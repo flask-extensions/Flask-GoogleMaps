@@ -1,0 +1,8 @@
+
+include README.md
+include example.py
+include example.html
+
+recursive-include *.html *.js *.css
+recursive-include docs *
+recursive-exclude docs *.pyc *.pyo .DS_Store

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+    <html>
+    <head>
+            <meta charset="utf-8">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <title>Flask Google Maps Example</title>
+            <link rel="stylesheet" href="">
+            {{"decoupled-map"|googlemap_js(37.4419, -122.1419, markers=[(37.4419, -122.1419)])}}
+            {{mymap.js}}
+    </head>
+    <body>
+        <h1>Flask Google Maps Example</h1>
+
+        <h2> Template function centered, no marker </h2>
+        {{googlemap("simple-map", 37.4419, -122.1419)}}
+        <code>
+            <pre>
+{% raw %}
+{{googlemap("simple-map", 37.4419, -122.1419)}}
+{% endraw %}
+            </pre>
+        </code>
+
+        <h2> Template filter decoupled with single marker </h2>
+        {{"decoupled-map"|googlemap_html(37.4419, -122.1419)}}
+        <code>
+            <pre>
+{% raw %}
+on the head:
+    {{"decoupled-map"|googlemap_js(37.4419, -122.1419, markers=[(37.4419, -122.1419)])}}
+on the body:
+    {{"decoupled-map"|googlemap_html(37.4419, -122.1419)}}
+{% endraw %}
+            </pre>
+        </code>
+
+
+        <h2> Template function with multiple markers </h2>
+        {% with map=googlemap_obj("another-map", 37.4419, -122.1419, markers=[(37.4419, -122.1419), (37.4300, -122.1400)]) %}
+            {{map.html}}
+            {{map.js}}
+        {% endwith %}
+
+        <code>
+            <pre>
+{% raw %}
+{% with map=googlemap_obj("another-map", 37.4419, -122.1419, markers=[(37.4419, -122.1419), (37.4300, -122.1400)]) %}
+    {{map.html}}
+    {{map.js}}
+{% endwith %}
+{% endraw %}
+            </pre>
+        </code>
+
+
+        <h2> Generated in view</h2>
+        {{mymap.html}}
+
+        <code>
+            <pre>
+{% raw %}
+
+View:
+from flaskext.googlemaps import Map
+
+@app.route("/")
+def mapview():
+    mymap = Map(
+        identifier="view-side",
+        lat=37.4419,
+        lng=-122.1419,
+        markers=[(37.4419, -122.1419)]
+    )
+    return render_template('example.html', mymap=mymap)
+
+Template:
+in head:
+    {{mymap.js}}
+in body:
+    {{mymap.html}}
+
+{% endraw %}
+            </pre>
+        </code>
+    </body>
+</html>
+

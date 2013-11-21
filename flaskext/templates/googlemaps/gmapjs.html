@@ -1,0 +1,25 @@
+<script src="http://maps.googleapis.com/maps/api/js?sensor=false" type="text/javascript"></script>
+
+<style type="text/css">
+      #{{gmap.identifier}} { {{gmap.style}} }
+</style>
+
+<script type="text/javascript">
+    function initialize_{{gmap.varname}}() {
+        var {{gmap.varname}} = new google.maps.Map(
+        document.getElementById('{{gmap.identifier}}'), {
+            center: new google.maps.LatLng({{gmap.center.0}}, {{gmap.center.1}}),
+            zoom: {{gmap.zoom}},
+            mapTypeId: google.maps.MapTypeId.{{gmap.maptype}}
+        });
+
+        {% for marker in gmap.markers %}
+            var marker_{{loop.counter}} = new google.maps.Marker({
+                position: new google.maps.LatLng({{marker.0}}, {{marker.1}}),
+                map: {{gmap.varname}}
+            });
+        {% endfor %}
+
+    }
+    google.maps.event.addDomListener(window, 'load', initialize_{{gmap.varname}});
+</script>
