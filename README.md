@@ -20,6 +20,34 @@ cd Flask-GoogleMaps
 python setup.py install
 ```
 
+
+### How it works
+
+Flask-GoogleMaps includes some global functions and template filters in your Jinja environment, also it allows you to use the Map in views if needed.
+
+
+#### registering
+
+in your app
+
+```python
+from flask import Flask
+from flask.ext.googlemaps import GoogleMaps
+
+app = Flask(__name__)
+GoogleMaps(app)
+```
+
+In template
+
+```html
+{{googlemap("my_awesome_map", lat=0.23234234, lng=-0.234234234, markers=[(0.12, -0.45345), ...])}}
+```
+
+That's it! now you have some template filters and functions to use, more details in examples and screenshot below.
+
+
+
 ### Usage
 
 - You can create the map in the view and then send to the template context 
@@ -30,8 +58,8 @@ python setup.py install
 
 ```python
 from flask import Flask, render_template
-from flaskext.googlemaps import GoogleMaps
-from flaskext.googlemaps import Map
+from flask.ext.googlemaps import GoogleMaps
+from flask.ext.googlemaps import Map
 
 app = Flask(__name__, template_folder=".")
 GoogleMaps(app)
