@@ -3,7 +3,7 @@ include README.md
 include example.py
 include example.html
 
-include flaskext/templates/googlemaps/gmapjs.html
-include flaskext/templates/googlemaps/gmap.html
+include flask_googlemaps/templates/googlemaps/gmapjs.html
+include flask_googlemaps/templates/googlemaps/gmap.html
 
-recursive-include flaskext/templates/googlemaps  *
+recursive-include flask_googlemaps/templates/googlemaps  *
