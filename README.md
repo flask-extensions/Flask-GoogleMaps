@@ -22,10 +22,11 @@ python setup.py install
 
 ### Usage
 
-You can create the map in the view and then send to the template context or you can use the template functions and filters directly
+- You can create the map in the view and then send to the template context 
+- you can use the template functions and filters directly
 
 
-#### View
+#### 1. View
 
 ```python
 from flask import Flask, render_template
@@ -50,7 +51,7 @@ if __name__ == "__main__":
     app.run(debug=True)
 ```
 
-#### Template
+#### 2. Template
 
 ```html
 <!DOCTYPE html>
