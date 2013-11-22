@@ -1,8 +1,8 @@
 # coding: utf-8
 
 from flask import Flask, render_template
-from flask_googlemaps.googlemaps import GoogleMaps
-from flask_googlemaps.googlemaps import Map
+from flask.ext.googlemaps import GoogleMaps
+from flask.ext.googlemaps import Map
 
 app = Flask(__name__, template_folder=".")
 GoogleMaps(app)
