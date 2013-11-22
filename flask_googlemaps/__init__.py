@@ -42,6 +42,7 @@ def googlemap(*args, **kwargs):
     map = googlemap_obj(*args, **kwargs)
     return Markup("".join((map.js, map.html)))
 
+
 def googlemap_html(*args, **kwargs):
     return googlemap_obj(*args, **kwargs).html
 
@@ -67,6 +68,6 @@ class GoogleMaps(object):
 
     def register_blueprint(self, app):
         module = Blueprint("googlemaps", __name__,
-            template_folder="templates")
+                           template_folder="templates")
         app.register_blueprint(module)
         return module

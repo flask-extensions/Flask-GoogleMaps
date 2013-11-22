@@ -7,6 +7,7 @@ from flask_googlemaps.googlemaps import Map
 app = Flask(__name__, template_folder=".")
 GoogleMaps(app)
 
+
 @app.route("/")
 def mapview():
     mymap = Map(
