@@ -3,6 +3,7 @@ include README.md
 include example.py
 include example.html
 
-recursive-include *.html *.js *.css
-recursive-include docs *
-recursive-exclude docs *.pyc *.pyo .DS_Store
+include flaskext/templates/googlemaps/gmapjs.html
+include flaskext/templates/googlemaps/gmap.html
+
+recursive-include flaskext/templates/googlemaps  *
