@@ -119,3 +119,7 @@ if __name__ == "__main__":
 ### TODO:
 
 Implement other methods from the api, add layers etc...
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/rochacbruno/flask-googlemaps/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
