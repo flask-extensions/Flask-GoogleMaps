@@ -9,7 +9,7 @@ class Map(object):
                  varname='map',
                  style="height:300px;width:300px;margin:0;",
                  cls="map", polylines=None, polygons=None,
-                 circles=None):
+                 circles=None, drawing=False):
         self.cls = cls
         self.style = style
         self.varname = varname
@@ -21,6 +21,7 @@ class Map(object):
         self.polylines = polylines or []
         self.polygons = polygons or []
         self.circles = circles or []
+        self.drawing = drawing
 
     def add_circle(self, circle):
         self.circles.append(circle)
