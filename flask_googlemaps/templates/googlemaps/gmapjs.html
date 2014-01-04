@@ -58,6 +58,22 @@
 
             polygonPath.setMap({{gmap.varname}});
         {% endfor %}
+
+        {% for circle in gmap.circles %}
+            var circleCenter = new google.maps.LatLng({{circle.center.0}}, {{circle.center.1}});
+
+            var gCircle = new google.maps.Circle({
+                strokeColor: '{{circle.stroke_color}}',
+                strokeOpacity: '{{circle.stroke_opacity}}',
+                strokeWeight: '{{circle.stroke_weight}}',
+                fillColor: '{{circle.fill_color}}',
+                fillOpacity: '{{circle.fill_opacity}}',
+                center: circleCenter,
+                radius: {{circle.radius}}
+            });
+
+            gCircle.setMap({{gmap.varname}});
+        {% endfor %}
     }
 
     google.maps.event.addDomListener(window, 'load', initialize_{{gmap.varname}});

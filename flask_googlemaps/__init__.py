@@ -8,7 +8,8 @@ class Map(object):
                  zoom=13, maptype="ROADMAP", markers=None,
                  varname='map',
                  style="height:300px;width:300px;margin:0;",
-                 cls="map", polylines=None, polygons=None):
+                 cls="map", polylines=None, polygons=None,
+                 circles=None):
         self.cls = cls
         self.style = style
         self.varname = varname
@@ -19,6 +20,10 @@ class Map(object):
         self.identifier = identifier
         self.polylines = polylines or []
         self.polygons = polygons or []
+        self.circles = circles or []
+
+    def add_circle(self, circle):
+        self.circles.append(circle)
 
     def add_polygon(self, polygon):
         self.polygons.append(polygon)
@@ -100,3 +105,16 @@ class PolyGon(object):
         self.fill_color = fill_color
         self.fill_opacity = fill_opacity
         self.coordinates = coordinates or []
+
+
+class Circle(object):
+    def __init__(self, lat, lng, radius=0,
+                 stroke_color='#FF0000', stroke_opacity=.8,
+                 stroke_weight=2, fill_color='#FF0000', fill_opacity=.35):
+        self.stroke_color = stroke_color
+        self.stroke_opacity = stroke_opacity
+        self.stroke_weight = stroke_weight
+        self.fill_color = fill_color
+        self.fill_opacity = fill_opacity
+        self.center = (lat, lng)
+        self.radius = radius
