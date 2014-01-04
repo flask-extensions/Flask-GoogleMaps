@@ -32,8 +32,8 @@ class Map(object):
     def add_polyline(self, polyline):
         self.polylines.append(polyline)
 
-    def add_marker(self, lat, lng, title="", icon=""):
-        self.markers.append((lat, lng, title, icon))
+    def add_marker(self, lat, lng, title="", icon="", info=""):
+        self.markers.append((lat, lng, title, icon, info))
 
     def render(self, *args, **kwargs):
         return render_template(*args, **kwargs)

@@ -13,12 +13,21 @@
             mapTypeId: google.maps.MapTypeId.{{gmap.maptype}}
         });
 
+        var infoWindow =  new google.maps.InfoWindow({
+            content: "loading..."
+        });
+
         {% for marker in gmap.markers %}
             var marker_{{loop.counter}} = new google.maps.Marker({
                 position: new google.maps.LatLng({{marker.0}}, {{marker.1}}),
                 map: {{gmap.varname}},
                 title: '{{marker.2}}',
                 icon: '{{marker.3}}',
+            });
+
+            google.maps.event.addListener(marker_{{loop.counter}}, 'click', function() {
+                infoWindow.setContent('{{marker.4}}');
+                infoWindow.open({{gmap.varname}}, this);
             });
         {% endfor %}
 
