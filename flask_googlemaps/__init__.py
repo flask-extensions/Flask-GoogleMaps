@@ -8,7 +8,7 @@ class Map(object):
                  zoom=13, maptype="ROADMAP", markers=None,
                  varname='map',
                  style="height:300px;width:300px;margin:0;",
-                 cls="map", polylines=None):
+                 cls="map", polylines=None, polygons=None):
         self.cls = cls
         self.style = style
         self.varname = varname
@@ -18,6 +18,10 @@ class Map(object):
         self.markers = markers or []
         self.identifier = identifier
         self.polylines = polylines or []
+        self.polygons = polygons or []
+
+    def add_polygon(self, polygon):
+        self.polygons.append(polygon)
 
     def add_polyline(self, polyline):
         self.polylines.append(polyline)
@@ -83,4 +87,16 @@ class PolyLine(object):
         self.stroke_color = stroke_color
         self.stroke_opacity = stroke_opacity
         self.stroke_weight = stroke_weight
+        self.coordinates = coordinates or []
+
+
+class PolyGon(object):
+    def __init__(self, stroke_color='#FF0000', stroke_opacity=.8,
+                 stroke_weight=2, fill_color='#FF0000',
+                 fill_opacity=.35, coordinates=None):
+        self.stroke_color = stroke_color
+        self.stroke_opacity = stroke_opacity
+        self.stroke_weight = stroke_weight
+        self.fill_color = fill_color
+        self.fill_opacity = fill_opacity
         self.coordinates = coordinates or []

@@ -39,6 +39,26 @@
 
             polylinePath.setMap({{gmap.varname}});
         {% endfor %}
+
+        {% for polygon in gmap.polygons %}
+            var polygonCoordinates = [];
+
+            {% for point in polygon.coordinates %}
+                polygonCoordinates.push(new google.maps.LatLng({{point.0}}, {{point.1}}))
+            {% endfor %}
+
+            var polygonPath = new google.maps.Polygon({
+                path: polygonCoordinates,
+                strokeColor: '{{polygon.stroke_color}}',
+                strokeOpacity: '{{polygon.stroke_opacity}}',
+                strokeWeight: '{{polygon.stroke_weight}}',
+                fillColor: '{{polygon.fill_color}}',
+                fillOpacity: '{{polygon.fill_opacity}}'
+            });
+
+            polygonPath.setMap({{gmap.varname}});
+        {% endfor %}
     }
+
     google.maps.event.addDomListener(window, 'load', initialize_{{gmap.varname}});
 </script>
