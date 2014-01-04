@@ -22,6 +22,23 @@
             });
         {% endfor %}
 
+        {% for polyline in gmap.polylines %}
+            var polylineCoordinates = [];
+
+            {% for point in polyline.coordinates %}
+                polylineCoordinates.push(new google.maps.LatLng({{point.0}}, {{point.1}}))
+            {% endfor %}
+
+            var polylinePath = new google.maps.Polyline({
+                path: polylineCoordinates,
+                geodesic: true,
+                strokeColor: '{{polyline.stroke_color}}',
+                strokeOpacity: '{{polyline.stroke_opacity}}',
+                strokeWeight: '{{polyline.stroke_weight}}'
+            });
+
+            polylinePath.setMap({{gmap.varname}});
+        {% endfor %}
     }
     google.maps.event.addDomListener(window, 'load', initialize_{{gmap.varname}});
 </script>

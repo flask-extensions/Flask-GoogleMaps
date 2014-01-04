@@ -8,7 +8,7 @@ class Map(object):
                  zoom=13, maptype="ROADMAP", markers=None,
                  varname='map',
                  style="height:300px;width:300px;margin:0;",
-                 cls="map"):
+                 cls="map", polylines=None):
         self.cls = cls
         self.style = style
         self.varname = varname
@@ -17,6 +17,10 @@ class Map(object):
         self.maptype = maptype
         self.markers = markers or []
         self.identifier = identifier
+        self.polylines = polylines or []
+
+    def add_polyline(self, polyline):
+        self.polylines.append(polyline)
 
     def add_marker(self, lat, lng, title="", icon=""):
         self.markers.append((lat, lng, title, icon))
@@ -71,3 +75,12 @@ class GoogleMaps(object):
                            template_folder="templates")
         app.register_blueprint(module)
         return module
+
+
+class PolyLine(object):
+    def __init__(self, stroke_color='#FF0000', stroke_opacity=1.0,
+                 stroke_weight=2, coordinates=None):
+        self.stroke_color = stroke_color
+        self.stroke_opacity = stroke_opacity
+        self.stroke_weight = stroke_weight
+        self.coordinates = coordinates or []
