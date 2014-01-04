@@ -9,7 +9,7 @@ class Map(object):
                  varname='map',
                  style="height:300px;width:300px;margin:0;",
                  cls="map", polylines=None, polygons=None,
-                 circles=None, drawing=False):
+                 circles=None, rectangles=None, drawing=False):
         self.cls = cls
         self.style = style
         self.varname = varname
@@ -21,7 +21,11 @@ class Map(object):
         self.polylines = polylines or []
         self.polygons = polygons or []
         self.circles = circles or []
+        self.rectangles = rectangles
         self.drawing = drawing
+
+    def add_rectangle(self, rectangle):
+        self.circles.append(rectangle)
 
     def add_circle(self, circle):
         self.circles.append(circle)
@@ -119,3 +123,15 @@ class Circle(object):
         self.fill_opacity = fill_opacity
         self.center = (lat, lng)
         self.radius = radius
+
+
+class Rectangle(object):
+    def __init__(self, left_point, right_point,
+                 stroke_color='#FF0000', stroke_opacity=.8,
+                 stroke_weight=2, fill_color='#FF0000', fill_opacity=.35):
+        self.stroke_color = stroke_color
+        self.stroke_opacity = stroke_opacity
+        self.stroke_weight = stroke_weight
+        self.fill_color = fill_color
+        self.fill_opacity = fill_opacity
+        self.bounds = (left_point, right_point)

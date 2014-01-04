@@ -84,6 +84,21 @@
             gCircle.setMap({{gmap.varname}});
         {% endfor %}
 
+        {% for rectangle in gmap.rectangles %}
+            var gRectangle = new google.maps.Rectangle({
+                strokeColor: '{{rectangle.stroke_color}}',
+                strokeOpacity: '{{rectangle.stroke_opacity}}',
+                strokeWeight: '{{rectangle.stroke_weight}}',
+                fillColor: '{{rectangle.fill_color}}',
+                fillOpacity: '{{rectangle.fill_opacity}}',
+                bounds: new google.maps.LatLngBounds(
+                    new google.maps.LatLng({{rectangle.bounds.0.0}}, {{rectangle.bounds.0.1}}),
+                    new google.maps.LatLng({{rectangle.bounds.1.0}}, {{rectangle.bounds.1.1}}))
+                });
+
+            gRectangle.setMap({{gmap.varname}});
+        {% endfor %}
+
         if('{{gmap.drawing}}' == "True") {
             var drawingManager = new google.maps.drawing.DrawingManager({
             drawingMode: google.maps.drawing.OverlayType.MARKER,
