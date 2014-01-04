@@ -18,8 +18,8 @@ class Map(object):
         self.markers = markers or []
         self.identifier = identifier
 
-    def add_marker(self, lat, lng, title=""):
-        self.markers.append((lat, lng, title))
+    def add_marker(self, lat, lng, title="", icon=""):
+        self.markers.append((lat, lng, title, icon))
 
     def render(self, *args, **kwargs):
         return render_template(*args, **kwargs)

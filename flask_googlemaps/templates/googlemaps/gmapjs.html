@@ -17,7 +17,8 @@
             var marker_{{loop.counter}} = new google.maps.Marker({
                 position: new google.maps.LatLng({{marker.0}}, {{marker.1}}),
                 map: {{gmap.varname}},
-                title: '{{marker.2}}'
+                title: '{{marker.2}}',
+                icon: '{{marker.3}}',
             });
         {% endfor %}
 
