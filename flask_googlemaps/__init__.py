@@ -21,7 +21,7 @@ class Map(object):
         self.polylines = polylines or []
         self.polygons = polygons or []
         self.circles = circles or []
-        self.rectangles = rectangles
+        self.rectangles = rectangles or []
         self.drawing = drawing
 
     def add_rectangle(self, rectangle):
