@@ -3,10 +3,11 @@
 <style type="text/css">
       #{{gmap.identifier}} { {{gmap.style}} }
 </style>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.7/angular.min.js"></script>
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=drawing"></script>
 <script type="text/javascript">
-    function initialize_{{gmap.varname}}() {
-        var {{gmap.varname}} = new google.maps.Map(
+    function initialize_googleMap() {
+        var googleMap = new google.maps.Map(
         document.getElementById('{{gmap.identifier}}'), {
             center: new google.maps.LatLng({{gmap.center.0}}, {{gmap.center.1}}),
             zoom: {{gmap.zoom}},
@@ -20,14 +21,18 @@
         {% for marker in gmap.markers %}
             var marker_{{loop.counter}} = new google.maps.Marker({
                 position: new google.maps.LatLng({{marker.0}}, {{marker.1}}),
-                map: {{gmap.varname}},
+                map: googleMap,
                 title: '{{marker.2}}',
                 icon: '{{marker.3}}',
             });
 
             google.maps.event.addListener(marker_{{loop.counter}}, 'click', function() {
                 infoWindow.setContent('{{marker.4}}');
-                infoWindow.open({{gmap.varname}}, this);
+                infoWindow.open(googleMap, this);
+            });
+            google.maps.event.addListener(marker_{{loop.counter}}, 'rightclick', function() {
+
+                $(this).w2overlay('Hello');
             });
         {% endfor %}
 
@@ -46,7 +51,7 @@
                 strokeWeight: '{{polyline.stroke_weight}}'
             });
 
-            polylinePath.setMap({{gmap.varname}});
+            polylinePath.setMap(googleMap);
         {% endfor %}
 
         {% for polygon in gmap.polygons %}
@@ -65,7 +70,7 @@
                 fillOpacity: '{{polygon.fill_opacity}}'
             });
 
-            polygonPath.setMap({{gmap.varname}});
+            polygonPath.setMap(googleMap);
         {% endfor %}
 
         {% for circle in gmap.circles %}
@@ -81,7 +86,7 @@
                 radius: {{circle.radius}}
             });
 
-            gCircle.setMap({{gmap.varname}});
+            gCircle.setMap(googleMap);
         {% endfor %}
 
         {% for rectangle in gmap.rectangles %}
@@ -96,7 +101,7 @@
                     new google.maps.LatLng({{rectangle.bounds.1.0}}, {{rectangle.bounds.1.1}}))
                 });
 
-            gRectangle.setMap({{gmap.varname}});
+            gRectangle.setMap(googleMap);
         {% endfor %}
 
         if('{{gmap.drawing}}' == "True") {
@@ -122,9 +127,9 @@
               zIndex: 1
             }
           });
-          drawingManager.setMap({{gmap.varname}});
+          drawingManager.setMap(googleMap);
         }
     }
 
-    google.maps.event.addDomListener(window, 'load', initialize_{{gmap.varname}});
+    google.maps.event.addDomListener(window, 'load', initialize_googleMap);
 </script>
