@@ -129,6 +129,30 @@
           });
           drawingManager.setMap(googleMap);
         }
+
+        if (navigator.geolocation) {
+            var container = document.createElement('div');
+            var homeControl = new BuildHomeControl(container);
+
+            container.index = 1;
+            googleMap.controls[google.maps.ControlPosition.RIGHT_TOP].push(container);
+
+            google.maps.event.addDomListener(container, 'click', function() {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    var coordinates = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+                    googleMap.setCenter(coordinates);
+                });
+            });
+        }
+    }
+
+    function BuildHomeControl(container) {
+          container.style.padding = '2px';
+
+          var img = document.createElement('img');
+          img.title = 'Click to set the map to Home';
+          container.appendChild(img);
+          img.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAB8klEQVR4Xu3XPWgTYRgA4Lug9QetFm1RqL8d0uIfSJwcOiiog4oi/oB0FAQRFxE6ODg6agehUMQiok62IO2iVmnXoIvNJEglSkstBYnWNOczHhnSpBfoYF54eLn7+N7vve+4uySMoihYyUjxfzfQaKDRwCpqjjAMm6U0W1gkT84j/bfmWibVsvBO6Qbn6YgNLfCJJwyo+avut8DiZ6VxbtPBHAUWKJLhAaMa7axrAwqekZ7RzmeucZAJPnKYXvIcZcicvVV1YLsqErvJEzFEa2zsOa9jx51kiRihaYn6Ve3ATbaRpcek6djYdXpiFzMpXeYHJziV6BbYxhbpAhH3LDBXtnuzzJSdy0l9BFxN1ACd7OALo1QbL/nDERexIUkDbQS0MKzYK1or7Fg7Yw6ekqKZTUkaKBGwnn2kWc1SEcVyKUkDU5T4xiEyfK/wRE3R7eAiRab5meRVPEmONPsVfxNUF6dZx3tzfi97B0wuSAOkuOv+rim759tDys9JtyjyuB5vwn6ydNNngbWxsRcgMNYmDbKHfhcwUZePkcIHpGF2McZ9xnlHyHFO0ksXI1xSez5pA/EmuqSHHCPgK1tJMU8bAY+4E1u8rp/jJukcV8iwkRIzvGVQvQ81/x5I8KNkM4vMqlNYVp3GHxNWNBoNNBr4B2Hh6BuKnV6nAAAAAElFTkSuQmCC';
     }
 
     google.maps.event.addDomListener(window, 'load', initialize_googleMap);
