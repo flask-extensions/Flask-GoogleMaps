@@ -50,7 +50,7 @@ That's it! now you have some template filters and functions to use, more details
 
 ### Usage
 
-- You can create the map in the view and then send to the template context 
+- You can create the map in the view and then send to the template context
 - you can use the template functions and filters directly
 
 
@@ -78,6 +78,18 @@ def mapview():
 if __name__ == "__main__":
     app.run(debug=True)
 ```
+
+##### `Map()` Parameters:
+
+- **lat**: The latitude coordinate for centering the map.
+- **lng**: The longitutde coordinate for centering the map.
+- **zoom**: The zoom level. Defaults to `13`.
+- **maptype**: The map type - `ROADMAP`, `SATELLITE`, `HYBRID`, `TERRAIN`. Defaults to `ROADMAP`.
+- **markers**: Markers array. Defaults to `None`.
+- **varname**: The instance variable name.
+- **style**: A string containing CSS styles. Defaults to `"height:300px;width:300px;margin:0;"`.
+- **identifier**: The CSS ID selector name.
+- **cls**: The CSS Class selector name. Defaults to `"map"`.
 
 #### 2. Template
 
