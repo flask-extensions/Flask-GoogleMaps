@@ -13,11 +13,14 @@
             mapTypeId: google.maps.MapTypeId.{{gmap.maptype}}
         });
 
-        {% for marker in gmap.markers %}
+        {% for icon in gmap.markers %}
+        {% for marker in gmap.markers[icon] %}
             var marker_{{loop.counter}} = new google.maps.Marker({
                 position: new google.maps.LatLng({{marker.0}}, {{marker.1}}),
-                map: {{gmap.varname}}
+                map: {{gmap.varname}},
+                icon: "{{ icon }}"
             });
+        {% endfor %}
         {% endfor %}
 
     }

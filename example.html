@@ -7,6 +7,7 @@
             <link rel="stylesheet" href="">
             {{"decoupled-map"|googlemap_js(37.4419, -122.1419, markers=[(37.4419, -122.1419)])}}
             {{mymap.js}}
+            {{sndmap.js}}
     </head>
     <body>
         <h1>Flask Google Maps Example</h1>
@@ -53,7 +54,7 @@ on the body:
         </code>
 
 
-        <h2> Generated in view</h2>
+        <h2> First map generated in view</h2>
         {{mymap.html}}
 
         <code>
@@ -78,6 +79,38 @@ in head:
     {{mymap.js}}
 in body:
     {{mymap.html}}
+
+{% endraw %}
+            </pre>
+        </code>
+
+        <h2> Second map generated in view</h2>
+        <h3> Example for different icons in multiple markers</h3>
+        {{sndmap.html}}
+
+        <code>
+            <pre>
+{% raw %}
+
+View:
+from flaskext.googlemaps import Map
+
+@app.route("/")
+def mapview():
+    sndmap = Map(
+        identifier="sndmap",
+        lat=37.4419,
+        lng=-122.1419,
+        markers={'http://maps.google.com/mapfiles/ms/icons/green-dot.png':[(37.4419, -122.1419)],
+                 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png':[(37.4300, -122.1400)]}
+    )
+    return render_template('example.html', sndmap=sndmap)
+
+Template:
+in head:
+    {{sndmap.js}}
+in body:
+    {{sndmap.html}}
 
 {% endraw %}
             </pre>

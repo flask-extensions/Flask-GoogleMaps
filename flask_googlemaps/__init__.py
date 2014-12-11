@@ -2,6 +2,7 @@
 
 from flask import render_template, Blueprint, Markup
 
+DEFAULT_ICON = 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
 
 class Map(object):
     def __init__(self, identifier, lat, lng,
@@ -16,6 +17,8 @@ class Map(object):
         self.zoom = zoom
         self.maptype = maptype
         self.markers = markers or []
+        if isinstance(markers, list):
+            self.markers = {DEFAULT_ICON: markers}
         self.identifier = identifier
 
     def add_marker(self, lat, lng):
@@ -42,7 +45,6 @@ def googlemap(*args, **kwargs):
     map = googlemap_obj(*args, **kwargs)
     return Markup("".join((map.js, map.html)))
 
-
 def googlemap_html(*args, **kwargs):
     return googlemap_obj(*args, **kwargs).html
 
@@ -68,6 +70,6 @@ class GoogleMaps(object):
 
     def register_blueprint(self, app):
         module = Blueprint("googlemaps", __name__,
-                           template_folder="templates")
+            template_folder="templates")
         app.register_blueprint(module)
         return module

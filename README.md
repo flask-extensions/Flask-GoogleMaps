@@ -73,7 +73,14 @@ def mapview():
         lng=-122.1419,
         markers=[(37.4419, -122.1419)]
     )
-    return render_template('example.html', mymap=mymap)
+    sndmap = Map(
+        identifier="sndmap",
+        lat=37.4419,
+        lng=-122.1419,
+        markers={'http://maps.google.com/mapfiles/ms/icons/green-dot.png':[(37.4419, -122.1419)],
+                 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png':[(37.4300, -122.1400)]}
+    )
+    return render_template('example.html', mymap=mymap, sndmap=sndmap)
 
 if __name__ == "__main__":
     app.run(debug=True)
@@ -86,6 +93,7 @@ if __name__ == "__main__":
 - **zoom**: The zoom level. Defaults to `13`.
 - **maptype**: The map type - `ROADMAP`, `SATELLITE`, `HYBRID`, `TERRAIN`. Defaults to `ROADMAP`.
 - **markers**: Markers array. Defaults to `None`.
+- or **markers**: Markers dictionary with icon urls as keys and markers array as values.               
 - **varname**: The instance variable name.
 - **style**: A string containing CSS styles. Defaults to `"height:300px;width:300px;margin:0;"`.
 - **identifier**: The CSS ID selector name.
@@ -99,6 +107,7 @@ if __name__ == "__main__":
     <head>
             {{"decoupled-map"|googlemap_js(37.4419, -122.1419, markers=[(37.4419, -122.1419)])}}
             {{mymap.js}}
+            {{sndmap.js}}
     </head>
     <body>
         <h1>Flask Google Maps Example</h1>
@@ -116,8 +125,13 @@ if __name__ == "__main__":
             {{map.js}}
         {% endwith %}
 
-        <h2> Generated in view</h2>
+        <h2> First map generated in view</h2>
         {{mymap.html}}
+
+        <h2> Second map generated in view</h2>
+        <h3> Example for different icons in multiple markers</h3>
+        {{sndmap.html}}
+
     </body>
 </html>
 
