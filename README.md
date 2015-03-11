@@ -32,7 +32,7 @@ in your app
 
 ```python
 from flask import Flask
-from flask.ext.googlemaps import GoogleMaps
+from flask_googlemaps import GoogleMaps
 
 app = Flask(__name__)
 GoogleMaps(app)
@@ -58,8 +58,8 @@ That's it! now you have some template filters and functions to use, more details
 
 ```python
 from flask import Flask, render_template
-from flask.ext.googlemaps import GoogleMaps
-from flask.ext.googlemaps import Map
+from flask_googlemaps import GoogleMaps
+from flask_googlemaps import Map
 
 app = Flask(__name__, template_folder=".")
 GoogleMaps(app)
