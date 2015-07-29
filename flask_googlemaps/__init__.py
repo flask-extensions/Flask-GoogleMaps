@@ -4,12 +4,13 @@ from flask import render_template, Blueprint, Markup
 
 DEFAULT_ICON = '//maps.google.com/mapfiles/ms/icons/red-dot.png'
 
+
 class Map(object):
     def __init__(self, identifier, lat, lng,
                  zoom=13, maptype="ROADMAP", markers=None,
                  varname='map',
                  style="height:300px;width:300px;margin:0;",
-                 cls="map"):
+                 cls="map", **kwargs):
         self.cls = cls
         self.style = style
         self.varname = varname
@@ -20,6 +21,10 @@ class Map(object):
         if isinstance(markers, list):
             self.markers = {DEFAULT_ICON: markers}
         self.identifier = identifier
+        if 'infobox' in kwargs:
+            self.infobox = kwargs['infobox']
+        else:
+            self.infobox = None
 
     def add_marker(self, lat, lng):
         self.markers.append((lat, lng))
@@ -44,6 +49,7 @@ def googlemap_obj(*args, **kwargs):
 def googlemap(*args, **kwargs):
     map = googlemap_obj(*args, **kwargs)
     return Markup("".join((map.js, map.html)))
+
 
 def googlemap_html(*args, **kwargs):
     return googlemap_obj(*args, **kwargs).html
@@ -70,6 +76,6 @@ class GoogleMaps(object):
 
     def register_blueprint(self, app):
         module = Blueprint("googlemaps", __name__,
-            template_folder="templates")
+                           template_folder="templates")
         app.register_blueprint(module)
         return module

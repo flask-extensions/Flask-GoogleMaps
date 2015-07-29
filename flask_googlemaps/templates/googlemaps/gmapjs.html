@@ -1,4 +1,4 @@
-<script src="//maps.googleapis.com/maps/api/js?sensor=false" type="text/javascript"></script>
+<script src="http://maps.googleapis.com/maps/api/js?sensor=false" type="text/javascript"></script>
 
 <style type="text/css">
       #{{gmap.identifier}} { {{gmap.style}} }
@@ -14,15 +14,28 @@
         });
 
         {% for icon in gmap.markers %}
-        {% for marker in gmap.markers[icon] %}
-            var marker_{{loop.counter}} = new google.maps.Marker({
-                position: new google.maps.LatLng({{marker.0}}, {{marker.1}}),
-                map: {{gmap.varname}},
-                icon: "{{ icon }}"
-            });
+            {% for marker in gmap.markers[icon] %}
+                var marker_{{loop.index0}} = new google.maps.Marker({
+                    position: new google.maps.LatLng({{marker.0}}, {{marker.1}}),
+                    map: {{gmap.varname}},
+                    icon: "{{ icon }}"
+                });
+                {% if gmap.infobox != None %}
+                        google.maps.event.addListener(marker_{{loop.index0}}, 'click',
+                        getInfoCallback({{gmap.varname}}, "{{gmap.infobox[loop.index0]|safe}}"));
+                {% endif %}
+            {% endfor %}
         {% endfor %}
-        {% endfor %}
+    }
 
+    function getInfoCallback(map, content) {
+        var infowindow = new google.maps.InfoWindow({content: content});
+        return function() {
+                infowindow.setContent(content);
+                infowindow.open(map, this);
+            };
     }
     google.maps.event.addDomListener(window, 'load', initialize_{{gmap.varname}});
+
+
 </script>
