@@ -144,6 +144,16 @@ if __name__ == "__main__":
 <img src="screenshot.png" />
 
 
+### Infobox
+
+Users should now be able to create infoboxes in python and have them displayed in a map. You can specify the optional argument `infobox` when creating a `Map` instance to have infoboxes for markers enabled. Pass in normal text or html to this parameter to format the infobox. I have provided an example where I pass in a list of images assigned to various lat/longs. There is also support for a single string value for infobox (so if you have four markers but only specify one string value for infobox, all markers will have the same infobox). This required some...umm...jankification as jinja2 has no builtin for `type()` to check if `infobox` is a list or string. I ended up creating a flag and checking it in `__init__.py`. 
+
+Here's an example snippet of code: 
+<img width="846" alt="screen shot 2015-07-29 at 2 55 53 pm" src="https://cloud.githubusercontent.com/assets/8108300/8969636/01994d80-3602-11e5-80ba-e0aa707b63a3.png">
+
+Which results in the following map:
+<img width="1439" alt="screen shot 2015-07-29 at 2 41 52 pm" src="https://cloud.githubusercontent.com/assets/8108300/8969650/13b0de7a-3602-11e5-9ed0-9f328ac9253f.png">
+
 ### TODO:
 
 Implement other methods from the api, add layers etc...
