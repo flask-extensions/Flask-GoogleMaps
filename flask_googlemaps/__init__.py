@@ -2,7 +2,7 @@
 
 from flask import render_template, Blueprint, Markup
 
-DEFAULT_ICON = '//maps.google.com/mapfiles/ms/icons/red-dot.png'
+DEFAULT_ICON = 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
 
 
 class Map(object):
@@ -23,6 +23,10 @@ class Map(object):
         self.identifier = identifier
         if 'infobox' in kwargs:
             self.infobox = kwargs['infobox']
+            # jinja2 has no builtin for type so a flag is set to check if infobox is
+            # string or list for the template iteration
+            if type(kwargs['infobox']) is list:
+                self.typeflag = True
         else:
             self.infobox = None
 
@@ -76,6 +80,6 @@ class GoogleMaps(object):
 
     def register_blueprint(self, app):
         module = Blueprint("googlemaps", __name__,
-                           template_folder="templates")
+            template_folder="templates")
         app.register_blueprint(module)
         return module

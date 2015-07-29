@@ -21,8 +21,13 @@
                     icon: "{{ icon }}"
                 });
                 {% if gmap.infobox != None %}
-                        google.maps.event.addListener(marker_{{loop.index0}}, 'click',
-                        getInfoCallback({{gmap.varname}}, "{{gmap.infobox[loop.index0]|safe}}"));
+                        {% if gmap.typeflag %}
+                            google.maps.event.addListener(marker_{{loop.index0}}, 'click',
+                            getInfoCallback({{gmap.varname}}, "{{gmap.infobox[loop.index0]|safe}}"));
+                        {% else %}
+                            google.maps.event.addListener(marker_{{loop.index0}}, 'click',
+                            getInfoCallback({{gmap.varname}}, "{{gmap.infobox|safe}}"));
+                        {% endif %}
                 {% endif %}
             {% endfor %}
         {% endfor %}
@@ -36,6 +41,5 @@
             };
     }
     google.maps.event.addDomListener(window, 'load', initialize_{{gmap.varname}});
-
 
 </script>
