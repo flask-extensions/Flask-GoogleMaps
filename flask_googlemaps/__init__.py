@@ -2,7 +2,7 @@
 
 from flask import render_template, Blueprint, Markup
 
-DEFAULT_ICON = 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
+DEFAULT_ICON = '//maps.google.com/mapfiles/ms/icons/red-dot.png'
 
 
 class Map(object):

@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='Flask-GoogleMaps',
-    version='0.1.8',
+    version='0.1.9',
     license='MIT',
     description='Small extension for Flask to make using Google Maps easy',
     long_description=open('README.md').read(),
