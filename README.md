@@ -8,7 +8,7 @@ Easy to use Google Maps in your Flask application
 ### requires
 - Jinja
 - Flask
-- A google api key (optional I guess)
+- A google api key [get here](https://developers.google.com/maps/documentation/javascript/get-api-key)
 
 
 ### Installation
@@ -38,7 +38,16 @@ from flask import Flask
 from flask_googlemaps import GoogleMaps
 
 app = Flask(__name__)
+
+# you can set key as config
+app.config['GOOGLEMAPS_KEY'] = "8JZ7i18MjFuM35dJHq70n3Hx4"
+
+# Initialize the extension
 GoogleMaps(app)
+
+# you can also pass the key here if you prefer
+GoogleMaps(app, key="8JZ7i18MjFuM35dJHq70n3Hx4")
+
 ```
 
 In template
@@ -80,8 +89,20 @@ def mapview():
         identifier="sndmap",
         lat=37.4419,
         lng=-122.1419,
-        markers={'http://maps.google.com/mapfiles/ms/icons/green-dot.png':[(37.4419, -122.1419)],
-                 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png':[(37.4300, -122.1400)]}
+        markers=[
+          {
+             'icon': 'http://maps.google.com/mapfiles/ms/icons/green-dot.png',
+             'lat': 37.4419,
+             'lng': -122.1419,
+             'infobox': "<b>Hello World</b>"
+          },
+          {
+             'icon': 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
+             'lat': 37.4300,
+             'lng': -122.1400,
+             'infobox': "<b>Hello World from other place</b>"
+          }
+        ]
     )
     return render_template('example.html', mymap=mymap, sndmap=sndmap)
 
@@ -95,12 +116,23 @@ if __name__ == "__main__":
 - **lng**: The longitutde coordinate for centering the map.
 - **zoom**: The zoom level. Defaults to `13`.
 - **maptype**: The map type - `ROADMAP`, `SATELLITE`, `HYBRID`, `TERRAIN`. Defaults to `ROADMAP`.
-- **markers**: Markers array. Defaults to `None`.
-- or **markers**: Markers dictionary with icon urls as keys and markers array as values.               
+- **markers**: Markers array of tuples having (**lat**, **lng**, infobox, icon). Defaults to `None`.
+- or **markers**: a list of dicts containing **icon, lat, lng, infobox**.
+- or **markers**: Markers dictionary with icon urls as keys and markers array as values.
 - **varname**: The instance variable name.
 - **style**: A string containing CSS styles. Defaults to `"height:300px;width:300px;margin:0;"`.
 - **identifier**: The CSS ID selector name.
 - **cls**: The CSS Class selector name. Defaults to `"map"`.
+
+Also controls True or False:
+
+- zoom_control
+- maptype_control
+- scale_control
+- scale_control
+- streetview_control
+- rorate_control
+- fullscreen_control
 
 #### 2. Template
 
@@ -132,7 +164,7 @@ if __name__ == "__main__":
         {{mymap.html}}
 
         <h2> Second map generated in view</h2>
-        <h3> Example for different icons in multiple markers</h3>
+        <h3> Example for different icons in multiple markers with infoboxes</h3>
         {{sndmap.html}}
 
     </body>
@@ -147,18 +179,44 @@ if __name__ == "__main__":
 
 ### Infobox
 
-Users should now be able to create infoboxes in python and have them displayed in a map. You can specify the optional argument `infobox` when creating a `Map` instance to have infoboxes for markers enabled. Pass in normal text or html to this parameter to format the infobox. I have provided an example where I pass in a list of images assigned to various lat/longs. There is also support for a single string value for infobox (so if you have four markers but only specify one string value for infobox, all markers will have the same infobox). This required some...umm...jankification as jinja2 has no builtin for `type()` to check if `infobox` is a list or string. I ended up creating a flag and checking it in `__init__.py`. 
-
 Here's an example snippet of code: 
-<img width="846" alt="screen shot 2015-07-29 at 2 55 53 pm" src="https://cloud.githubusercontent.com/assets/8108300/8969636/01994d80-3602-11e5-80ba-e0aa707b63a3.png">
+```python
+    Map(
+        identifier="catsmap",
+        lat=37.4419,
+        lng=-122.1419,
+        markers=[
+            {
+                'icon': 'http://maps.google.com/mapfiles/ms/icons/green-dot.png',
+                'lat':  37.4419,
+                'lng':  -122.1419,
+                'infobox': "<img src='cat1.jpg' />"
+            },
+            {
+                'icon': 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
+                'lat': 37.4300,
+                'lng': -122.1400,
+                'infobox': "<img src='cat2.jpg' />"
+            },
+            {
+                'icon': 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png',
+                'lat': 37.4500,
+                'lng': -122.1350,
+                'infobox': "<img src='cat3.jpg' />"
+            }
+        ]
+    )
 
-Which results in the following map:
+```
+
+Which results in something like the following map:
 <img width="1439" alt="screen shot 2015-07-29 at 2 41 52 pm" src="https://cloud.githubusercontent.com/assets/8108300/8969650/13b0de7a-3602-11e5-9ed0-9f328ac9253f.png">
 
 ### TODO:
 
 Implement other methods from the api, add layers etc...
 
+Please see this page [developers.google.com/maps/documentation/javascript/tutorial](https://developers.google.com/maps/documentation/javascript/tutorial) and contribute!
 
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/rochacbruno/flask-googlemaps/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 

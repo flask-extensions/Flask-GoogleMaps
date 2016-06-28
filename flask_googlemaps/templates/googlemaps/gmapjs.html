@@ -1,4 +1,9 @@
-<script src="//maps.googleapis.com/maps/api/js?sensor=false" type="text/javascript"></script>
+
+{% if GOOGLEMAPS_KEY %}
+<script src="//maps.googleapis.com/maps/api/js?key={{GOOGLEMAPS_KEY}}" type="text/javascript"></script>
+{%  else %}
+<script src="//maps.googleapis.com/maps/api/js" type="text/javascript"></script>
+{%  endif %}
 
 <style type="text/css">
       #{{gmap.identifier}} { {{gmap.style}} }
@@ -10,26 +15,32 @@
         document.getElementById('{{gmap.identifier}}'), {
             center: new google.maps.LatLng({{gmap.center.0}}, {{gmap.center.1}}),
             zoom: {{gmap.zoom}},
-            mapTypeId: google.maps.MapTypeId.{{gmap.maptype}}
+            mapTypeId: google.maps.MapTypeId.{{gmap.maptype}},
+            zoomControl: {% if gmap.zoom_control %}true{% else %}false{% endif %},
+            mapTypeControl: {% if gmap.maptype_control %}true{% else %}false{% endif %},
+            scaleControl: {% if gmap.scale_control %}true{% else %}false{% endif %},
+            streetViewControl: {% if gmap.streetview_control %}true{% else %}false{% endif %},
+            rotateControl: {% if gmap.rotate_control %}true{% else %}false{% endif %},
+            fullscreenControl: {% if gmap.fullscreen_control %}true{% else %}false{% endif %}
         });
 
-        {% for icon in gmap.markers %}
-            {% for marker in gmap.markers[icon] %}
-                var marker_{{loop.index0}} = new google.maps.Marker({
-                    position: new google.maps.LatLng({{marker.0}}, {{marker.1}}),
-                    map: {{gmap.varname}},
-                    icon: "{{ icon }}"
-                });
-                {% if gmap.infobox != None %}
-                        {% if gmap.typeflag %}
-                            google.maps.event.addListener(marker_{{loop.index0}}, 'click',
-                            getInfoCallback({{gmap.varname}}, "{{gmap.infobox[loop.index0]|safe}}"));
-                        {% else %}
-                            google.maps.event.addListener(marker_{{loop.index0}}, 'click',
-                            getInfoCallback({{gmap.varname}}, "{{gmap.infobox|safe}}"));
-                        {% endif %}
-                {% endif %}
-            {% endfor %}
+        // add gmap markers
+        {% for marker in gmap.markers %}
+
+            var marker_{{loop.index0}} = new google.maps.Marker({
+                position: new google.maps.LatLng({{marker['lat']}}, {{marker['lng']}}),
+                map: {{gmap.varname}},
+                icon: "{{ marker.get('icon', DEFAULT_ICON) }}"
+            });
+
+            {% if marker.get('infobox') %}
+                google.maps.event.addListener(
+                        marker_{{loop.index0}},
+                        'click',
+                        getInfoCallback({{gmap.varname}}, "{{marker['infobox']|safe}}")
+                );
+            {% endif %}
+
         {% endfor %}
     }
 

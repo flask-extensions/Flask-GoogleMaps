@@ -8,6 +8,7 @@
             {{"decoupled-map"|googlemap_js(37.4419, -122.1419, markers=[(37.4419, -122.1419)])}}
             {{mymap.js}}
             {{sndmap.js}}
+            {{trdmap.js}}
     </head>
     <body>
         <h1>Flask Google Maps Example</h1>
@@ -21,6 +22,39 @@
 {% endraw %}
             </pre>
         </code>
+
+
+        <h1>Disabling controls</h1>
+
+        <h2> Template function centered, no marker, no controls </h2>
+        {{googlemap("no-controls-map",
+                    37.4419, -122.1419,
+                    zoom_control=False,
+                    maptype_control=False,
+                    scale_control=False,
+                    streetview_control=False,
+                    rotate_control=False,
+                    fullscreen_control=False)}}
+        <code>
+            <pre>
+{% raw %}
+{{
+    googlemap(
+        identifier="no-controls-map",
+        lat=37.4419,
+        lng=-122.1419,
+        zoom_control=False,
+        maptype_control=False,
+        scale_control=False,
+        streetview_control=False,
+        rotate_control=False,
+        fullscreen_control=False
+    )
+}}
+{% endraw %}
+            </pre>
+        </code>
+
 
         <h2> Template filter decoupled with single marker </h2>
         {{"decoupled-map"|googlemap_html(37.4419, -122.1419)}}
@@ -37,7 +71,7 @@ on the body:
 
 
         <h2> Template function with multiple markers </h2>
-        {% with map=googlemap_obj("another-map", 37.4419, -122.1419, markers=[(37.4419, -122.1419), (37.4300, -122.1400)]) %}
+        {% with map=googlemap_obj("another-map", 37.4419, -122.1419, markers=[(37.4419, -122.1419), (37.4300, -122.1400, "Hello!")]) %}
             {{map.html}}
             {{map.js}}
         {% endwith %}
@@ -45,7 +79,7 @@ on the body:
         <code>
             <pre>
 {% raw %}
-{% with map=googlemap_obj("another-map", 37.4419, -122.1419, markers=[(37.4419, -122.1419), (37.4300, -122.1400)]) %}
+{% with map=googlemap_obj("another-map", 37.4419, -122.1419, markers=[(37.4419, -122.1419), (37.4300, -122.1400, "Hello")]) %}
     {{map.html}}
     {{map.js}}
 {% endwith %}
@@ -62,7 +96,7 @@ on the body:
 {% raw %}
 
 View:
-from flaskext.googlemaps import Map
+from flask_googlemaps import Map
 
 @app.route("/")
 def mapview():
@@ -86,6 +120,7 @@ in body:
 
         <h2> Second map generated in view</h2>
         <h3> Example for different icons in multiple markers</h3>
+        <h4>The blue point is clickable!</h4>
         {{sndmap.html}}
 
         <code>
@@ -93,7 +128,7 @@ in body:
 {% raw %}
 
 View:
-from flaskext.googlemaps import Map
+from flask_googlemaps import Map
 
 @app.route("/")
 def mapview():
@@ -101,8 +136,8 @@ def mapview():
         identifier="sndmap",
         lat=37.4419,
         lng=-122.1419,
-        markers={'http://maps.google.com/mapfiles/ms/icons/green-dot.png':[(37.4419, -122.1419)],
-                 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png':[(37.4300, -122.1400)]}
+        markers={'http://maps.google.com/mapfiles/ms/icons/green-dot.png':[(37.4419, -122.1419), (37.4500, -122.1350)],
+                 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png':[(37.4300, -122.1400, "Hello World")]}
     )
     return render_template('example.html', sndmap=sndmap)
 
@@ -115,6 +150,66 @@ in body:
 {% endraw %}
             </pre>
         </code>
+
+
+        <h2> 3rd map generated in view</h2>
+        <h3> Example for multiple markers with infoboxes</h3>
+        <h4>Click in markers to see it in action!</h4>
+        <h4>Click in the YELLOW marker to see HTML rendered</h4>
+        {{trdmap.html}}
+
+        <code>
+            <pre>
+{% raw %}
+
+View:
+from flask_googlemaps import Map
+
+@app.route("/")
+def mapview():
+    trdmap = Map(
+        identifier="trdmap",
+        lat=37.4419,
+        lng=-122.1419,
+        markers=[
+            {
+                'icon': 'http://maps.google.com/mapfiles/ms/icons/green-dot.png',
+                'lat':  37.4419,
+                'lng':  -122.1419,
+                'infobox': "Hello I am < b style='color:green;'>GREEN< / b >!"
+            },
+            {
+                'icon': 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
+                'lat': 37.4300,
+                'lng': -122.1400,
+                'infobox': "Hello I am < b style='color:blue;'>BLUE< / b >!"
+            },
+            {
+                'icon': 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png',
+                'lat': 37.4500,
+                'lng': -122.1350,
+                'infobox': (
+                    "Hello I am < b style='color:#ffcc00;'> YELLOW < / b >!"
+                    "< h2 >It is HTML title< / h2 >"
+                    "< img src=' //placehold.it/50' >"
+                    "< br >Images allowed!"
+                )
+            }
+        ]
+    )
+    return render_template('example.html', trdmap=trdmap)
+
+Template:
+in head:
+    {{trdmap.js}}
+in body:
+    {{trdmap.html}}
+
+{% endraw %}
+            </pre>
+        </code>
+
+
     </body>
 </html>
 
