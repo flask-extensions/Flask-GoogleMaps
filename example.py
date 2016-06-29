@@ -37,7 +37,7 @@ def mapview():
         lng=-122.1419,
         markers=[
             {
-                'icon': '//maps.google.com/mapfiles/ms/icons/green-dot.png',
+                'icon': icons.alpha.B,
                 'lat': 37.4419,
                 'lng': -122.1419,
                 'infobox': "Hello I am <b style='color:green;'>GREEN</b>!"

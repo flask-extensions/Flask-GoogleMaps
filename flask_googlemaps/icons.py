@@ -7,18 +7,28 @@ and
 http://mabp.kiev.ua/2010/01/12/google-map-markers/
 """
 
-__all__ = ['dots']
+__all__ = ['dots', 'alpha']
 
 
-class Dots(object):
+class Icon(object):
     """Dynbamically return dot icon url"""
 
-    all = [
-        'blue', 'yellow', 'green', 'red', 'pink', 'purple', 'red'
-    ]
+    def __init__(self, base_url, options=None):
+        self.base_url = base_url
+        self.options = options
 
     def __getattr__(self, item):
-        return '//maps.google.com/mapfiles/ms/icons/{0}-dot.png'.format(item)
+        return self.base_url.format(item)
 
 
-dots = Dots()
+dots = Icon(
+    base_url='//maps.google.com/mapfiles/ms/icons/{0}-dot.png',
+    options=['blue', 'yellow', 'green', 'red', 'pink', 'purple', 'red']
+)
+
+alpha = Icon(
+    base_url='//www.google.com/mapfiles/marker{0}.png',
+    options=['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K'
+             'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V',
+             'X', 'Z', 'W', 'Y']
+)
