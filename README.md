@@ -212,7 +212,20 @@ Here's an example snippet of code:
 Which results in something like the following map:
 <img width="1439" alt="screen shot 2015-07-29 at 2 41 52 pm" src="https://cloud.githubusercontent.com/assets/8108300/8969650/13b0de7a-3602-11e5-9ed0-9f328ac9253f.png">
 
-### TODO:
+
+### Run the example app
+
+```bash
+$ git clone https://github.com/rochacbruno/Flask-GoogleMaps
+$ cd Flask-GoogleMaps
+$ python setup.py develop
+$ python example.py
+
+```
+
+Access: http://localhost:5000/ and http://localhost:5000/fullmap
+
+### TODO (open a Pull Request):
 
 Implement other methods from the api, add layers etc...
 

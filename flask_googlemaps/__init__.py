@@ -77,7 +77,7 @@ class Map(object):
             kwargs['lat'] = lat
         if lng:
             kwargs['lng'] = lng
-        if not 'lat' in kwargs or not 'lng' in kwargs:
+        if 'lat' not in kwargs or 'lng' not in kwargs:
             raise AttributeError('lat and lng required')
         self.markers.append(kwargs)
 
@@ -136,7 +136,8 @@ class GoogleMaps(object):
             app.config.get('GOOGLEMAPS_KEY'), name='GOOGLEMAPS_KEY')
 
     def register_blueprint(self, app):
-        module = Blueprint("googlemaps", __name__,
-            template_folder="templates")
+        module = Blueprint(
+            "googlemaps", __name__, template_folder="templates"
+        )
         app.register_blueprint(module)
         return module

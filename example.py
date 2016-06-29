@@ -2,7 +2,7 @@
 
 from flask import Flask, render_template
 from flask_googlemaps import GoogleMaps
-from flask_googlemaps import Map
+from flask_googlemaps import Map, icons
 
 app = Flask(__name__, template_folder=".")
 
@@ -11,9 +11,6 @@ app.config['GOOGLEMAPS_KEY'] = "AIzaSyAZzeHhs-8JZ7i18MjFuM35dJHq70n3Hx4"
 
 # you can also pass key here
 GoogleMaps(app, key="AIzaSyAZzeHhs-8JZ7i18MjFuM35dJHq70n3Hx4")
-
-BLUE_DOT = 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'
-GREEN_DOT = 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
 
 
 @app.route("/")
@@ -29,8 +26,8 @@ def mapview():
         lat=37.4419,
         lng=-122.1419,
         markers={
-            GREEN_DOT:[(37.4419, -122.1419), (37.4500, -122.1350)],
-            BLUE_DOT:[(37.4300, -122.1400, "Hello World")]
+            icons.dots.green: [(37.4419, -122.1419), (37.4500, -122.1350)],
+            icons.dots.blue: [(37.4300, -122.1400, "Hello World")]
         }
     )
 
@@ -40,19 +37,19 @@ def mapview():
         lng=-122.1419,
         markers=[
             {
-                'icon': 'http://maps.google.com/mapfiles/ms/icons/green-dot.png',
-                'lat':  37.4419,
-                'lng':  -122.1419,
+                'icon': '//maps.google.com/mapfiles/ms/icons/green-dot.png',
+                'lat': 37.4419,
+                'lng': -122.1419,
                 'infobox': "Hello I am <b style='color:green;'>GREEN</b>!"
             },
             {
-                'icon': 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
+                'icon': icons.dots.blue,
                 'lat': 37.4300,
                 'lng': -122.1400,
                 'infobox': "Hello I am <b style='color:blue;'>BLUE</b>!"
             },
             {
-                'icon': 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png',
+                'icon': '//maps.google.com/mapfiles/ms/icons/yellow-dot.png',
                 'lat': 37.4500,
                 'lng': -122.1350,
                 'infobox': (
@@ -72,28 +69,36 @@ def mapview():
         trdmap=trdmap
     )
 
+
 @app.route('/fullmap')
 def fullmap():
     fullmap = Map(
         identifier="fullmap",
-        style="height:100%;width:100%;top:0;left:0;position:absolute;z-index:200;",
+        style=(
+            "height:100%;"
+            "width:100%;"
+            "top:0;"
+            "left:0;"
+            "position:absolute;"
+            "z-index:200;"
+        ),
         lat=37.4419,
         lng=-122.1419,
         markers=[
             {
-                'icon': 'http://maps.google.com/mapfiles/ms/icons/green-dot.png',
-                'lat':  37.4419,
-                'lng':  -122.1419,
+                'icon': '//maps.google.com/mapfiles/ms/icons/green-dot.png',
+                'lat': 37.4419,
+                'lng': -122.1419,
                 'infobox': "Hello I am <b style='color:green;'>GREEN</b>!"
             },
             {
-                'icon': 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
+                'icon': '//maps.google.com/mapfiles/ms/icons/blue-dot.png',
                 'lat': 37.4300,
                 'lng': -122.1400,
                 'infobox': "Hello I am <b style='color:blue;'>BLUE</b>!"
             },
             {
-                'icon': 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png',
+                'icon': icons.dots.yellow,
                 'lat': 37.4500,
                 'lng': -122.1350,
                 'infobox': (

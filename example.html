@@ -128,7 +128,7 @@ in body:
 {% raw %}
 
 View:
-from flask_googlemaps import Map
+from flask_googlemaps import Map, icons
 
 @app.route("/")
 def mapview():
@@ -136,8 +136,8 @@ def mapview():
         identifier="sndmap",
         lat=37.4419,
         lng=-122.1419,
-        markers={'http://maps.google.com/mapfiles/ms/icons/green-dot.png':[(37.4419, -122.1419), (37.4500, -122.1350)],
-                 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png':[(37.4300, -122.1400, "Hello World")]}
+        markers={icons.dots.green: [(37.4419, -122.1419), (37.4500, -122.1350)],
+                 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png': [(37.4300, -122.1400, "Hello World")]}
     )
     return render_template('example.html', sndmap=sndmap)
 
@@ -163,7 +163,7 @@ in body:
 {% raw %}
 
 View:
-from flask_googlemaps import Map
+from flask_googlemaps import Map, icons
 
 @app.route("/")
 def mapview():
@@ -179,13 +179,13 @@ def mapview():
                 'infobox': "Hello I am < b style='color:green;'>GREEN< / b >!"
             },
             {
-                'icon': 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
+                'icon': icons.dots.blue,
                 'lat': 37.4300,
                 'lng': -122.1400,
                 'infobox': "Hello I am < b style='color:blue;'>BLUE< / b >!"
             },
             {
-                'icon': 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png',
+                'icon': icons.dots.yellow,
                 'lat': 37.4500,
                 'lng': -122.1350,
                 'infobox': (
