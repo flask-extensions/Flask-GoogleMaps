@@ -1,8 +1,8 @@
 # coding: utf-8
 
-from flask import render_template, Blueprint, Markup
-
-DEFAULT_ICON = '//maps.google.com/mapfiles/ms/icons/red-dot.png'
+from flask import render_template, Blueprint, Markup, g
+from flask_googlemaps.icons import dots
+DEFAULT_ICON = dots.red
 
 
 class Map(object):
@@ -117,6 +117,15 @@ def googlemap_js(*args, **kwargs):
     return googlemap_obj(*args, **kwargs).js
 
 
+def set_googlemaps_loaded():
+    g.googlemaps_loaded = True
+    return ''
+
+
+def is_googlemaps_loaded():
+    return getattr(g, 'googlemaps_loaded', False)
+
+
 class GoogleMaps(object):
     def __init__(self, app=None, **kwargs):
         self.key = kwargs.get('key')
@@ -134,6 +143,8 @@ class GoogleMaps(object):
         app.add_template_global(googlemap)
         app.add_template_global(
             app.config.get('GOOGLEMAPS_KEY'), name='GOOGLEMAPS_KEY')
+        app.add_template_global(set_googlemaps_loaded)
+        app.add_template_global(is_googlemaps_loaded)
 
     def register_blueprint(self, app):
         module = Blueprint(
