@@ -3,6 +3,8 @@ The idea is to implement all icons from here:
 http://kml4earth.appspot.com/icons.html#mapfiles
 and
 http://jg.org/mapping/icons.html
+and
+http://mabp.kiev.ua/2010/01/12/google-map-markers/
 """
 
 __all__ = ['dots']
