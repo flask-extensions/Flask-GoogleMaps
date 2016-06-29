@@ -99,6 +99,7 @@ def fullmap():
             },
             {
                 'icon': icons.dots.yellow,
+                'title': 'Click Here',
                 'lat': 37.4500,
                 'lng': -122.1350,
                 'infobox': (

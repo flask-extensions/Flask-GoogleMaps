@@ -33,7 +33,8 @@
             var marker_{{loop.index0}} = new google.maps.Marker({
                 position: new google.maps.LatLng({{marker['lat']}}, {{marker['lng']}}),
                 map: {{gmap.varname}},
-                icon: "{{ marker.get('icon', DEFAULT_ICON) }}"
+                icon: "{{ marker.get('icon', DEFAULT_ICON) }}",
+                title: {% if marker.get('title')%}"{{marker['title']}}"{% else %}null{% endif %}
             });
 
             {% if marker.get('infobox') %}
