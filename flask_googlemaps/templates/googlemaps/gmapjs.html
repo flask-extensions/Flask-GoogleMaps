@@ -46,6 +46,24 @@
             {% endif %}
 
         {% endfor %}
+
+    // add rectangles
+    {% for rect in gmap.rectangles %}
+        var gRectangle = new google.maps.Rectangle({
+            strokeColor: '{{ rect.stroke_color }}',
+            strokeOpacity: '{{ rect.stroke_opacity }}',
+            strokeWeight: '{{ rect.stroke_weight }}',
+            fillColor: '{{ rect.fill_color }}',
+            fillOpacity: '{{ rect.fill_opacity }}',
+            bounds: {
+                north: {{ rect.bounds.north }},
+                east: {{ rect.bounds.east }},
+                south: {{ rect.bounds.south }},
+                west: {{ rect.bounds.west }}},
+        });
+        gRectangle.setMap({{gmap.varname}});
+
+    {% endfor %}
     }
 
     function getInfoCallback(map, content) {
