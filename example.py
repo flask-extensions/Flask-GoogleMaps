@@ -89,12 +89,37 @@ def mapview():
         ]
     )
 
+    circle = {
+        'stroke_color': '#FF00FF',
+        'stroke_opacity': 1.0,
+        'stroke_weight': 7,
+        'fill_color': '#FFFFFF',
+        'fill_opacity': .8,
+        'center': {
+                  'lat': 33.685,
+                  'lng': -116.251
+        },
+        'radius': 2000,
+    }
+
+    circlemap = Map(
+        identifier="circlemap",
+        lat=33.678,
+        lng=-116.243,
+        circles=[
+            circle,
+            [33.685, -116.251, 1000],
+            (33.685, -116.251, 1500),
+        ]
+    )
+
     return render_template(
         'example.html',
         mymap=mymap,
         sndmap=sndmap,
         trdmap=trdmap,
-        rectmap=rectmap
+        rectmap=rectmap,
+        circlemap=circlemap,
     )
 
 

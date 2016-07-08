@@ -64,6 +64,25 @@
         gRectangle.setMap({{gmap.varname}});
 
     {% endfor %}
+
+
+    // add circles
+    {% for circle in gmap.circles %}
+        var gCircle = new google.maps.Circle({
+            strokeColor: '{{ circle.stroke_color }}',
+            strokeOpacity: '{{ circle.stroke_opacity }}',
+            strokeWeight: '{{ circle.stroke_weight }}',
+            fillColor: '{{ circle.fill_color }}',
+            fillOpacity: '{{ circle.fill_opacity }}',
+            center: {
+                lat: {{ circle.center.lat }},
+                lng: {{ circle.center.lng }},
+            },
+            radius: {{ circle.radius  }}
+        });
+        gCircle.setMap({{gmap.varname}});
+
+    {% endfor %}
     }
 
     function getInfoCallback(map, content) {

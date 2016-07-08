@@ -17,7 +17,7 @@ class Map(object):
                  style="height:300px;width:300px;margin:0;",
                  cls="map",
                  rectangles=None,
-                 drawing=False,
+                 circles=None,
                  zoom_control=True,
                  maptype_control=True,
                  scale_control=True,
@@ -37,6 +37,8 @@ class Map(object):
         # Following the same pattern of building markers for rectangles objs
         self.rectangles = []
         self.build_rectangles(rectangles)
+        self.circles = []
+        self.build_circles(circles)
 
         self.identifier = identifier
         self.zoom_control = zoom_control
@@ -250,6 +252,74 @@ class Map(object):
         kwargs.setdefault('fill_opacity', .3)
 
         self.rectangles.append(kwargs)
+
+    def build_circles(self, circles):
+        if not circles:
+            return
+        if not isinstance(circles, list):
+            raise AttributeError('circles accepts only lists')
+
+        for circle in circles:
+            if isinstance(circle, dict):
+                self.add_circle(**circle)
+            elif isinstance(circle, (tuple, list)):
+                if len(circle) != 3:
+                    raise AttributeError('circle requires center and radius')
+                circle_dict = self.build_circle_dict(circle[0],
+                                                     circle[1],
+                                                     circle[2])
+                self.add_circle(**circle_dict)
+
+    def build_circle_dict(self,
+                          center_lat,
+                          center_lng,
+                          radius,
+                          stroke_color='#FF0000',
+                          stroke_opacity=.8,
+                          stroke_weight=2,
+                          fill_color='#FF0000',
+                          fill_opacity=.3,
+                          ):
+
+        circle = {
+            'stroke_color': stroke_color,
+            'stroke_opacity': stroke_opacity,
+            'stroke_weight': stroke_weight,
+            'fill_color': fill_color,
+            'fill_opacity': fill_opacity,
+            'center': {'lat': center_lat,
+                       'lng': center_lng},
+            'radius': radius,
+        }
+
+        return circle
+
+    def add_circle(self,
+                   center_lat=None,
+                   center_lng=None,
+                   radius=None,
+                   **kwargs):
+
+        kwargs.setdefault('center', {})
+        if center_lat:
+            kwargs['center']['lat'] = center_lat
+        if center_lng:
+            kwargs['center']['lng'] = center_lng
+        if radius:
+            kwargs['radius'] = radius
+
+        if {'lat', 'lng'} != set(kwargs['center'].keys()):
+            raise AttributeError('circle center coordinates required')
+        if 'radius' not in kwargs:
+            raise AttributeError('circle radius definition required')
+
+        kwargs.setdefault('stroke_color', '#FF0000')
+        kwargs.setdefault('stroke_opacity', .8)
+        kwargs.setdefault('stroke_weight', 2)
+        kwargs.setdefault('fill_color', '#FF0000')
+        kwargs.setdefault('fill_opacity', .3)
+
+        self.circles.append(kwargs)
 
     def render(self, *args, **kwargs):
         return render_template(*args, **kwargs)
