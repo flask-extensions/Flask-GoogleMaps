@@ -16,6 +16,8 @@ class Map(object):
                  varname='map',
                  style="height:300px;width:300px;margin:0;",
                  cls="map",
+                 rectangles=None,
+                 circles=None,
                  zoom_control=True,
                  maptype_control=True,
                  scale_control=True,
@@ -32,8 +34,13 @@ class Map(object):
         self.maptype = maptype
         self.markers = []
         self.build_markers(markers)
-        self.identifier = identifier
+        # Following the same pattern of building markers for rectangles objs
+        self.rectangles = []
+        self.build_rectangles(rectangles)
+        self.circles = []
+        self.build_circles(circles)
 
+        self.identifier = identifier
         self.zoom_control = zoom_control
         self.maptype_control = maptype_control
         self.scale_control = scale_control
@@ -80,6 +87,239 @@ class Map(object):
         if 'lat' not in kwargs or 'lng' not in kwargs:
             raise AttributeError('lat and lng required')
         self.markers.append(kwargs)
+
+    def build_rectangles(self, rectangles):
+        """ Process data to construct rectangles
+
+        This method is built from the assumption that the rectangles parameter
+        is a list of:
+            lists : a list with 4 elements indicating [north, west, south, east]
+            tuples: a tuple with 4 elements indicating (north, west, south,east)
+            tuple of tuples: a tuple of 2 tuple elements of length 2 indicating
+            (north_west, south_east)
+            dicts: a dictionary with rectangle attributes
+
+        So, for instance, we have this general scenario as a input parameter:
+            [[22.345,45.44,23.345, 45.55],
+             (22.345,45.44,23.345,45.55),
+             ((22.345,45.44),(23.345,45.55)),
+             [(22.345,45.44),(23.345,45.55)],
+             {
+            'stroke_color': stroke_color,
+            'stroke_opacity': stroke_opacity,
+            'stroke_weight': stroke_weight,
+            'fill_color': fill_color,
+            'fill_opacity': fill_opacity,
+            'bounds': {'north': north,
+                       'east': east,
+                       'south': south,
+                       'west': west,
+                       }
+            }]
+        """
+
+        if not rectangles:
+            return
+        if not isinstance(rectangles, list):
+            raise AttributeError('rectangles only accept lists as parameters')
+        for rect in rectangles:
+
+            # Check the instance of one rectangle in the list. Can be
+            # list, tuple or dict
+            if isinstance(rect, (list, tuple)):
+
+                # If the rectangle bounds doesn't have size 4 or 2
+                # an AttributeError is raised
+                if len(rect) not in (2, 4):
+                    raise AttributeError('The bound must have length'
+                                         ' 4 or 2')
+
+                # If the tuple or list has size 4, the bounds order are
+                # especified as north, west, south, east
+                if len(rect) == 4:
+                    rect_dict = self.build_rectangle_dict(*rect)
+                    self.add_rectangle(**rect_dict)
+
+                # Otherwise size 2, the tuple or list have the north_west and
+                # south_east tuples. If the tuples doesn't have the correct
+                # size, an AttributeError is raised.
+                elif len(rect) == 2:
+                    if len(rect[0]) != 2 or len(rect[1]) != 2:
+                        raise AttributeError('Wrong size of rectangle bounds')
+                    rect_dict = self.build_rectangle_dict(rect[0][0],
+                                                          rect[0][1],
+                                                          rect[1][0],
+                                                          rect[1][1])
+                    self.add_rectangle(**rect_dict)
+                else:
+                    raise AttributeError('Wrong bounds input size')
+            elif isinstance(rect, dict):
+                self.add_rectangle(**rect)
+
+    def build_rectangle_dict(self,
+                             north,
+                             west,
+                             south,
+                             east,
+                             stroke_color='#FF0000',
+                             stroke_opacity=.8,
+                             stroke_weight=2,
+                             fill_color='#FF0000',
+                             fill_opacity=.3,
+                             ):
+        """ Set a dictionary with the javascript class Rectangle parameters
+
+        This function sets a default drawing configuration if the user just
+        pass the rectangle bounds, but also allows to set each parameter
+        individually if the user wish so.
+
+        Args:
+            north (float): The north latitude bound
+            west (float): The west longitude bound
+            south (float): The south latitude bound
+            east (float): The east longitude bound
+            stroke_color (str): Sets the color of the rectangle border using
+                hexadecimal color notation
+            stroke_opacity (float): Sets the opacity of the rectangle border
+                in percentage. If stroke_opacity = 0, the border is transparent
+            stroke_weight (int): Sets the stroke girth in pixels.
+            fill_color (str): Sets the color of the rectangle fill using
+                hexadecimal color notation
+            fill_opacity (float): Sets the opacity of the rectangle fill
+
+
+        """
+        rectangle = {
+            'stroke_color': stroke_color,
+            'stroke_opacity': stroke_opacity,
+            'stroke_weight': stroke_weight,
+            'fill_color': fill_color,
+            'fill_opacity': fill_opacity,
+            'bounds': {'north': north,
+                       'west': west,
+                       'south': south,
+                       'east': east,
+                       }
+        }
+
+        return rectangle
+
+    def add_rectangle(self,
+                      north=None,
+                      west=None,
+                      south=None,
+                      east=None,
+                      **kwargs):
+        """ Adds a rectangle dict to the Map.rectangles attribute
+
+        The Google Maps API describes a rectangle using the LatLngBounds
+        object, which defines the bounds to be drawn. The bounds use the
+        concept of 2 delimiting points, a northwest and a southeast points,
+        were each coordinate is defined by each parameter.
+
+        It accepts a rectangle dict representation as well.
+
+        Args:
+            north (float): The north latitude
+            west (float): The west longitude
+            south (float): The south latitude
+            east (float): The east longitude
+
+        .. _LatLngBoundsLiteral:
+            https://developers.google.com/maps/documentation/javascript/reference#LatLngBoundsLiteral
+
+        .. _Rectangles:
+            https://developers.google.com/maps/documentation/javascript/shapes#rectangles
+        """
+        kwargs.setdefault('bounds', {})
+
+        if north:
+            kwargs['bounds']['north'] = north
+        if west:
+            kwargs['bounds']['west'] = west
+        if south:
+            kwargs['bounds']['south'] = south
+        if east:
+            kwargs['bounds']['east'] = east
+
+        if {'north', 'east', 'south', 'west'} != set(kwargs['bounds'].keys()):
+            raise AttributeError('rectangle bounds required to rectangles')
+
+        kwargs.setdefault('stroke_color', '#FF0000')
+        kwargs.setdefault('stroke_opacity', .8)
+        kwargs.setdefault('stroke_weight', 2)
+        kwargs.setdefault('fill_color', '#FF0000')
+        kwargs.setdefault('fill_opacity', .3)
+
+        self.rectangles.append(kwargs)
+
+    def build_circles(self, circles):
+        if not circles:
+            return
+        if not isinstance(circles, list):
+            raise AttributeError('circles accepts only lists')
+
+        for circle in circles:
+            if isinstance(circle, dict):
+                self.add_circle(**circle)
+            elif isinstance(circle, (tuple, list)):
+                if len(circle) != 3:
+                    raise AttributeError('circle requires center and radius')
+                circle_dict = self.build_circle_dict(circle[0],
+                                                     circle[1],
+                                                     circle[2])
+                self.add_circle(**circle_dict)
+
+    def build_circle_dict(self,
+                          center_lat,
+                          center_lng,
+                          radius,
+                          stroke_color='#FF0000',
+                          stroke_opacity=.8,
+                          stroke_weight=2,
+                          fill_color='#FF0000',
+                          fill_opacity=.3,
+                          ):
+
+        circle = {
+            'stroke_color': stroke_color,
+            'stroke_opacity': stroke_opacity,
+            'stroke_weight': stroke_weight,
+            'fill_color': fill_color,
+            'fill_opacity': fill_opacity,
+            'center': {'lat': center_lat,
+                       'lng': center_lng},
+            'radius': radius,
+        }
+
+        return circle
+
+    def add_circle(self,
+                   center_lat=None,
+                   center_lng=None,
+                   radius=None,
+                   **kwargs):
+
+        kwargs.setdefault('center', {})
+        if center_lat:
+            kwargs['center']['lat'] = center_lat
+        if center_lng:
+            kwargs['center']['lng'] = center_lng
+        if radius:
+            kwargs['radius'] = radius
+
+        if {'lat', 'lng'} != set(kwargs['center'].keys()):
+            raise AttributeError('circle center coordinates required')
+        if 'radius' not in kwargs:
+            raise AttributeError('circle radius definition required')
+
+        kwargs.setdefault('stroke_color', '#FF0000')
+        kwargs.setdefault('stroke_opacity', .8)
+        kwargs.setdefault('stroke_weight', 2)
+        kwargs.setdefault('fill_color', '#FF0000')
+        kwargs.setdefault('fill_opacity', .3)
+
+        self.circles.append(kwargs)
 
     def render(self, *args, **kwargs):
         return render_template(*args, **kwargs)

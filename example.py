@@ -62,11 +62,64 @@ def mapview():
         ]
     )
 
+    rectangle = {
+        'stroke_color': '#0000FF',
+        'stroke_opacity': .8,
+        'stroke_weight': 5,
+        'fill_color': '#FFFFFF',
+        'fill_opacity': .1,
+        'bounds': {
+                  'north': 33.685,
+                  'south': 33.671,
+                  'east': -116.234,
+                  'west': -116.251
+        }
+    }
+
+    rectmap = Map(
+        identifier="rectmap",
+        lat=33.678,
+        lng=-116.243,
+        rectangles=[
+            rectangle,
+            [33.678, -116.243, 33.671, -116.234],
+            (33.685, -116.251, 33.678, -116.243),
+            [(33.679, -116.254), (33.678, -116.243)],
+            ([33.689, -116.260], [33.685, -116.250]),
+        ]
+    )
+
+    circle = {
+        'stroke_color': '#FF00FF',
+        'stroke_opacity': 1.0,
+        'stroke_weight': 7,
+        'fill_color': '#FFFFFF',
+        'fill_opacity': .8,
+        'center': {
+                  'lat': 33.685,
+                  'lng': -116.251
+        },
+        'radius': 2000,
+    }
+
+    circlemap = Map(
+        identifier="circlemap",
+        lat=33.678,
+        lng=-116.243,
+        circles=[
+            circle,
+            [33.685, -116.251, 1000],
+            (33.685, -116.251, 1500),
+        ]
+    )
+
     return render_template(
         'example.html',
         mymap=mymap,
         sndmap=sndmap,
-        trdmap=trdmap
+        trdmap=trdmap,
+        rectmap=rectmap,
+        circlemap=circlemap,
     )
 
 
