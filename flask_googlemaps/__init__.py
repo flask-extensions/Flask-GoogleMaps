@@ -128,10 +128,9 @@ class Map(object):
 
                 # If the rectangle bounds doesn't have size 4 or 2
                 # an AttributeError is raised
-                if len(rect) != 4:
-                    if len(rect) != 2:
-                        raise AttributeError('The bound must have length'
-                                             ' 4 or 2')
+                if len(rect) not in (2, 4):
+                    raise AttributeError('The bound must have length'
+                                         ' 4 or 2')
 
                 # If the tuple or list has size 4, the bounds order are
                 # especified as north, west, south, east
@@ -230,6 +229,7 @@ class Map(object):
         .. _Rectangles:
             https://developers.google.com/maps/documentation/javascript/shapes#rectangles
         """
+        kwargs.setdefault('bounds', {})
 
         if north:
             kwargs['bounds']['north'] = north
@@ -240,24 +240,14 @@ class Map(object):
         if east:
             kwargs['bounds']['east'] = east
 
-        if 'bounds' not in kwargs:
-            raise AttributeError('bounds required to build rectangles')
-
-        if 'bounds' in kwargs \
-                and {'north', 'east', 'south', 'west'} \
-                != kwargs['bounds'].keys():
+        if {'north', 'east', 'south', 'west'} != set(kwargs['bounds'].keys()):
             raise AttributeError('rectangle bounds required to rectangles')
 
-        if 'stroke_color' not in kwargs:
-            kwargs['stroke_color'] = '#FF0000'
-        if 'stroke_opacity' not in kwargs:
-            kwargs['stroke_opacity'] = .8
-        if 'stroke_weight' not in kwargs:
-            kwargs['stroke_weight'] = 2
-        if 'fill_color' not in kwargs:
-            kwargs['fill_color'] = '#FF0000'
-        if 'fill_opacity' not in kwargs:
-            kwargs['fill_opacity'] = .3
+        kwargs.setdefault('stroke_color', '#FF0000')
+        kwargs.setdefault('stroke_opacity', .8)
+        kwargs.setdefault('stroke_weight', 2)
+        kwargs.setdefault('fill_color', '#FF0000')
+        kwargs.setdefault('fill_opacity', .3)
 
         self.rectangles.append(kwargs)
 
