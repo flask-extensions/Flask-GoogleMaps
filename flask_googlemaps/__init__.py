@@ -321,6 +321,59 @@ class Map(object):
 
         self.circles.append(kwargs)
 
+    def build_polylines(self, polylines):
+        if not polylines:
+            return
+        if not isinstance(polylines, (list, tuple)):
+            raise AttributeError('A list or tuple of polylines is required')
+
+        for points in polylines:
+            if isinstance(points, dict):
+                self.add_polyline(**points)
+            elif isinstance(points, (tuple, list)):
+                path = []
+                for coords in points:
+                    if len(coords) != 2:
+                        raise AttributeError('A point needs two coordinates')
+                    path.append({'lat': coords[0],
+                                 'lng': coords[1]})
+                polyline_dict = self.build_polyline_dict(path)
+                self.add_circle(**polyline_dict)
+
+    def build_polyline_dict(self,
+                            path,
+                            stroke_color='#FF0000',
+                            stroke_opacity=.8,
+                            stroke_weight=2):
+
+        if not isinstance(path, list):
+            raise AttributeError('To build a map path a list of dictionaries'
+                                 ' of latitude and logitudes is required')
+
+        polyline = {
+            'path': path,
+            'stroke_color': stroke_color,
+            'stroke_opacity': stroke_opacity,
+            'stroke_weight': stroke_weight,
+        }
+
+        return polyline
+
+    def add_polyline(self, path=None, **kwargs):
+
+        if not isinstance(path, list):
+            raise AttributeError('The path is a list of dictionary of latitude'
+                                 'and longitudes por path points')
+
+        if path:
+            kwargs['path'] = path
+
+        kwargs.setdefault('stroke_color', '#FF0000')
+        kwargs.setdefault('stroke_opacity', .8)
+        kwargs.setdefault('stroke_weight', 2)
+
+        self.polylines.append(kwargs)
+
     def render(self, *args, **kwargs):
         return render_template(*args, **kwargs)
 
