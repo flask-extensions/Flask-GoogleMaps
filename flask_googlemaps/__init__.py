@@ -188,8 +188,6 @@ class Map(object):
             fill_color (str): Sets the color of the rectangle fill using
                 hexadecimal color notation
             fill_opacity (float): Sets the opacity of the rectangle fill
-
-
         """
         rectangle = {
             'stroke_color': stroke_color,
@@ -256,6 +254,31 @@ class Map(object):
         self.rectangles.append(kwargs)
 
     def build_circles(self, circles):
+        """ Process data to construct rectangles
+
+        This method is built from the assumption that the circles parameter
+        is a list of:
+            lists : a list with 3 elements indicating
+                [center_latitude, center_longitude, radius]
+            tuples : a tuple with 3 elements indicating
+                (center_latitude, center_longitude, radius)
+            dicts: a dictionary with circle attributes
+
+        So, for instance, we have this general scenario as a input parameter:
+            [[22.345,45.44, 1000],
+             (22.345,45.44,200),
+             {
+            'stroke_color': stroke_color,
+            'stroke_opacity': stroke_opacity,
+            'stroke_weight': stroke_weight,
+            'fill_color': fill_color,
+            'fill_opacity': fill_opacity,
+            'center': {'lat': center_latitude,
+                       'lng': center_longitude,
+                       },
+            'radius': radius
+            }]
+        """
         if not circles:
             return
         if not isinstance(circles, list):
@@ -282,6 +305,25 @@ class Map(object):
                           fill_color='#FF0000',
                           fill_opacity=.3,
                           ):
+        """ Set a dictionary with the javascript class Circle parameters
+
+        This function sets a default drawing configuration if the user just
+        pass the rectangle bounds, but also allows to set each parameter
+        individually if the user wish so.
+
+        Args:
+            center_lat (float): The circle center latitude
+            center_lng (float): The circle center longitude
+            radius  (float): The circle radius, in meters
+            stroke_color (str): Sets the color of the rectangle border using
+                hexadecimal color notation
+            stroke_opacity (float): Sets the opacity of the rectangle border
+                in percentage. If stroke_opacity = 0, the border is transparent
+            stroke_weight (int): Sets the stroke girth in pixels.
+            fill_color (str): Sets the color of the circle fill using
+                hexadecimal color notation
+            fill_opacity (float): Sets the opacity of the circle fill
+        """
 
         circle = {
             'stroke_color': stroke_color,
@@ -301,6 +343,23 @@ class Map(object):
                    center_lng=None,
                    radius=None,
                    **kwargs):
+        """ Adds a circle dict to the Map.circles attribute
+
+        The circle in a sphere is called "spherical cap" and is defined in the
+        Google Maps API by at least the center coordinates and its radius, in
+        meters. A circle has color and opacity both for the border line and the
+        inside area.
+
+        It accepts a circle dict representation as well.
+
+        Args:
+            center_lat (float): The circle center latitude
+            center_lng (float): The circle center longitude
+            radius  (float): The circle radius, in meters
+
+        .. _Circle:
+            https://developers.google.com/maps/documentation/javascript/reference#Circle
+        """
 
         kwargs.setdefault('center', {})
         if center_lat:
@@ -324,6 +383,48 @@ class Map(object):
         self.circles.append(kwargs)
 
     def build_polylines(self, polylines):
+        """ Process data to construct polylines
+
+        This method is built from the assumption that the polylines parameter
+        is a list of:
+            list of lists or tuples : a list of path points, each one indicating
+                the point coordinates -- [lat,lng], [lat, lng], (lat, lng), ...
+
+            tuple of lists or tuples : a tuple of path points, each one
+                indicating the point coordinates -- (lat,lng), [lat, lng],
+                (lat, lng), ...
+
+            dicts: a dictionary with polylines attributes
+
+        So, for instance, we have this general scenario as a input parameter:
+
+
+            polyline = {
+                'stroke_color': '#0AB0DE',
+                'stroke_opacity': 1.0,
+                'stroke_weight': 3,
+                'path': [{'lat': 33.678, 'lng': -116.243},
+                        {'lat': 33.679, 'lng': -116.244},
+                        {'lat': 33.680, 'lng': -116.250},
+                        {'lat': 33.681, 'lng': -116.239},
+                        {'lat': 33.678, 'lng': -116.243}]
+            }
+
+            path1 = [(33.665, -116.235), (33.666, -116.256),
+                    (33.667, -116.250), (33.668, -116.229)]
+
+            path2 = ((33.659, -116.243), (33.660, -116.244),
+                    (33.649, -116.250), (33.644, -116.239))
+
+            path3 = ([33.688, -116.243], [33.680, -116.244],
+                    [33.682, -116.250], [33.690, -116.239])
+
+            path4 = [[33.690, -116.243], [33.691, -116.244],
+                    [33.692, -116.250], [33.693, -116.239]]
+
+            polylines = [polyline, path1, path2, path3, path4]
+
+        """
         if not polylines:
             return
         if not isinstance(polylines, (list, tuple)):
@@ -347,6 +448,20 @@ class Map(object):
                             stroke_color='#FF0000',
                             stroke_opacity=.8,
                             stroke_weight=2):
+        """ Set a dictionary with the javascript class Polyline parameters
+
+        This function sets a default drawing configuration if the user just
+        pass the polyline path, but also allows to set each parameter
+        individually if the user wish so.
+
+        Args:
+            path (list): A list of latitude and longitude point for the polyline
+            stroke_color (str): Sets the color of the rectangle border using
+                hexadecimal color notation
+            stroke_opacity (float): Sets the opacity of the rectangle border
+                in percentage. If stroke_opacity = 0, the border is transparent
+            stroke_weight (int): Sets the stroke girth in pixels.
+        """
 
         if not isinstance(path, list):
             raise AttributeError('To build a map path a list of dictionaries'
@@ -362,12 +477,33 @@ class Map(object):
         return polyline
 
     def add_polyline(self, path=None, **kwargs):
+        """ Adds a polyline dict to the Map.polylines attribute
 
-        if not isinstance(path, list):
-            raise AttributeError('The path is a list of dictionary of latitude'
-                                 'and longitudes por path points')
+        The Google Maps API describes a polyline as a "linear overlay of
+        connected line segments on the map". The linear paths are defined
+        by a list of Latitude and Longitude coordinate pairs, like so:
+
+            { 'lat': y, 'lng': x }
+
+        with each one being a point of the polyline path.
+
+        It accepts a polyline dict representation as well.
+
+        Args:
+            path (list(dict)): The set of points of the path
+
+        .. _Polyline:
+            https://developers.google.com/maps/documentation/javascript/reference#Polyline
+        """
 
         if path:
+            if not isinstance(path, list):
+                raise AttributeError('The path is a list of dictionary of'
+                                     'latitude and longitudes por path points')
+            for point in path:
+                if not isinstance(point, dict):
+                    raise AttributeError('All points in the path must be dicts'
+                                         ' of latitudes and longitudes')
             kwargs['path'] = path
 
         kwargs.setdefault('stroke_color', '#FF0000')
