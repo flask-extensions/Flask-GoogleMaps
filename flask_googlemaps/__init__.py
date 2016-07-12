@@ -340,7 +340,7 @@ class Map(object):
                     path.append({'lat': coords[0],
                                  'lng': coords[1]})
                 polyline_dict = self.build_polyline_dict(path)
-                self.add_circle(**polyline_dict)
+                self.add_polyline(**polyline_dict)
 
     def build_polyline_dict(self,
                             path,
