@@ -46,6 +46,62 @@
             {% endif %}
 
         {% endfor %}
+
+    // add rectangles
+    {% for rect in gmap.rectangles %}
+        var gRectangle = new google.maps.Rectangle({
+            strokeColor: '{{ rect.stroke_color }}',
+            strokeOpacity: '{{ rect.stroke_opacity }}',
+            strokeWeight: '{{ rect.stroke_weight }}',
+            fillColor: '{{ rect.fill_color }}',
+            fillOpacity: '{{ rect.fill_opacity }}',
+            bounds: {
+                north: {{ rect.bounds.north }},
+                east: {{ rect.bounds.east }},
+                south: {{ rect.bounds.south }},
+                west: {{ rect.bounds.west }}},
+        });
+        gRectangle.setMap({{gmap.varname}});
+
+    {% endfor %}
+
+
+    // add circles
+    {% for circle in gmap.circles %}
+        var gCircle = new google.maps.Circle({
+            strokeColor: '{{ circle.stroke_color }}',
+            strokeOpacity: '{{ circle.stroke_opacity }}',
+            strokeWeight: '{{ circle.stroke_weight }}',
+            fillColor: '{{ circle.fill_color }}',
+            fillOpacity: '{{ circle.fill_opacity }}',
+            center: {
+                lat: {{ circle.center.lat }},
+                lng: {{ circle.center.lng }},
+            },
+            radius: {{ circle.radius  }}
+        });
+        gCircle.setMap({{gmap.varname}});
+    
+    {% endfor %}
+    
+    // add polylines
+    {% for line in gmap.polylines %}
+        var coordinates = [ {% for point in line.path %}
+                            {lat: {{point.lat}} , lng: {{point.lng}} },
+                            {% endfor %}
+        ];
+
+        
+        var gPolyline = new google.maps.Polyline({
+            strokeColor: '{{ line.stroke_color }}',
+            strokeOpacity: '{{ line.stroke_opacity }}',
+            strokeWeight: '{{ line.stroke_weight }}',
+            path: coordinates,
+            geodesic: true
+        });
+        gPolyline.setMap({{gmap.varname}});
+
+    {% endfor %}
     }
 
     function getInfoCallback(map, content) {
