@@ -18,6 +18,7 @@ class Map(object):
                  cls="map",
                  rectangles=None,
                  circles=None,
+                 polylines=None,
                  zoom_control=True,
                  maptype_control=True,
                  scale_control=True,
@@ -39,7 +40,8 @@ class Map(object):
         self.build_rectangles(rectangles)
         self.circles = []
         self.build_circles(circles)
-
+        self.polylines = []
+        self.build_polylines(polylines)
         self.identifier = identifier
         self.zoom_control = zoom_control
         self.maptype_control = maptype_control

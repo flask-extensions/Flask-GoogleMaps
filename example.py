@@ -113,6 +113,23 @@ def mapview():
         ]
     )
 
+    polyline = {
+        'stroke_color': '#FF00FF',
+        'stroke_opacity': 1.0,
+        'stroke_weight': 7,
+        'path': [{'lat': 37.772, 'lng': -122.214},
+                 {'lat': 21.291, 'lng': -157.821},
+                 {'lat': -18.142, 'lng': 178.431},
+                 {'lat': -27.467, 'lng': 153.027}]
+    }
+
+    plinemap = Map(
+        identifier="plinemap",
+        lat=0,
+        lng=-180,
+        polylines=[polyline]
+    )
+
     return render_template(
         'example.html',
         mymap=mymap,
@@ -120,6 +137,7 @@ def mapview():
         trdmap=trdmap,
         rectmap=rectmap,
         circlemap=circlemap,
+        plinemap=plinemap,
     )
 
 
