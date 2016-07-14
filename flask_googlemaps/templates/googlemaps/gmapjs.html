@@ -8,6 +8,11 @@
     {{ set_googlemaps_loaded() }}
 {% endif %}
 
+{% if gmap.cluster %}
+        <script src="//cdnjs.cloudflare.com/ajax/libs/js-marker-clusterer/1.0.0/markerclusterer_compiled.js" type="text/javascript"></script>
+{%  endif %}
+
+
 <style type="text/css">
       #{{gmap.identifier}} { {{gmap.style}} }
 </style>
@@ -84,7 +89,11 @@
         gCircle.setMap({{gmap.varname}});
 
     {% endfor %}
-    }
+
+    {% if gmap.cluster %}
+	    var markerCluster = new MarkerClusterer({{gmap.varname}}, _markers, {'imagePath': "{{gmap.cluster_imagepath}}", 'gridSize': {{gmap.cluster_gridsize}}});
+    {% endif %}
+}
 
     function getInfoCallback(map, content) {
         var infowindow = new google.maps.InfoWindow({content: content});
