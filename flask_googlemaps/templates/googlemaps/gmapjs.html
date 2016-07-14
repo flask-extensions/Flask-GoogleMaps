@@ -7,9 +7,11 @@
     {%  endif %}
     {{ set_googlemaps_loaded() }}
 {% endif %}
+
 {% if gmap.cluster %}
         <script src="//cdnjs.cloudflare.com/ajax/libs/js-marker-clusterer/1.0.0/markerclusterer_compiled.js" type="text/javascript"></script>
 {%  endif %}
+
 
 <style type="text/css">
       #{{gmap.identifier}} { {{gmap.style}} }
@@ -31,31 +33,25 @@
         });
 
         // add gmap markers
-        {% if gmap.cluster %}
-            var _markers = []
-        {% endif %}
-        {% for marker in gmap.markers %}
-
-            var marker_{{loop.index0}} = new google.maps.Marker({
-                position: new google.maps.LatLng({{marker['lat']}}, {{marker['lng']}}),
+        var raw_markers = {{gmap.markers|safe}}
+        var _markers = []
+        for(i=0; i<{{gmap.markers|length}};i++) {
+            _markers[i] = new google.maps.Marker({
+                position: new google.maps.LatLng(raw_markers[i].lat, raw_markers[i].lng),
                 map: {{gmap.varname}},
-                icon: "{{ marker.get('icon', DEFAULT_ICON) }}",
-                title: {% if marker.get('title')%}"{{marker['title']}}"{% else %}null{% endif %}
+                icon: raw_markers[i].icon,
+                title: raw_markers[i].title ? raw_markers[i].title : null,
             });
 
-            {% if gmap.cluster %}
-	            _markers.push(marker_{{loop.index0}});
-            {% endif %}
-
-            {% if marker.get('infobox') %}
+           if(raw_markers[i].infobox)
+           {
                 google.maps.event.addListener(
-                        marker_{{loop.index0}},
+                        _markers[i],
                         'click',
-                        getInfoCallback({{gmap.varname}}, "{{marker['infobox']|safe}}")
+                        getInfoCallback({{gmap.varname}}, raw_markers[i].infobox)
                 );
-            {% endif %}
-
-        {% endfor %}
+           }
+        }
 
     // add rectangles
     {% for rect in gmap.rectangles %}
@@ -97,7 +93,7 @@
     {% if gmap.cluster %}
 	    var markerCluster = new MarkerClusterer({{gmap.varname}}, _markers, {'imagePath': "{{gmap.cluster_imagepath}}", 'gridSize': {{gmap.cluster_gridsize}}});
     {% endif %}
-    }
+}
 
     function getInfoCallback(map, content) {
         var infowindow = new google.maps.InfoWindow({content: content});
