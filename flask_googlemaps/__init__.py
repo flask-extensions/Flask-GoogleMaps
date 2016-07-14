@@ -26,6 +26,9 @@ class Map(object):
                  streetview_control=True,
                  rotate_control=True,
                  fullscreen_control=True,
+                 cluster=False,
+                 cluster_imagepath=DEFAULT_CLUSTER_IMAGE_PATH,
+                 cluster_gridsize=60,
                  **kwargs):
         """Builds the Map properties"""
         self.cls = cls
@@ -49,6 +52,10 @@ class Map(object):
         self.streetview_control = streetview_control
         self.rotate_control = rotate_control
         self.fullscreen_control = fullscreen_control
+
+        self.cluster = cluster
+        self.cluster_imagepath = cluster_imagepath
+        self.cluster_gridsize = cluster_gridsize
 
     def build_markers(self, markers):
         if not markers:
@@ -371,18 +378,12 @@ def is_googlemaps_loaded():
 class GoogleMaps(object):
     def __init__(self, app=None, **kwargs):
         self.key = kwargs.get('key')
-        self.cluster = kwargs.get('cluster') or False
-        self.cluster_imagepath = kwargs.get('cluster_imagepath') or DEFAULT_CLUSTER_IMAGE_PATH
         if app:
             self.init_app(app)
 
     def init_app(self, app):
         if self.key:
             app.config['GOOGLEMAPS_KEY'] = self.key
-        if self.cluster:
-            app.config['GOOGLEMAPS_CLUSTER'] = self.cluster
-        if self.cluster_imagepath:
-            app.config['GOOGLEMAPS_CLUSTER_IMAGEPATH'] = self.cluster_imagepath    
         self.register_blueprint(app)
         app.add_template_filter(googlemap_html)
         app.add_template_filter(googlemap_js)
@@ -391,10 +392,6 @@ class GoogleMaps(object):
         app.add_template_global(googlemap)
         app.add_template_global(
             app.config.get('GOOGLEMAPS_KEY'), name='GOOGLEMAPS_KEY')
-        app.add_template_global(
-            app.config.get('GOOGLEMAPS_CLUSTER'), name='GOOGLEMAPS_CLUSTER')
-        app.add_template_global(
-            app.config.get('GOOGLEMAPS_CLUSTER_IMAGEPATH'), name='GOOGLEMAPS_CLUSTER_IMAGEPATH')
         app.add_template_global(set_googlemaps_loaded)
         app.add_template_global(is_googlemaps_loaded)
 
