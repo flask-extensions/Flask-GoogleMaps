@@ -392,8 +392,6 @@ class GoogleMaps(object):
         app.add_template_global(
             app.config.get('GOOGLEMAPS_KEY'), name='GOOGLEMAPS_KEY')
         app.add_template_global(
-            app.config.get('GOOGLEMAPS_KEY'), name='GOOGLEMAPS_KEY')
-        app.add_template_global(
             app.config.get('GOOGLEMAPS_CLUSTER'), name='GOOGLEMAPS_CLUSTER')
         app.add_template_global(
             app.config.get('GOOGLEMAPS_CLUSTER_IMAGEPATH'), name='GOOGLEMAPS_CLUSTER_IMAGEPATH')
