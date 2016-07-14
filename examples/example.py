@@ -4,7 +4,7 @@ from flask import Flask, render_template
 from flask_googlemaps import GoogleMaps
 from flask_googlemaps import Map, icons
 
-app = Flask(__name__, template_folder=".")
+app = Flask(__name__, template_folder="templates")
 
 # you can set key as config
 app.config['GOOGLEMAPS_KEY'] = "AIzaSyAZzeHhs-8JZ7i18MjFuM35dJHq70n3Hx4"
@@ -60,6 +60,36 @@ def mapview():
                 )
             }
         ]
+    )
+
+    clustermap = Map(
+        identifier="clustermap",
+        lat=37.4419,
+        lng=-122.1419,
+        markers=[
+            {
+                'lat': 37.4500,
+                'lng': -122.1350
+            },
+            {
+                'lat': 37.4400,
+                'lng': -122.1350
+            },
+            {
+                'lat': 37.4300,
+                'lng': -122.1350
+            },
+            {
+                'lat': 36.4200,
+                'lng': -122.1350
+            },
+            {
+                'lat': 36.4100,
+                'lng': -121.1350
+            }
+        ],
+        zoom=12,
+        cluster=True
     )
 
     rectangle = {
@@ -120,6 +150,7 @@ def mapview():
         trdmap=trdmap,
         rectmap=rectmap,
         circlemap=circlemap,
+        clustermap=clustermap
     )
 
 
