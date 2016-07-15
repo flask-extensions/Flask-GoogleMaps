@@ -2,7 +2,9 @@
 
 from flask import render_template, Blueprint, Markup, g
 from flask_googlemaps.icons import dots
+
 DEFAULT_ICON = dots.red
+DEFAULT_CLUSTER_IMAGE_PATH = "static/images/m"
 
 
 class Map(object):
@@ -25,6 +27,9 @@ class Map(object):
                  streetview_control=True,
                  rotate_control=True,
                  fullscreen_control=True,
+                 cluster=False,
+                 cluster_imagepath=DEFAULT_CLUSTER_IMAGE_PATH,
+                 cluster_gridsize=60,
                  **kwargs):
         """Builds the Map properties"""
         self.cls = cls
@@ -49,6 +54,10 @@ class Map(object):
         self.streetview_control = streetview_control
         self.rotate_control = rotate_control
         self.fullscreen_control = fullscreen_control
+
+        self.cluster = cluster
+        self.cluster_imagepath = cluster_imagepath
+        self.cluster_gridsize = cluster_gridsize
 
     def build_markers(self, markers):
         if not markers:
@@ -576,6 +585,7 @@ class GoogleMaps(object):
             app.config.get('GOOGLEMAPS_KEY'), name='GOOGLEMAPS_KEY')
         app.add_template_global(set_googlemaps_loaded)
         app.add_template_global(is_googlemaps_loaded)
+
 
     def register_blueprint(self, app):
         module = Blueprint(
