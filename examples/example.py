@@ -143,6 +143,56 @@ def mapview():
         ]
     )
 
+    polyline = {
+        'stroke_color': '#0AB0DE',
+        'stroke_opacity': 1.0,
+        'stroke_weight': 3,
+        'path': [{'lat': 33.678, 'lng': -116.243},
+                 {'lat': 33.679, 'lng': -116.244},
+                 {'lat': 33.680, 'lng': -116.250},
+                 {'lat': 33.681, 'lng': -116.239},
+                 {'lat': 33.678, 'lng': -116.243}]
+    }
+
+    path1 = [(33.665, -116.235), (33.666, -116.256),
+             (33.667, -116.250), (33.668, -116.229)]
+
+    path2 = ((33.659, -116.243), (33.660, -116.244),
+             (33.649, -116.250), (33.644, -116.239))
+
+    path3 = ([33.688, -116.243], [33.680, -116.244],
+             [33.682, -116.250], [33.690, -116.239])
+
+    path4 = [[33.690, -116.243], [33.691, -116.244],
+             [33.692, -116.250], [33.693, -116.239]]
+
+    plinemap = Map(
+        identifier="plinemap",
+        lat=33.678,
+        lng=-116.243,
+        polylines=[polyline, path1, path2, path3, path4]
+    )
+
+    polygon = {
+        'stroke_color': '#0AB0DE',
+        'stroke_opacity': 1.0,
+        'stroke_weight': 3,
+        'fill_color': '#ABC321',
+        'fill_opacity': .5,
+        'path': [{'lat': 33.678, 'lng': -116.243},
+                 {'lat': 33.679, 'lng': -116.244},
+                 {'lat': 33.680, 'lng': -116.250},
+                 {'lat': 33.681, 'lng': -116.239},
+                 {'lat': 33.678, 'lng': -116.243}]
+    }
+
+    pgonmap = Map(
+        identifier="pgonmap",
+        lat=33.678,
+        lng=-116.243,
+        polygons=[polygon, path1, path2, path3, path4]
+    )
+
     return render_template(
         'example.html',
         mymap=mymap,
@@ -150,6 +200,8 @@ def mapview():
         trdmap=trdmap,
         rectmap=rectmap,
         circlemap=circlemap,
+        plinemap=plinemap,
+        pgonmap=pgonmap,
         clustermap=clustermap
     )
 
