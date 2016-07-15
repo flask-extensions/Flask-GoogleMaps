@@ -109,6 +109,27 @@
 
     {% endfor %}
 
+    // add polygons
+    {% for line in gmap.polygons %}
+        var coordinates = [ {% for point in line.path %}
+                            {lat: {{point.lat}} , lng: {{point.lng}} },
+                            {% endfor %}
+        ];
+
+
+        var gPolygon = new google.maps.Polygon({
+            strokeColor: '{{ line.stroke_color }}',
+            strokeOpacity: '{{ line.stroke_opacity }}',
+            strokeWeight: '{{ line.stroke_weight }}',
+            fillOpacity: '{{ line.fill_opacity }}',
+            fillColor: '{{ line.fill_color }}',
+            path: coordinates,
+            geodesic: true
+        });
+        gPolygon.setMap({{gmap.varname}});
+
+    {% endfor %}
+
     {% if gmap.cluster %}
 	    var markerCluster = new MarkerClusterer({{gmap.varname}}, _markers, {'imagePath': "{{gmap.cluster_imagepath}}", 'gridSize': {{gmap.cluster_gridsize}}});
     {% endif %}

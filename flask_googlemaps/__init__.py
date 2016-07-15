@@ -21,6 +21,7 @@ class Map(object):
                  rectangles=None,
                  circles=None,
                  polylines=None,
+                 polygons=None,
                  zoom_control=True,
                  maptype_control=True,
                  scale_control=True,
@@ -47,6 +48,8 @@ class Map(object):
         self.build_circles(circles)
         self.polylines = []
         self.build_polylines(polylines)
+        self.polygons = []
+        self.build_polygons(polygons)
         self.identifier = identifier
         self.zoom_control = zoom_control
         self.maptype_control = maptype_control
@@ -521,6 +524,149 @@ class Map(object):
 
         self.polylines.append(kwargs)
 
+    def build_polygons(self, polygons):
+        """ Process data to construct polygons
+
+        This method is built from the assumption that the polygons parameter
+        is a list of:
+            list of lists or tuples : a list of path points, each one indicating
+                the point coordinates -- [lat,lng], [lat, lng], (lat, lng), ...
+
+            tuple of lists or tuples : a tuple of path points, each one
+                indicating the point coordinates -- (lat,lng), [lat, lng],
+                (lat, lng), ...
+
+            dicts: a dictionary with polylines attributes
+
+        So, for instance, we have this general scenario as a input parameter:
+
+
+            polygon = {
+                'stroke_color': '#0AB0DE',
+                'stroke_opacity': 1.0,
+                'stroke_weight': 3,
+                'fill_color': '#FFABCD',
+                'fill_opacity': 0.5,
+                'path': [{'lat': 33.678, 'lng': -116.243},
+                        {'lat': 33.679, 'lng': -116.244},
+                        {'lat': 33.680, 'lng': -116.250},
+                        {'lat': 33.681, 'lng': -116.239},
+                        {'lat': 33.678, 'lng': -116.243}]
+            }
+
+            path1 = [(33.665, -116.235), (33.666, -116.256),
+                    (33.667, -116.250), (33.668, -116.229)]
+
+            path2 = ((33.659, -116.243), (33.660, -116.244),
+                    (33.649, -116.250), (33.644, -116.239))
+
+            path3 = ([33.688, -116.243], [33.680, -116.244],
+                    [33.682, -116.250], [33.690, -116.239])
+
+            path4 = [[33.690, -116.243], [33.691, -116.244],
+                    [33.692, -116.250], [33.693, -116.239]]
+
+            polygons = [polygon, path1, path2, path3, path4]
+
+        """
+        if not polygons:
+            return
+        if not isinstance(polygons, (list, tuple)):
+            raise AttributeError('A list or tuple of polylines is required')
+
+        for points in polygons:
+            if isinstance(points, dict):
+                self.add_polygon(**points)
+            elif isinstance(points, (tuple, list)):
+                path = []
+                for coords in points:
+                    if len(coords) != 2:
+                        raise AttributeError('A point needs two coordinates')
+                    path.append({'lat': coords[0],
+                                 'lng': coords[1]})
+                polygon_dict = self.build_polygon_dict(path)
+                self.add_polygon(**polygon_dict)
+
+    def build_polygon_dict(self,
+                           path,
+                           stroke_color='#FF0000',
+                           stroke_opacity=.8,
+                           stroke_weight=2,
+                           fill_color='#FF0000',
+                           fill_opacity=0.3):
+        """ Set a dictionary with the javascript class Polygon parameters
+
+        This function sets a default drawing configuration if the user just
+        pass the polygon path, but also allows to set each parameter
+        individually if the user wish so.
+
+        Args:
+            path (list): A list of latitude and longitude point for the polygon
+            stroke_color (str): Sets the color of the polygon border using
+                hexadecimal color notation
+            stroke_opacity (float): Sets the opacity of the polygon border
+                in percentage. If stroke_opacity = 0, the border is transparent
+            stroke_weight (int): Sets the stroke girth in pixels.
+
+            fill_color (str): Sets the color of the polygon fill using
+                hexadecimal color notation
+            fill_opacity (float): Sets the opacity of the polygon fill
+        """
+
+        if not isinstance(path, list):
+            raise AttributeError('To build a map path a list of dictionaries'
+                                 ' of latitude and logitudes is required')
+
+        polygon = {
+            'path': path,
+            'stroke_color': stroke_color,
+            'stroke_opacity': stroke_opacity,
+            'stroke_weight': stroke_weight,
+            'fill_color': fill_color,
+            'fill_opacity': fill_opacity
+        }
+
+        return polygon
+
+    def add_polygon(self, path=None, **kwargs):
+        """ Adds a polygon dict to the Map.polygons attribute
+
+        The Google Maps API describes a polyline as a "linear overlay of
+        connected line segments on the map" and "form a closed loop and define a
+        filled region.". The linear paths are defined by a list of Latitude and
+        Longitude coordinate pairs, like so:
+
+            { 'lat': y, 'lng': x }
+
+        with each one being a point of the polyline path.
+
+        It accepts a polygon dict representation as well.
+
+        Args:
+            path (list(dict)): The set of points of the path
+
+        .. _Polygon:
+            https://developers.google.com/maps/documentation/javascript/reference#Polygon
+        """
+
+        if path:
+            if not isinstance(path, list):
+                raise AttributeError('The path is a list of dictionary of'
+                                     'latitude and longitudes por path points')
+            for point in path:
+                if not isinstance(point, dict):
+                    raise AttributeError('All points in the path must be dicts'
+                                         ' of latitudes and longitudes')
+            kwargs['path'] = path
+
+        kwargs.setdefault('stroke_color', '#FF0000')
+        kwargs.setdefault('stroke_opacity', .8)
+        kwargs.setdefault('stroke_weight', 2)
+        kwargs.setdefault('fill_color', '#FF0000')
+        kwargs.setdefault('fill_opacity', .3)
+
+        self.polygons.append(kwargs)
+
     def render(self, *args, **kwargs):
         return render_template(*args, **kwargs)
 
@@ -585,7 +731,6 @@ class GoogleMaps(object):
             app.config.get('GOOGLEMAPS_KEY'), name='GOOGLEMAPS_KEY')
         app.add_template_global(set_googlemaps_loaded)
         app.add_template_global(is_googlemaps_loaded)
-
 
     def register_blueprint(self, app):
         module = Blueprint(

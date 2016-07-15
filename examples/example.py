@@ -173,6 +173,26 @@ def mapview():
         polylines=[polyline, path1, path2, path3, path4]
     )
 
+    polygon = {
+        'stroke_color': '#0AB0DE',
+        'stroke_opacity': 1.0,
+        'stroke_weight': 3,
+        'fill_color': '#ABC321',
+        'fill_opacity': .5,
+        'path': [{'lat': 33.678, 'lng': -116.243},
+                 {'lat': 33.679, 'lng': -116.244},
+                 {'lat': 33.680, 'lng': -116.250},
+                 {'lat': 33.681, 'lng': -116.239},
+                 {'lat': 33.678, 'lng': -116.243}]
+    }
+
+    pgonmap = Map(
+        identifier="pgonmap",
+        lat=33.678,
+        lng=-116.243,
+        polygons=[polygon, path1, path2, path3, path4]
+    )
+
     return render_template(
         'example.html',
         mymap=mymap,
@@ -181,6 +201,7 @@ def mapview():
         rectmap=rectmap,
         circlemap=circlemap,
         plinemap=plinemap,
+        pgonmap=pgonmap,
         clustermap=clustermap
     )
 
