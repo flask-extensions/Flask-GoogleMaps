@@ -18,8 +18,9 @@
 </style>
 
 <script type="text/javascript">
+    var {{gmap.varname}};
     function initialize_{{gmap.varname}}() {
-        var {{gmap.varname}} = new google.maps.Map(
+        {{gmap.varname}} = new google.maps.Map(
         document.getElementById('{{gmap.identifier}}'), {
             center: new google.maps.LatLng({{gmap.center.0}}, {{gmap.center.1}}),
             zoom: {{gmap.zoom}},
