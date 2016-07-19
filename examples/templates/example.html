@@ -4,11 +4,12 @@
             <meta charset="utf-8">
             <meta http-equiv="X-UA-Compatible" content="IE=edge">
             <title>Flask Google Maps Example</title>
-            {{"decoupled-map"|googlemap_js(37.4419, -122.1419, markers=[(37.4419, -122.1419)])}}
+            {{"decoupled-map"|googlemap_js(37.4419, -122.1419, varname="decoupledmap", markers=[(37.4419, -122.1419)])}}
             {{mymap.js}}
             {{sndmap.js}}
             {{trdmap.js}}
             {{clustermap.js}}
+            {{movingmap.js}}
             {{rectmap.js}}
             {{circlemap.js}}
             {{plinemap.js}}
@@ -18,7 +19,7 @@
         <h1>Flask Google Maps Example</h1>
 
         <h2> Template function centered, no marker </h2>
-        {{googlemap("simple-map", 37.4419, -122.1419)}}
+        {{googlemap("simple-map", 37.4419, -122.1419, varname="simplemap")}}
         <code>
             <pre>
 {% raw %}
@@ -33,6 +34,7 @@
         <h2> Template function centered, no marker, no controls </h2>
         {{googlemap("no-controls-map",
                     37.4419, -122.1419,
+                    varname="nocontrolsmap",
                     zoom_control=False,
                     maptype_control=False,
                     scale_control=False,
@@ -75,7 +77,7 @@ on the body:
 
 
         <h2> Template function with multiple markers </h2>
-        {% with map=googlemap_obj("another-map", 37.4419, -122.1419, markers=[(37.4419, -122.1419), (37.4300, -122.1400, "Hello!")]) %}
+        {% with map=googlemap_obj("another-map", 37.4419, -122.1419, varname="anothermap", markers=[(37.4419, -122.1419), (37.4300, -122.1400, "Hello!")]) %}
             {{map.html}}
             {{map.js}}
         {% endwith %}
@@ -122,6 +124,31 @@ in body:
 
 {% endraw %}
             </pre>
+           </code>
+
+
+
+<h2> Moving Map</h2>
+{{movingmap.html}}
+
+{%  for position in movingmarkers %}
+<button onclick='movingmap_markers.map(function(mk){mk.setPosition({lat: {{ position.lat }}, lng:{{ position.lng }}})})'>Go to position {{ loop.index }} </button>
+{% endfor %}
+<br />
+<button onclick='movingmap_markers.map(function(mk){mk.setMap(null)})'>Remove marker</button>
+<button onclick='movingmap_markers.map(function(mk){mk.setMap(movingmap)})'>Restore marker</button>
+<button onclick='new google.maps.Marker({title: "New Marker", position: {lat: 37.4640, lng: -122.1350}}).setMap(movingmap)'>Add New Marker Above</button>
+
+
+    <pre>
+&lt;button onclick='movingmap_markers.map(function(mk){mk.setPosition({lat: 37.44, lng:-122.135})})'&gt;Go to position 1 &lt;/button&gt;
+&lt;button onclick='movingmap_markers.map(function(mk){mk.setPosition({lat: 37.443, lng:-122.135})})'&gt;Go to position 2 &lt;/button&gt;
+&lt;button onclick='movingmap_markers.map(function(mk){mk.setPosition({lat: 37.445, lng:-122.135})})'&gt;Go to position 3 &lt;/button&gt;
+&lt;button onclick='movingmap_markers.map(function(mk){mk.setPosition({lat: 37.449, lng:-122.135})})'&gt;Go to position 4 &lt;/button&gt;
+&lt;button onclick='movingmap_markers.map(function(mk){mk.setMap(null)})'&gt;Remove marker&lt;/button&gt;
+&lt;button onclick='movingmap_markers.map(function(mk){mk.setMap(movingmap)})'&gt;Restore marker&lt;/button&gt;
+&lt;button onclick='onclick='new google.maps.Marker({title: "New Marker", position: {lat: 37.4640, lng: -122.1350}}).setMap(movingmap)''&gt;Add new marker above&lt;/button&gt;
+    </pre>
 
 
         <h2> First map generated in view</h2>

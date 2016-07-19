@@ -16,13 +16,15 @@ GoogleMaps(app, key="AIzaSyAZzeHhs-8JZ7i18MjFuM35dJHq70n3Hx4")
 @app.route("/")
 def mapview():
     mymap = Map(
-        identifier="view-side",
+        identifier="view-side",  # for DOM element
+        varname="mymap",  # for JS object name
         lat=37.4419,
         lng=-122.1419,
         markers=[(37.4419, -122.1419)]
     )
     sndmap = Map(
         identifier="sndmap",
+        varname="sndmap",
         lat=37.4419,
         lng=-122.1419,
         markers={
@@ -33,6 +35,7 @@ def mapview():
 
     trdmap = Map(
         identifier="trdmap",
+        varname="trdmap",
         lat=37.4419,
         lng=-122.1419,
         markers=[
@@ -64,6 +67,7 @@ def mapview():
 
     clustermap = Map(
         identifier="clustermap",
+        varname="clustermap",
         lat=37.4419,
         lng=-122.1419,
         markers=[
@@ -92,6 +96,39 @@ def mapview():
         cluster=True
     )
 
+    movingmap = Map(
+        identifier="movingmap",
+        varname="movingmap",
+        lat=37.4419,
+        lng=-122.1419,
+        markers=[
+            {
+                'lat': 37.4500,
+                'lng': -122.1350
+            }
+        ],
+        zoom=12
+    )
+
+    movingmarkers = [
+        {
+            'lat': 37.4400,
+            'lng': -122.1350
+        },
+        {
+            'lat': 37.4430,
+            'lng': -122.1350
+        },
+        {
+            'lat': 37.4450,
+            'lng': -122.1350
+        },
+        {
+            'lat': 37.4490,
+            'lng': -122.1350
+        }
+    ]
+
     rectangle = {
         'stroke_color': '#0000FF',
         'stroke_opacity': .8,
@@ -108,6 +145,7 @@ def mapview():
 
     rectmap = Map(
         identifier="rectmap",
+        varname="rectmap",
         lat=33.678,
         lng=-116.243,
         rectangles=[
@@ -134,6 +172,7 @@ def mapview():
 
     circlemap = Map(
         identifier="circlemap",
+        varname="circlemap",
         lat=33.678,
         lng=-116.243,
         circles=[
@@ -168,6 +207,7 @@ def mapview():
 
     plinemap = Map(
         identifier="plinemap",
+        varname="plinemap",
         lat=33.678,
         lng=-116.243,
         polylines=[polyline, path1, path2, path3, path4]
@@ -188,6 +228,7 @@ def mapview():
 
     pgonmap = Map(
         identifier="pgonmap",
+        varname="pgonmap",
         lat=33.678,
         lng=-116.243,
         polygons=[polygon, path1, path2, path3, path4]
@@ -202,7 +243,9 @@ def mapview():
         circlemap=circlemap,
         plinemap=plinemap,
         pgonmap=pgonmap,
-        clustermap=clustermap
+        clustermap=clustermap,
+        movingmap=movingmap,
+        movingmarkers=movingmarkers
     )
 
 
@@ -210,6 +253,7 @@ def mapview():
 def fullmap():
     fullmap = Map(
         identifier="fullmap",
+        varname="fullmap",
         style=(
             "height:100%;"
             "width:100%;"

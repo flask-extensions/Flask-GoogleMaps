@@ -19,6 +19,7 @@
 
 <script type="text/javascript">
     var {{gmap.varname}};
+    var {{gmap.varname}}_markers = [];
     function initialize_{{gmap.varname}}() {
         {{gmap.varname}} = new google.maps.Map(
         document.getElementById('{{gmap.identifier}}'), {
@@ -34,20 +35,19 @@
         });
 
         // add gmap markers
-        var raw_markers = {{gmap.markers|safe}}
-        var _markers = []
+        var raw_markers = {{gmap.markers|safe}};
         for(i=0; i<{{gmap.markers|length}};i++) {
-            _markers[i] = new google.maps.Marker({
+            {{gmap.varname}}_markers[i] = new google.maps.Marker({
                 position: new google.maps.LatLng(raw_markers[i].lat, raw_markers[i].lng),
                 map: {{gmap.varname}},
                 icon: raw_markers[i].icon,
-                title: raw_markers[i].title ? raw_markers[i].title : null,
+                title: raw_markers[i].title ? raw_markers[i].title : null
             });
 
            if(raw_markers[i].infobox)
            {
                 google.maps.event.addListener(
-                        _markers[i],
+                        {{gmap.varname}}_markers[i],
                         'click',
                         getInfoCallback({{gmap.varname}}, raw_markers[i].infobox)
                 );
@@ -132,7 +132,7 @@
     {% endfor %}
 
     {% if gmap.cluster %}
-	    var markerCluster = new MarkerClusterer({{gmap.varname}}, _markers, {'imagePath': "{{gmap.cluster_imagepath}}", 'gridSize': {{gmap.cluster_gridsize}}});
+	    var markerCluster = new MarkerClusterer({{gmap.varname}}, {{gmap.varname}}_markers, {'imagePath': "{{gmap.cluster_imagepath}}", 'gridSize': {{gmap.cluster_gridsize}}});
     {% endif %}
 }
 
