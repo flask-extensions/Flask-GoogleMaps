@@ -5,6 +5,8 @@
 
 Easy to use Google Maps in your Flask application
 
+Look the Live DEMO: http://flaskgooglemaps.pythonanywhere.com
+
 ### requires
 - Jinja
 - Flask
