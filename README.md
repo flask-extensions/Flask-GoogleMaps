@@ -174,11 +174,6 @@ Also controls True or False:
 
 ```
 
-### Screenshot
-
-<img src="screenshot.png" />
-
-
 ### Infobox
 
 Here's an example snippet of code: 
