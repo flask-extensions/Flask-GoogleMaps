@@ -214,7 +214,7 @@ Which results in something like the following map:
 
 ```bash
 $ git clone https://github.com/rochacbruno/Flask-GoogleMaps
-$ cd Flask-GoogleMaps
+$ cd Flask-GoogleMaps/examples
 $ python setup.py develop
 $ python example.py
 
