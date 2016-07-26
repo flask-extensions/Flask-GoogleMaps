@@ -27,6 +27,7 @@ class Map(object):
                  scale_control=True,
                  streetview_control=True,
                  rotate_control=True,
+                 scroll_wheel=True,
                  fullscreen_control=True,
                  cluster=False,
                  cluster_imagepath=DEFAULT_CLUSTER_IMAGE_PATH,
@@ -56,6 +57,7 @@ class Map(object):
         self.scale_control = scale_control
         self.streetview_control = streetview_control
         self.rotate_control = rotate_control
+        self.scroll_wheel = scroll_wheel
         self.fullscreen_control = fullscreen_control
 
         self.cluster = cluster
