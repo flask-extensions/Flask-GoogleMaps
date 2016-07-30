@@ -36,7 +36,7 @@
         });
 
         // add gmap markers
-        var raw_markers = {{gmap.markers|safe}};
+        var raw_markers = {{gmap.markers|tojson|safe}};
         for(i=0; i<{{gmap.markers|length}};i++) {
             {{gmap.varname}}_markers[i] = new google.maps.Marker({
                 position: new google.maps.LatLng(raw_markers[i].lat, raw_markers[i].lng),
