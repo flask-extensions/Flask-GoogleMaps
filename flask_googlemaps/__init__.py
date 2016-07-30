@@ -29,6 +29,7 @@ class Map(object):
                  rotate_control=True,
                  scroll_wheel=True,
                  fullscreen_control=True,
+                 collapsible=False,
                  cluster=False,
                  cluster_imagepath=DEFAULT_CLUSTER_IMAGE_PATH,
                  cluster_gridsize=60,
@@ -59,6 +60,7 @@ class Map(object):
         self.rotate_control = rotate_control
         self.scroll_wheel = scroll_wheel
         self.fullscreen_control = fullscreen_control
+        self.collapsible = collapsible
 
         self.cluster = cluster
         self.cluster_imagepath = cluster_imagepath

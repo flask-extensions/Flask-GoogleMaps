@@ -18,10 +18,11 @@
 </style>
 
 <script type="text/javascript">
-    var {{gmap.varname}};
+    var {{gmap.varname}} = null;
     var {{gmap.varname}}_markers = [];
-    var prev_infowindow_{{gmap.varname}};
+    var prev_infowindow_{{gmap.varname}} = null;
     function initialize_{{gmap.varname}}() {
+        document.getElementById('{{gmap.identifier}}').style.display = 'block';
         {{gmap.varname}} = new google.maps.Map(
         document.getElementById('{{gmap.identifier}}'), {
             center: new google.maps.LatLng({{gmap.center.0}}, {{gmap.center.1}}),
@@ -149,6 +150,28 @@
                 infowindow.open(map, this);
             };
     }
-    google.maps.event.addDomListener(window, 'load', initialize_{{gmap.varname}});
+    
+    {% if gmap.collapsible %}
+        window.onload = function() {
+            document.getElementById('{{gmap.identifier}}').style.display = 'none';
+            document.getElementById('{{gmap.varname}}_collapse').onclick = function() {
+                if ({{gmap.varname}} === null) {
+                    initialize_{{gmap.varname}}();
+                    document.getElementById('{{gmap.varname}}_collapse').textContent = "Hide map";
+                } else {
+                    var m = document.getElementById('{{gmap.identifier}}');
+                    if (m.style.display !== 'none') {
+                        m.style.display = 'none';
+                        document.getElementById('{{gmap.varname}}_collapse').textContent = "Show map";
+                    } else {
+                        m.style.display = 'block';
+                        document.getElementById('{{gmap.varname}}_collapse').textContent = "Hide map";
+                    }
+                }
+            }
+        };
+    {% else %}
+        google.maps.event.addDomListener(window, 'load', initialize_{{gmap.varname}});
+    {% endif %}
 
 </script>

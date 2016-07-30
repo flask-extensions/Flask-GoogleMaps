@@ -234,6 +234,15 @@ def mapview():
         polygons=[polygon, path1, path2, path3, path4]
     )
 
+    collapsible = Map(
+        identifier="collapsible",
+        varname="collapsible",
+        lat=60.000025,
+        lng=30.288809,
+        zoom = 13,
+        collapsible = True
+    )
+
     return render_template(
         'example.html',
         mymap=mymap,
@@ -245,7 +254,8 @@ def mapview():
         pgonmap=pgonmap,
         clustermap=clustermap,
         movingmap=movingmap,
-        movingmarkers=movingmarkers
+        movingmarkers=movingmarkers,
+        collapsible=collapsible
     )
 
 
