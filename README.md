@@ -135,6 +135,7 @@ Also controls True or False:
 - streetview_control
 - rorate_control
 - fullscreen_control
+- scroll_wheel
 
 #### 2. Template
 
