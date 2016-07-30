@@ -152,10 +152,10 @@
     }
     
     {% if gmap.collapsible %}
-        window.onload = function() {
+        function init_{{gmap.identifier}}_button() {
             document.getElementById('{{gmap.identifier}}').style.display = 'none';
             document.getElementById('{{gmap.varname}}_collapse').onclick = function() {
-                if ({{gmap.varname}} === null) {
+            if ({{gmap.varname}} === null) {
                     initialize_{{gmap.varname}}();
                     document.getElementById('{{gmap.varname}}_collapse').textContent = "Hide map";
                 } else {
@@ -170,6 +170,16 @@
                 }
             }
         };
+
+        if (typeof window.onload === 'function') {
+            func = window.onload;
+            window.onload = function() {
+                func();
+                init_{{gmap.identifier}}_button();
+            }
+        } else {
+            window.onload = init_{{gmap.identifier}}_button;
+        }
     {% else %}
         google.maps.event.addDomListener(window, 'load', initialize_{{gmap.varname}});
     {% endif %}
