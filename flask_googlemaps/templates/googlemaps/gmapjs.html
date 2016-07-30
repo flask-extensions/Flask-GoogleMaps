@@ -20,6 +20,7 @@
 <script type="text/javascript">
     var {{gmap.varname}};
     var {{gmap.varname}}_markers = [];
+    var prev_infowindow_{{gmap.varname}};
     function initialize_{{gmap.varname}}() {
         {{gmap.varname}} = new google.maps.Map(
         document.getElementById('{{gmap.identifier}}'), {
@@ -140,6 +141,10 @@
     function getInfoCallback(map, content) {
         var infowindow = new google.maps.InfoWindow({content: content});
         return function() {
+                if( prev_infowindow_{{gmap.varname}} ) {
+                    prev_infowindow_{{gmap.varname}}.close();
+                }
+                prev_infowindow_{{gmap.varname}} = infowindow;
                 infowindow.setContent(content);
                 infowindow.open(map, this);
             };
