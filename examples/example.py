@@ -136,10 +136,10 @@ def mapview():
         'fill_color': '#FFFFFF',
         'fill_opacity': .1,
         'bounds': {
-                  'north': 60,
-                  'south': 61,
-                  'east': 30,
-                  'west': 31,
+            'north': 33.685,
+ -          'south': 33.671,
+ -          'east': -116.234,
+ -          'west': -116.251
         }
     }
 

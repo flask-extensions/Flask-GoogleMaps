@@ -162,25 +162,6 @@
            }
         }
 
-        /*{% for line in gmap.polylines %}
-            var coordinates = [ {% for point in line.path %}
-                                {lat: {{point.lat}} , lng: {{point.lng}} },
-                                {% endfor %}
-            ];
-
-            
-            var gPolyline = new google.maps.Polyline({
-                strokeColor: '{{ line.stroke_color }}',
-                strokeOpacity: '{{ line.stroke_opacity }}',
-                strokeWeight: '{{ line.stroke_weight }}',
-                path: coordinates,
-                geodesic: true
-            });
-            gPolyline.setMap({{gmap.varname}});
-
-        {% endfor %}
-        */
-
         {% if gmap.cluster %}
     	    var markerCluster = new MarkerClusterer({{gmap.varname}}, {{gmap.varname}}_markers, {'imagePath': "{{gmap.cluster_imagepath}}", 'gridSize': {{gmap.cluster_gridsize}}});
         {% endif %}
