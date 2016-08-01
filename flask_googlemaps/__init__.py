@@ -516,10 +516,14 @@ class Map(object):
             if not isinstance(path, list):
                 raise AttributeError('The path is a list of dictionary of'
                                      'latitude and longitudes por path points')
-            for point in path:
+            for i in range(len(path)):
+                point = path[i]
                 if not isinstance(point, dict):
-                    raise AttributeError('All points in the path must be dicts'
-                                         ' of latitudes and longitudes')
+                    if isinstance(point, (list, tuple)) and len(point) == 2:
+                        path[i] = {'lat': point[0], 'lng': point[1]}
+                    else:
+                        raise AttributeError('All points in the path must be dicts'
+                                         ' of latitudes and longitudes, list or tuple')
             kwargs['path'] = path
 
         kwargs.setdefault('stroke_color', '#FF0000')
@@ -657,10 +661,14 @@ class Map(object):
             if not isinstance(path, list):
                 raise AttributeError('The path is a list of dictionary of'
                                      'latitude and longitudes por path points')
-            for point in path:
+            for i in range(len(path)):
+                point = path[i]
                 if not isinstance(point, dict):
-                    raise AttributeError('All points in the path must be dicts'
-                                         ' of latitudes and longitudes')
+                    if isinstance(point, (list, tuple)) and len(point) == 2:
+                        path[i] = {'lat': point[0], 'lng': point[1]}
+                    else:
+                        raise AttributeError('All points in the path must be dicts'
+                                         ' of latitudes and longitudes, list or tuple')
             kwargs['path'] = path
 
         kwargs.setdefault('stroke_color', '#FF0000')
