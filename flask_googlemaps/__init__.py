@@ -692,10 +692,11 @@ class Map(object):
             'cluster': self.cluster,
             'cluster_imagepath': self.cluster_imagepath,
             'cluster_gridsize': self.cluster_gridsize,
+            'js': self.js.unescape(),
+            'html': self.html.unescape(),
         }
 
-        from json import dumps
-        return dumps(json_dict, indent=2)
+        return json_dict
 
     @property
     def js(self):

@@ -1,7 +1,8 @@
 from flask import Flask, jsonify
-from flask_googlemaps import Map, GoogleMaps, icons
+from flask_googlemaps import Map, GoogleMaps, icons, render_template
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder="templates")
+app.config['GOOGLEMAPS_KEY'] = "AIzaSyAZzeHhs-8JZ7i18MjFuM35dJHq70n3Hx4"
 GoogleMaps(app, key="AIzaSyAZzeHhs-8JZ7i18MjFuM35dJHq70n3Hx4")
 
 
@@ -18,8 +19,8 @@ def tst_jsonify():
     return jsonify(mymap.as_json())
 
 
-@app.route("/map1")
-def mymap_view():
+@app.route("/simplemap")
+def simple_view_one():
     mymap = Map(
         identifier="view-side",  # for DOM element
         varname="mymap",  # for JS object name
@@ -30,8 +31,8 @@ def mymap_view():
     return jsonify(mymap.as_json())
 
 
-@app.route("/map2")
-def sndmap_view():
+@app.route("/simplemap2")
+def simple_view_two():
     sndmap = Map(
         identifier="sndmap",
         varname="sndmap",
@@ -45,8 +46,8 @@ def sndmap_view():
     return jsonify(sndmap.as_json())
 
 
-@app.route('/trdmap')
-def trdmap_view():
+@app.route('/simplemap3')
+def simple_view_three():
     trdmap = Map(
         identifier="trdmap",
         varname="trdmap",
@@ -82,8 +83,8 @@ def trdmap_view():
     return jsonify(trdmap.as_json())
 
 
-@app.route('/cluster')
-def clustermap_view():
+@app.route('/clustered')
+def cluster_view():
     clustermap = Map(
         identifier="clustermap",
         varname="clustermap",
@@ -119,7 +120,7 @@ def clustermap_view():
 
 
 @app.route('/rectangle')
-def rectmap_view():
+def rectangle_view():
     rectangle = {
         'stroke_color': '#0000FF',
         'stroke_opacity': .8,
@@ -152,7 +153,7 @@ def rectmap_view():
 
 
 @app.route('/circle')
-def circlemap_view():
+def circle_view():
     circle = {
         'stroke_color': '#FF00FF',
         'stroke_opacity': 1.0,
@@ -182,7 +183,7 @@ def circlemap_view():
 
 
 @app.route('/polyline')
-def polymap_view():
+def polyline_view():
     polyline = {
         'stroke_color': '#0AB0DE',
         'stroke_opacity': 1.0,
@@ -218,7 +219,7 @@ def polymap_view():
 
 
 @app.route('/polygon')
-def polygonmap_view():
+def polygon_view():
     polygon = {
         'stroke_color': '#0AB0DE',
         'stroke_opacity': 1.0,
@@ -255,6 +256,16 @@ def polygonmap_view():
     return jsonify(pgonmap.as_json())
 
 
+@app.route('/jsonified')
+def jsonified_viewi():
+    """ This view is to test the maps loading dynamically.
+    IDK how to do this yet, but I'll have to check it out
+    """
+    maps = [{'name': 'plinemap', 'label': 'Polyline', 'url': '/polyline'},
+            {'name': 'pgonmap', 'label': 'Polygon', 'url': '/polygon'}]
+
+    return render_template('jsonified.html',
+                           maps=maps)
 
 if __name__ == "__main__":
     app.run(debug=True, use_reloader=True)
