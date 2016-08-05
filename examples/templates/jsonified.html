@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title> Flask Google Maps Jsonify Example</title>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.js"> </script>
+  </head>
+  <body>
+      OK
+      
+        <h1>Example of live map loading</h1>
+          <select id="map-list" name="map-list" form="map-form">
+            {% for map in maps %}
+                <option value="{{map.url}}">{{map.label}}</option>
+            {% endfor %}
+          </select>
+          
+          <div class="maps-canvas">
+          </div>
+
+    </body>
+    <script>
+    /*
+    *   I wrote this example to try to load dynamically the maps
+    *   with AJAX & JQuery, but it seems that this is not  
+    */
+      $("#map-list").change(function(){
+          $("#map-list")
+          $.ajax({url: $("#map-list").val(),
+                  type: "GET",
+                  dataType: "json",
+                  success: function (data){
+                    console.log(data);
+                    $(".maps-canvas").append(data['js']);
+                    $(".maps-canvas").append(data["html"]);
+                    //console.log(data["js"]);
+                    //console.log(data["html"]);
+                  }
+          });
+      });
+    </script>
+</html>

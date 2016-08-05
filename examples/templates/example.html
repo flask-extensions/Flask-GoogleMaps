@@ -14,6 +14,8 @@
             {{circlemap.js}}
             {{plinemap.js}}
             {{pgonmap.js}}
+            {{collapsible.js}}
+            {{infoboxmap.js}}
     </head>
     <body>
         <h1>Flask Google Maps Example</h1>
@@ -290,5 +292,44 @@ in body:
         <h2>Map with polygons examples</h2>
 
         {{ pgonmap.html }}
+
+        <h2 style="display:inline-block;">Collapsible map example</h2>
+
+        <button id="collapsible_collapse">Show map</button>
+        {{ collapsible.html }}
+
+                <code>
+            <pre>
+{% raw %}
+
+View:
+from flask_googlemaps import Map, icons
+
+@app.route("/")
+def mapview():
+    collapsible = Map(
+        identifier="collapsible",
+        varname="collapsible",
+        lat=60.000025,
+        lng=30.288809,
+        zoom = 13,
+        collapsible = True
+    )
+    return render_template('example.html', collapsible=collapsible)
+
+Template:
+in head:
+    {{collapsible.js}}
+in body:
+    &lt;button id="collapsible_collapse"&gt;Show map&lt;/button&gt;
+    {{collapsible.html}}
+
+{% endraw %}
+            </pre>
+        </code>
+
+        <h2>Infoboxes for map shapes</h2>
+        {{infoboxmap.html}}
+
     </body>
 </html>
