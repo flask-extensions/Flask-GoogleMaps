@@ -239,21 +239,21 @@ def mapview():
         varname="collapsible",
         lat=60.000025,
         lng=30.288809,
-        zoom = 13,
-        collapsible = True
+        zoom=13,
+        collapsible=True
     )
 
     infoboxmap = Map(
-        identifier = "infoboxmap",
-        zoom = 12,
-        lat = 59.939012, 
-        lng = 30.315707,
-        markers = [{
+        identifier="infoboxmap",
+        zoom=12,
+        lat=59.939012,
+        lng=30.315707,
+        markers=[{
             'lat': 59.939,
             'lng': 30.315,
             'infobox': 'This is a marker'
         }],
-        circles = [{
+        circles=[{
             'stroke_color': '#FF00FF',
             'stroke_opacity': 1.0,
             'stroke_weight': 7,
@@ -266,7 +266,7 @@ def mapview():
             'radius': 200,
             'infobox': "This is a circle"
         }],
-        rectangles = [{
+        rectangles=[{
             'stroke_color': '#0000FF',
             'stroke_opacity': .8,
             'stroke_weight': 5,
@@ -293,7 +293,7 @@ def mapview():
             ],
             'infobox': 'This is a polygon'
         }],
-        polylines = [{
+        polylines=[{
             'stroke_color': '#0AB0DE',
             'stroke_opacity': 1.0,
             'stroke_weight': 10,
