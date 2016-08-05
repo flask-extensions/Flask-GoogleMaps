@@ -691,6 +691,7 @@ class Map(object):
         return render_template(*args, **kwargs)
 
     def as_json(self):
+        from json import dumps
         json_dict = {
             'identifier': self.identifier,
             'center': self.center,
@@ -714,8 +715,8 @@ class Map(object):
             'cluster_imagepath': self.cluster_imagepath,
             'cluster_gridsize': self.cluster_gridsize,
             'collapsible': self.collapsible,
-            'js': self.js.unescape(),
-            'html': self.html.unescape(),
+            'js': dumps(self.js),
+            'html': dumps(self.html),
         }
 
         return json_dict
