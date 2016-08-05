@@ -27,7 +27,9 @@ class Map(object):
                  scale_control=True,
                  streetview_control=True,
                  rotate_control=True,
+                 scroll_wheel=True,
                  fullscreen_control=True,
+                 collapsible=False,
                  cluster=False,
                  cluster_imagepath=DEFAULT_CLUSTER_IMAGE_PATH,
                  cluster_gridsize=60,
@@ -55,7 +57,9 @@ class Map(object):
         self.scale_control = scale_control
         self.streetview_control = streetview_control
         self.rotate_control = rotate_control
+        self.scroll_wheel = scroll_wheel
         self.fullscreen_control = fullscreen_control
+        self.collapsible = collapsible
 
         self.cluster = cluster
         self.cluster_imagepath = cluster_imagepath
@@ -106,8 +110,8 @@ class Map(object):
 
         This method is built from the assumption that the rectangles parameter
         is a list of:
-            lists : a list with 4 elements indicating [north, west, south, east]
-            tuples: a tuple with 4 elements indicating (north, west, south,east)
+            lists :a list with 4 elements indicating [north, west, south, east]
+            tuples:a tuple with 4 elements indicating (north, west, south,east)
             tuple of tuples: a tuple of 2 tuple elements of length 2 indicating
             (north_west, south_east)
             dicts: a dictionary with rectangle attributes
@@ -237,10 +241,12 @@ class Map(object):
             east (float): The east longitude
 
         .. _LatLngBoundsLiteral:
-            https://developers.google.com/maps/documentation/javascript/reference#LatLngBoundsLiteral
+            https://developers.google.com/maps/documen
+            tation/javascript/reference#LatLngBoundsLiteral
 
         .. _Rectangles:
-            https://developers.google.com/maps/documentation/javascript/shapes#rectangles
+            https://developers.google.com/maps/documen
+            tation/javascript/shapes#rectangles
         """
         kwargs.setdefault('bounds', {})
 
@@ -369,7 +375,8 @@ class Map(object):
             radius  (float): The circle radius, in meters
 
         .. _Circle:
-            https://developers.google.com/maps/documentation/javascript/reference#Circle
+            https://developers.google.com/maps/documen
+            tation/javascript/reference#Circle
         """
 
         kwargs.setdefault('center', {})
@@ -398,8 +405,9 @@ class Map(object):
 
         This method is built from the assumption that the polylines parameter
         is a list of:
-            list of lists or tuples : a list of path points, each one indicating
-                the point coordinates -- [lat,lng], [lat, lng], (lat, lng), ...
+            list of lists or tuples : a list of path points, each one
+            indicating the point coordinates --
+            [lat,lng], [lat, lng], (lat, lng), ...
 
             tuple of lists or tuples : a tuple of path points, each one
                 indicating the point coordinates -- (lat,lng), [lat, lng],
@@ -466,9 +474,9 @@ class Map(object):
         individually if the user wish so.
 
         Args:
-            path (list): A list of latitude and longitude point for the polyline
-            stroke_color (str): Sets the color of the rectangle border using
-                hexadecimal color notation
+            path (list): A list of latitude and longitude point for the
+            polyline stroke_color (str): Sets the color of the rectangle
+            border using hexadecimal color notation
             stroke_opacity (float): Sets the opacity of the rectangle border
                 in percentage. If stroke_opacity = 0, the border is transparent
             stroke_weight (int): Sets the stroke girth in pixels.
@@ -504,17 +512,23 @@ class Map(object):
             path (list(dict)): The set of points of the path
 
         .. _Polyline:
-            https://developers.google.com/maps/documentation/javascript/reference#Polyline
+            https://developers.google.com/maps/documen
+            tation/javascript/reference#Polyline
         """
 
         if path:
             if not isinstance(path, list):
                 raise AttributeError('The path is a list of dictionary of'
                                      'latitude and longitudes por path points')
-            for point in path:
+            for i, point in enumerate(path):
                 if not isinstance(point, dict):
-                    raise AttributeError('All points in the path must be dicts'
-                                         ' of latitudes and longitudes')
+                    if isinstance(point, (list, tuple)) and len(point) == 2:
+                        path[i] = {'lat': point[0], 'lng': point[1]}
+                    else:
+                        raise AttributeError(
+                            'All points in the path must be dicts'
+                            ' of latitudes and longitudes, list or tuple'
+                        )
             kwargs['path'] = path
 
         kwargs.setdefault('stroke_color', '#FF0000')
@@ -528,8 +542,9 @@ class Map(object):
 
         This method is built from the assumption that the polygons parameter
         is a list of:
-            list of lists or tuples : a list of path points, each one indicating
-                the point coordinates -- [lat,lng], [lat, lng], (lat, lng), ...
+            list of lists or tuples : a list of path points, each one
+            indicating the point coordinates --
+            [lat,lng], [lat, lng], (lat, lng), ...
 
             tuple of lists or tuples : a tuple of path points, each one
                 indicating the point coordinates -- (lat,lng), [lat, lng],
@@ -631,9 +646,9 @@ class Map(object):
         """ Adds a polygon dict to the Map.polygons attribute
 
         The Google Maps API describes a polyline as a "linear overlay of
-        connected line segments on the map" and "form a closed loop and define a
-        filled region.". The linear paths are defined by a list of Latitude and
-        Longitude coordinate pairs, like so:
+        connected line segments on the map" and "form a closed loop and define
+        a filled region.". The linear paths are defined by a list of Latitude
+        and Longitude coordinate pairs, like so:
 
             { 'lat': y, 'lng': x }
 
@@ -645,17 +660,23 @@ class Map(object):
             path (list(dict)): The set of points of the path
 
         .. _Polygon:
-            https://developers.google.com/maps/documentation/javascript/reference#Polygon
+            https://developers.google.com/maps/documen
+            tation/javascript/reference#Polygon
         """
 
         if path:
             if not isinstance(path, list):
                 raise AttributeError('The path is a list of dictionary of'
                                      'latitude and longitudes por path points')
-            for point in path:
+            for i, point in enumerate(path):
                 if not isinstance(point, dict):
-                    raise AttributeError('All points in the path must be dicts'
-                                         ' of latitudes and longitudes')
+                    if isinstance(point, (list, tuple)) and len(point) == 2:
+                        path[i] = {'lat': point[0], 'lng': point[1]}
+                    else:
+                        raise AttributeError(
+                            'All points in the path must be dicts'
+                            ' of latitudes and longitudes, list or tuple'
+                        )
             kwargs['path'] = path
 
         kwargs.setdefault('stroke_color', '#FF0000')
