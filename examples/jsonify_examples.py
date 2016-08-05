@@ -256,16 +256,5 @@ def polygon_view():
     return jsonify(pgonmap.as_json())
 
 
-@app.route('/jsonified')
-def jsonified_viewi():
-    """ This view is to test the maps loading dynamically.
-    IDK how to do this yet, but I'll have to check it out
-    """
-    maps = [{'name': 'plinemap', 'label': 'Polyline', 'url': '/polyline'},
-            {'name': 'pgonmap', 'label': 'Polygon', 'url': '/polygon'}]
-
-    return render_template('jsonified.html',
-                           maps=maps)
-
 if __name__ == "__main__":
     app.run(debug=True, use_reloader=True)
