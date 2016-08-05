@@ -136,6 +136,7 @@ Also controls True or False:
 - rorate_control
 - fullscreen_control
 - scroll_wheel
+- collapsible (map collapses by click on **varname**_collapse button)
 
 #### 2. Template
 

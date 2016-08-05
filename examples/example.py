@@ -136,10 +136,10 @@ def mapview():
         'fill_color': '#FFFFFF',
         'fill_opacity': .1,
         'bounds': {
-                  'north': 33.685,
-                  'south': 33.671,
-                  'east': -116.234,
-                  'west': -116.251
+            'north': 33.685,
+            'south': 33.671,
+            'east': -116.234,
+            'west': -116.251
         }
     }
 
@@ -234,6 +234,79 @@ def mapview():
         polygons=[polygon, path1, path2, path3, path4]
     )
 
+    collapsible = Map(
+        identifier="collapsible",
+        varname="collapsible",
+        lat=60.000025,
+        lng=30.288809,
+        zoom = 13,
+        collapsible = True
+    )
+
+    infoboxmap = Map(
+        identifier = "infoboxmap",
+        zoom = 12,
+        lat = 59.939012, 
+        lng = 30.315707,
+        markers = [{
+            'lat': 59.939,
+            'lng': 30.315,
+            'infobox': 'This is a marker'
+        }],
+        circles = [{
+            'stroke_color': '#FF00FF',
+            'stroke_opacity': 1.0,
+            'stroke_weight': 7,
+            'fill_color': '#FF00FF',
+            'fill_opacity': 0.2,
+            'center': {
+                'lat': 59.939,
+                'lng': 30.3
+            },
+            'radius': 200,
+            'infobox': "This is a circle"
+        }],
+        rectangles = [{
+            'stroke_color': '#0000FF',
+            'stroke_opacity': .8,
+            'stroke_weight': 5,
+            'fill_color': '#FFFFFF',
+            'fill_opacity': .1,
+            'bounds': {
+                'north': 59.935,
+                'south': 59.93,
+                'east': 30.325,
+                'west': 30.3,
+            },
+            'infobox': "This is a rectangle"
+        }],
+        polygons=[{
+            'stroke_color': '#0AB0DE',
+            'stroke_opacity': 1.0,
+            'stroke_weight': 3,
+            'path': [
+                [59.94, 30.318],
+                [59.946, 30.325],
+                [59.946, 30.34],
+                [59.941, 30.35],
+                [59.938, 30.33]
+            ],
+            'infobox': 'This is a polygon'
+        }],
+        polylines = [{
+            'stroke_color': '#0AB0DE',
+            'stroke_opacity': 1.0,
+            'stroke_weight': 10,
+            'path': [
+                (59.941, 30.285),
+                (59.951, 30.31),
+                (59.95, 30.36),
+                (59.938, 30.358)
+            ],
+            'infobox': 'This is a polyline'
+        }]
+    )
+
     return render_template(
         'example.html',
         mymap=mymap,
@@ -245,7 +318,9 @@ def mapview():
         pgonmap=pgonmap,
         clustermap=clustermap,
         movingmap=movingmap,
-        movingmarkers=movingmarkers
+        movingmarkers=movingmarkers,
+        collapsible=collapsible,
+        infoboxmap=infoboxmap
     )
 
 
