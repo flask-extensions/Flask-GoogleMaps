@@ -2,6 +2,7 @@
 
 from flask import render_template, Blueprint, Markup, g
 from flask_googlemaps.icons import dots
+from json import dumps
 
 DEFAULT_ICON = dots.red
 DEFAULT_CLUSTER_IMAGE_PATH = "static/images/m"
@@ -691,7 +692,6 @@ class Map(object):
         return render_template(*args, **kwargs)
 
     def as_json(self):
-        from json import dumps
         json_dict = {
             'identifier': self.identifier,
             'center': self.center,
