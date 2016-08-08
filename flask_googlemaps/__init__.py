@@ -2,6 +2,7 @@
 
 from flask import render_template, Blueprint, Markup, g
 from flask_googlemaps.icons import dots
+from json import dumps
 
 DEFAULT_ICON = dots.red
 DEFAULT_CLUSTER_IMAGE_PATH = "static/images/m"
@@ -43,7 +44,6 @@ class Map(object):
         self.maptype = maptype
         self.markers = []
         self.build_markers(markers)
-        # Following the same pattern of building markers for rectangles objs
         self.rectangles = []
         self.build_rectangles(rectangles)
         self.circles = []
@@ -690,6 +690,36 @@ class Map(object):
 
     def render(self, *args, **kwargs):
         return render_template(*args, **kwargs)
+
+    def as_json(self):
+        json_dict = {
+            'identifier': self.identifier,
+            'center': self.center,
+            'zoom': self.zoom,
+            'maptype': self.maptype,
+            'markers': self.markers,
+            'varname': self.varname,
+            'style': self.style,
+            'cls': self.cls,
+            'rectangles': self.rectangles,
+            'circles': self.circles,
+            'polylines': self.polylines,
+            'polygons': self.polygons,
+            'zoom_control': self.zoom_control,
+            'maptype_control': self.maptype_control,
+            'scale_control': self.scale_control,
+            'streetview_controle': self.streetview_control,
+            'rotate_control': self.rotate_control,
+            'fullscreen_control': self.fullscreen_control,
+            'cluster': self.cluster,
+            'cluster_imagepath': self.cluster_imagepath,
+            'cluster_gridsize': self.cluster_gridsize,
+            'collapsible': self.collapsible,
+            'js': dumps(self.js),
+            'html': dumps(self.html),
+        }
+
+        return json_dict
 
     @property
     def js(self):
