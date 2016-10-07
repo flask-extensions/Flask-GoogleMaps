@@ -1,5 +1,5 @@
 from flask import Flask, jsonify
-from flask_googlemaps import Map, GoogleMaps, icons, render_template
+from flask_googlemaps import Map, GoogleMaps, icons
 
 app = Flask(__name__, template_folder="templates")
 app.config['GOOGLEMAPS_KEY'] = "AIzaSyAZzeHhs-8JZ7i18MjFuM35dJHq70n3Hx4"

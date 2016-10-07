@@ -260,7 +260,9 @@ class Map(object):
         if east:
             kwargs['bounds']['east'] = east
 
-        if {'north', 'east', 'south', 'west'} != set(kwargs['bounds'].keys()):
+        if set(
+            ('north', 'east', 'south', 'west')
+        ) != set(kwargs['bounds'].keys()):
             raise AttributeError('rectangle bounds required to rectangles')
 
         kwargs.setdefault('stroke_color', '#FF0000')
@@ -388,7 +390,7 @@ class Map(object):
         if radius:
             kwargs['radius'] = radius
 
-        if {'lat', 'lng'} != set(kwargs['center'].keys()):
+        if set(('lat', 'lng')) != set(kwargs['center'].keys()):
             raise AttributeError('circle center coordinates required')
         if 'radius' not in kwargs:
             raise AttributeError('circle radius definition required')
