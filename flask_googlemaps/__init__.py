@@ -98,9 +98,9 @@ class Map(object):
         return marker_dict
 
     def add_marker(self, lat=None, lng=None, **kwargs):
-        if lat:
+        if lat != None:
             kwargs['lat'] = lat
-        if lng:
+        if lng != None:
             kwargs['lng'] = lng
         if 'lat' not in kwargs or 'lng' not in kwargs:
             raise AttributeError('lat and lng required')
