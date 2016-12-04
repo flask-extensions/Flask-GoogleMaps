@@ -245,6 +245,7 @@ def mapview():
 
     infoboxmap = Map(
         identifier="infoboxmap",
+        varname="infoboxmap",
         zoom=12,
         lat=59.939012,
         lng=30.315707,
@@ -316,6 +317,76 @@ def mapview():
         user_position=True
     )
 
+    markedfigures = Map(
+        identifier="markedfigures",
+        varname='markedfigures',
+        zoom=12,
+        lat=59.939012,
+        lng=30.315707,
+        cluster=True,
+        cluster_maxzoom=10,
+        markers=[{
+            'lat': 59.939,
+            'lng': 30.315,
+            'infobox': 'This is a marker'
+        }],
+        circles=[{
+            'stroke_color': '#0000ff',
+            'stroke_opacity': 1.0,
+            'stroke_weight': 5,
+            'fill_color': '#0000ff',
+            'fill_opacity': 0.1,
+            'center': {
+                'lat': 59.948,
+                'lng': 30.315
+            },
+            'radius': 200,
+            'infobox': "Circle without marker_zoom option"
+        }, {
+            'stroke_color': '#FF00FF',
+            'stroke_opacity': 1.0,
+            'stroke_weight': 7,
+            'fill_color': '#FF00FF',
+            'fill_opacity': 0.2,
+            'center': {
+                'lat': 59.939,
+                'lng': 30.3
+            },
+            'radius': 200,
+            'marker_zoom': 14,
+            'infobox': "Circle with marker_zoom option"
+        }],
+        polygons=[{
+            'stroke_color': '#0AB0DE',
+            'stroke_opacity': 1.0,
+            'stroke_weight': 3,
+            'path': [
+                [59.94, 30.318],
+                [59.946, 30.325],
+                [59.946, 30.34],
+                [59.941, 30.35],
+                [59.938, 30.33]
+            ],
+            'marker_zoom': 13,
+            'infobox': 'This is a polygon'
+        }],
+        rectangles=[{
+            'stroke_color': '#00ff00',
+            'stroke_opacity': .8,
+            'stroke_weight': 5,
+            'fill_color': '#00ff00',
+            'fill_opacity': .4,
+            'bounds': {
+                'north': 59.935,
+                'south': 59.93,
+                'east': 30.325,
+                'west': 30.3,
+            },
+            'marker_zoom': 13,
+            'infobox': "This is a rectangle"
+        }]
+    )
+
     return render_template(
         'example.html',
         mymap=mymap,
@@ -330,7 +401,8 @@ def mapview():
         movingmarkers=movingmarkers,
         collapsible=collapsible,
         infoboxmap=infoboxmap,
-        userposition=userposition
+        userposition=userposition,
+        markedfigures=markedfigures,
     )
 
 

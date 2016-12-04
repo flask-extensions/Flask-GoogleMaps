@@ -6,7 +6,7 @@
         <script src="//maps.googleapis.com/maps/api/js" type="text/javascript"></script>
     {%  endif %}
     <script type="text/javascript">
-        function add_marker(map_struct, new_marker) {
+        function addMarker(map_struct, new_marker) {
             var marker = new google.maps.Marker({
                 position: new google.maps.LatLng(new_marker.lat, new_marker.lng),
                 map: map_struct.map,
@@ -25,7 +25,7 @@
             }
             map_struct.markers.push(marker);
         }
-        function add_rectangle(map_struct, new_rectangle) {
+        function addRectangle(map_struct, new_rectangle) {
             var rectangle = new google.maps.Rectangle({
                 strokeColor: new_rectangle.stroke_color,
                 strokeOpacity: new_rectangle.stroke_opacity,
@@ -38,6 +38,7 @@
                     east: new_rectangle.bounds.east,
                     south: new_rectangle.bounds.south,
                     west: new_rectangle.bounds.west },
+                visible: !new_rectangle.marker_zoom || map_struct.map.getZoom() >= new_rectangle.marker_zoom
             });
             if(new_rectangle.infobox) {
                 google.maps.event.addListener(
@@ -46,9 +47,44 @@
                     getInfoCallback(map_struct, new_rectangle.infobox)
                 );
             }
+            var callback;
+            if(new_rectangle.infobox) {
+                callback = getInfoCallback(map_struct, new_rectangle.infobox);
+                google.maps.event.addListener(
+                    rectangle,
+                    'click',
+                    callback
+                );
+            }
+            if (new_rectangle.marker_zoom) {
+                var position = new google.maps.LatLng(
+                    (new_rectangle.bounds.north + new_rectangle.bounds.south) / 2,
+                    (new_rectangle.bounds.east + new_rectangle.bounds.west) / 2
+                );
+                var rectangle_marker = new google.maps.Marker({
+                    position: position,
+                    map: map_struct.map,
+                    icon: "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|" + new_rectangle.fill_color.substring(1, new_rectangle.fill_color.length),
+                    visible: map_struct.map.getZoom() < new_rectangle.marker_zoom
+                });
+                if (callback) {
+                    google.maps.event.addListener(
+                        rectangle_marker,
+                        'click',
+                        function(ev) {
+                            callback(ev, rectangle);
+                            if (map_struct.map.getZoom() < new_rectangle.marker_zoom) map_struct.map.setZoom(new_rectangle.marker_zoom);
+                            map_struct.map.setCenter(position);
+                        }
+                    );
+                }
+                if (map_struct.marked_figures === undefined) initFigureMarking(map_struct);
+                map_struct.marked_figures.push({figure: rectangle, marker: rectangle_marker, zoom: new_rectangle.marker_zoom});
+                if (map_struct.markerCluster) map_struct.markerCluster.addMarker(rectangle_marker);
+            }
             map_struct.rectangles.push(rectangle);
         }
-        function add_circle(map_struct, new_circle) {
+        function addCircle(map_struct, new_circle) {
             var circle = new google.maps.Circle({
                 strokeColor: new_circle.stroke_color,
                 strokeOpacity: new_circle.stroke_opacity,
@@ -62,16 +98,42 @@
                 },
                 radius: new_circle.radius
             });
+            var callback;
             if(new_circle.infobox) {
+                callback = getInfoCallback(map_struct, new_circle.infobox);
                 google.maps.event.addListener(
                     circle,
                     'click',
-                    getInfoCallback(map_struct, new_circle.infobox)
+                    callback
                 );
+            }
+            if (new_circle.marker_zoom) {
+                var position = new google.maps.LatLng(new_circle.center.lat, new_circle.center.lng);
+                var circle_marker = new google.maps.Marker({
+                    position: position,
+                    map: map_struct.map,
+                    icon: "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|" + new_circle.fill_color.substring(1, new_circle.fill_color.length),
+                    visible: map_struct.map.getZoom() < new_circle.marker_zoom
+                });
+                if (callback) {
+                    google.maps.event.addListener(
+                        circle_marker,
+                        'click',
+                        function(ev) {
+                            callback(ev, circle);
+                            if (map_struct.map.getZoom() < new_circle.marker_zoom) map_struct.map.setZoom(new_circle.marker_zoom);
+                            map_struct.map.setCenter(position);
+                        }
+                    );
+                }
+                circle.setVisible(map_struct.map.getZoom() >= new_circle.marker_zoom);
+                if (map_struct.marked_figures === undefined) initFigureMarking(map_struct);
+                map_struct.marked_figures.push({figure: circle, marker: circle_marker, zoom: new_circle.marker_zoom});
+                if (map_struct.markerCluster) map_struct.markerCluster.addMarker(circle_marker);
             }
             map_struct.circles.push(circle);
         }
-        function add_polygon(map_struct, new_polygon) {
+        function addPolygon(map_struct, new_polygon) {
             var polygon = new google.maps.Polygon({
                 strokeColor: new_polygon.stroke_color,
                 strokeOpacity: new_polygon.stroke_opacity,
@@ -80,25 +142,54 @@
                 fillColor: new_polygon.fill_color,
                 path: new_polygon.path,
                 map: map_struct.map,
-                geodesic: true
+                geodesic: true,
+                visible: !new_polygon.marker_zoom || map_struct.map.getZoom() >= new_polygon.marker_zoom
             });
+            var callback;
             if(new_polygon.infobox) {
+                callback = getInfoCallback(map_struct, new_polygon.infobox);
                 google.maps.event.addListener(
                     polygon,
                     'click',
-                    getInfoCallback(map_struct, new_polygon.infobox)
+                    callback
                 );
+            }
+            if (new_polygon.marker_zoom) {
+                var path_sum = new_polygon.path.reduce(function(prev, cur) {
+                    return {lat: prev.lat + cur.lat, lng: prev.lng + cur.lng};
+                });
+                var position = new google.maps.LatLng(path_sum.lat / new_polygon.path.length, path_sum.lng / new_polygon.path.length);
+                var polygon_marker = new google.maps.Marker({
+                    position: position,
+                    map: map_struct.map,
+                    icon: "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|" + new_polygon.fill_color.substring(1, new_polygon.fill_color.length),
+                    visible: map_struct.map.getZoom() < new_polygon.marker_zoom
+                });
+                if (callback) {
+                    google.maps.event.addListener(
+                        polygon_marker,
+                        'click',
+                        function(ev) {
+                            callback(ev, polygon);
+                            if (map_struct.map.getZoom() < new_polygon.marker_zoom) map_struct.map.setZoom(new_polygon.marker_zoom);
+                            map_struct.map.setCenter(position);
+                        }
+                    );
+                }
+                if (map_struct.marked_figures === undefined) initFigureMarking(map_struct);
+                map_struct.marked_figures.push({figure: polygon, marker: polygon_marker, zoom: new_polygon.marker_zoom});
+                if (map_struct.markerCluster) map_struct.markerCluster.addMarker(polygon_marker);
             }
             map_struct.polygons.push(polygon);
         }
-        function add_polyline(map_struct, new_polyline) {
+        function addPolyline(map_struct, new_polyline) {
             var polyline = new google.maps.Polyline({
                 strokeColor: new_polyline.stroke_color,
                 strokeOpacity: new_polyline.stroke_opacity,
                 strokeWeight: new_polyline.stroke_weight,
                 path: new_polyline.path,
                 map: map_struct.map,
-                geodesic: true
+                geodesic: true,
             });
             if(new_polyline.infobox) {
                 google.maps.event.addListener(
@@ -111,15 +202,29 @@
         }
         function getInfoCallback(map_struct, content) {
             var infowindow = new google.maps.InfoWindow({content: content});
-            //infowindow.setContent(content);
-            return function(ev) {
+            return function(ev, obj = null) {
                 if (map_struct.prev_infowindow) {
                     map_struct.prev_infowindow.close();
                 }
                 map_struct.prev_infowindow = infowindow;
+                infowindow.setContent(content);
                 infowindow.setPosition(ev.latLng);
-                infowindow.open(map_struct.map, this);
+                infowindow.open(map_struct.map, obj || this);
             };
+        }
+        function initFigureMarking(map_struct) {
+            map_struct.marked_figures = [];
+            map_struct.map.addListener('zoom_changed', function() {
+                map_struct.marked_figures.map(function(el) {
+                    if (map_struct.map.getZoom() >= el.zoom) {
+                        el.marker.setVisible(false);
+                        el.figure.setVisible(true);
+                    } else {
+                        el.marker.setVisible(true);
+                        el.figure.setVisible(false);
+                    }
+                });
+            });
         }
     </script>
     {{ set_googlemaps_loaded() }}
@@ -177,31 +282,32 @@
 
         {% if gmap.cluster %}
             {{gmap.varname}}.markerCluster = new MarkerClusterer({{gmap.varname}}.map, {{gmap.varname}}.markers, {'imagePath': "{{gmap.cluster_imagepath}}", 'gridSize': {{gmap.cluster_gridsize}}});
+            {{gmap.varname}}.markerCluster.setMaxZoom({{gmap.cluster_maxzoom}});
         {% endif %}
 
         // add gmap markers
         {{ gmap.markers|tojson|safe }}.forEach(function(el) {
-            add_marker({{gmap.varname}}, el);
+            addMarker({{gmap.varname}}, el);
         });
 
         // add rectangles
         {{ gmap.rectangles|tojson|safe }}.forEach(function(el) {
-            add_rectangle({{gmap.varname}}, el);
+            addRectangle({{gmap.varname}}, el);
         });
 
         // add circles
         {{ gmap.circles|tojson|safe }}.forEach(function(el) {
-            add_circle({{gmap.varname}}, el);
+            addCircle({{gmap.varname}}, el);
         });
 
         // add polygons
         {{ gmap.polygons|tojson|safe }}.forEach(function(el) {
-            add_polygon({{gmap.varname}}, el);
+            addPolygon({{gmap.varname}}, el);
         });
 
         // add polylines
         {{ gmap.polylines|tojson|safe }}.forEach(function(el) {
-            add_polyline({{gmap.varname}}, el);
+            addPolyline({{gmap.varname}}, el);
         });
     }
     

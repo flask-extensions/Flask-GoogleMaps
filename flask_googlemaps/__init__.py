@@ -35,6 +35,7 @@ class Map(object):
                  cluster=False,
                  cluster_imagepath=DEFAULT_CLUSTER_IMAGE_PATH,
                  cluster_gridsize=60,
+                 cluster_maxzoom=20,
                  **kwargs):
         """Builds the Map properties"""
         self.cls = cls
@@ -67,6 +68,7 @@ class Map(object):
         self.cluster = cluster
         self.cluster_imagepath = cluster_imagepath
         self.cluster_gridsize = cluster_gridsize
+        self.cluster_maxzoom=cluster_maxzoom
 
     def build_markers(self, markers):
         if not markers:
@@ -186,6 +188,7 @@ class Map(object):
                              stroke_weight=2,
                              fill_color='#FF0000',
                              fill_opacity=.3,
+                             marker_zoom=None,
                              ):
         """ Set a dictionary with the javascript class Rectangle parameters
 
@@ -213,6 +216,7 @@ class Map(object):
             'stroke_weight': stroke_weight,
             'fill_color': fill_color,
             'fill_opacity': fill_opacity,
+            'marker_zoom': marker_zoom,
             'bounds': {'north': north,
                        'west': west,
                        'south': south,
@@ -326,6 +330,7 @@ class Map(object):
                           stroke_weight=2,
                           fill_color='#FF0000',
                           fill_opacity=.3,
+                          marker_zoom=None,
                           ):
         """ Set a dictionary with the javascript class Circle parameters
 
@@ -353,6 +358,7 @@ class Map(object):
             'stroke_weight': stroke_weight,
             'fill_color': fill_color,
             'fill_opacity': fill_opacity,
+            'marker_zoom': marker_zoom,
             'center': {'lat': center_lat,
                        'lng': center_lng},
             'radius': radius,
@@ -612,7 +618,8 @@ class Map(object):
                            stroke_opacity=.8,
                            stroke_weight=2,
                            fill_color='#FF0000',
-                           fill_opacity=0.3):
+                           fill_opacity=0.3,
+                           marker_zoom=None):
         """ Set a dictionary with the javascript class Polygon parameters
 
         This function sets a default drawing configuration if the user just
@@ -642,7 +649,8 @@ class Map(object):
             'stroke_opacity': stroke_opacity,
             'stroke_weight': stroke_weight,
             'fill_color': fill_color,
-            'fill_opacity': fill_opacity
+            'fill_opacity': fill_opacity,
+            'marker_zoom': marker_zoom,
         }
 
         return polygon
@@ -718,7 +726,9 @@ class Map(object):
             'cluster': self.cluster,
             'cluster_imagepath': self.cluster_imagepath,
             'cluster_gridsize': self.cluster_gridsize,
+            'cluster_maxzoom': self.cluster_maxzoom,
             'collapsible': self.collapsible,
+            'user_position': self.user_position,
             'js': dumps(self.js),
             'html': dumps(self.html),
         }
