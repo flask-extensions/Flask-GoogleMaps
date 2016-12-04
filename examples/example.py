@@ -307,6 +307,15 @@ def mapview():
         }]
     )
 
+    userposition = Map(
+        identifier="userposition",
+        varname="userposition",
+        lat=0,
+        lng=0,
+        zoom=14,
+        user_position=True
+    )
+
     return render_template(
         'example.html',
         mymap=mymap,
@@ -320,7 +329,8 @@ def mapview():
         movingmap=movingmap,
         movingmarkers=movingmarkers,
         collapsible=collapsible,
-        infoboxmap=infoboxmap
+        infoboxmap=infoboxmap,
+        userposition=userposition
     )
 
 

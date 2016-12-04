@@ -16,6 +16,7 @@
             {{pgonmap.js}}
             {{collapsible.js}}
             {{infoboxmap.js}}
+            {{userposition.js}}
     </head>
     <body>
         <h1>Flask Google Maps Example</h1>
@@ -332,6 +333,11 @@ in body:
 
         <h2>Infoboxes for map shapes</h2>
         {{infoboxmap.html}}
+
+        <h2>User position map</h2>
+        {{ userposition.html }}
+
+        <pre>Map(... ,user_position=True)</pre>
 
     </body>
 </html>

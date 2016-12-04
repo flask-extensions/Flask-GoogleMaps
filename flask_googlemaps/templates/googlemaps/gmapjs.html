@@ -129,6 +129,9 @@
         <script src="//cdnjs.cloudflare.com/ajax/libs/js-marker-clusterer/1.0.0/markerclusterer_compiled.js" type="text/javascript"></script>
 {%  endif %}
 
+{% if gmap.user_position %}
+    <script src="https://github.com/ChadKillingsworth/geolocation-marker/releases/download/v2.0.4/geolocation-marker.js"></script>
+{% endif %}
 
 <style type="text/css">
       #{{gmap.identifier}} { {{gmap.style}} }
@@ -159,6 +162,18 @@
             rotateControl: {% if gmap.rotate_control %}true{% else %}false{% endif %},
             fullscreenControl: {% if gmap.fullscreen_control %}true{% else %}false{% endif %}
         });
+
+        {% if gmap.user_position %}
+            {{gmap.varname}}.geo_marker = new GeolocationMarker({{gmap.varname}}.map);
+            {{gmap.varname}}.interval_id = setInterval(function() {
+                if ({{gmap.varname}}.geo_marker.getPosition() !== null) {
+                    {{gmap.varname}}.map.setCenter({{gmap.varname}}.geo_marker.getPosition());
+                    {{gmap.varname}}.map.setZoom({{gmap.zoom}});
+                    clearInterval({{gmap.varname}}.interval_id);
+                    delete {{gmap.varname}}.interval_id;
+                }
+            }, 1000);
+        {% endif %}
 
         {% if gmap.cluster %}
             {{gmap.varname}}.markerCluster = new MarkerClusterer({{gmap.varname}}.map, {{gmap.varname}}.markers, {'imagePath': "{{gmap.cluster_imagepath}}", 'gridSize': {{gmap.cluster_gridsize}}});
