@@ -136,22 +136,24 @@ in body:
 {{movingmap.html}}
 
 {%  for position in movingmarkers %}
-<button onclick='movingmap_markers.map(function(mk){mk.setPosition({lat: {{ position.lat }}, lng:{{ position.lng }}})})'>Go to position {{ loop.index }} </button>
+<button onclick='{{ movingmap.varname }}.markers.map(function(mk){mk.setPosition({lat: {{ position.lat }}, lng:{{ position.lng }}})})'>Go to position {{ loop.index }} </button>
 {% endfor %}
 <br />
-<button onclick='movingmap_markers.map(function(mk){mk.setMap(null)})'>Remove marker</button>
-<button onclick='movingmap_markers.map(function(mk){mk.setMap(movingmap)})'>Restore marker</button>
-<button onclick='new google.maps.Marker({title: "New Marker", position: {lat: 37.4640, lng: -122.1350}}).setMap(movingmap)'>Add New Marker Above</button>
+<button onclick='{{ movingmap.varname }}.markers.map(function(mk){mk.setMap(null)})'>Remove marker</button>
+<button onclick='{{ movingmap.varname }}.markers.map(function(mk){mk.setMap({{ movingmap.varname }}.map)})'>Restore marker</button>
+<button onclick='new google.maps.Marker({title: "New Marker", position: {lat: 37.4640, lng: -122.1350}}).setMap({{ movingmap.varname }}.map)'>Add New Marker Above</button>
 
 
     <pre>
-&lt;button onclick='movingmap_markers.map(function(mk){mk.setPosition({lat: 37.44, lng:-122.135})})'&gt;Go to position 1 &lt;/button&gt;
-&lt;button onclick='movingmap_markers.map(function(mk){mk.setPosition({lat: 37.443, lng:-122.135})})'&gt;Go to position 2 &lt;/button&gt;
-&lt;button onclick='movingmap_markers.map(function(mk){mk.setPosition({lat: 37.445, lng:-122.135})})'&gt;Go to position 3 &lt;/button&gt;
-&lt;button onclick='movingmap_markers.map(function(mk){mk.setPosition({lat: 37.449, lng:-122.135})})'&gt;Go to position 4 &lt;/button&gt;
-&lt;button onclick='movingmap_markers.map(function(mk){mk.setMap(null)})'&gt;Remove marker&lt;/button&gt;
-&lt;button onclick='movingmap_markers.map(function(mk){mk.setMap(movingmap)})'&gt;Restore marker&lt;/button&gt;
-&lt;button onclick='onclick='new google.maps.Marker({title: "New Marker", position: {lat: 37.4640, lng: -122.1350}}).setMap(movingmap)''&gt;Add new marker above&lt;/button&gt;
+{% raw %}
+&lt;button onclick='{{ movingmap.varname }}.markers.map(function(mk){mk.setPosition({lat: 37.44, lng:-122.135})})'&gt;Go to position 1 &lt;/button&gt;
+&lt;button onclick='{{ movingmap.varname }}.markers.map(function(mk){mk.setPosition({lat: 37.443, lng:-122.135})})'&gt;Go to position 2 &lt;/button&gt;
+&lt;button onclick='{{ movingmap.varname }}.markers.map(function(mk){mk.setPosition({lat: 37.445, lng:-122.135})})'&gt;Go to position 3 &lt;/button&gt;
+&lt;button onclick='{{ movingmap.varname }}.markers.map(function(mk){mk.setPosition({lat: 37.449, lng:-122.135})})'&gt;Go to position 4 &lt;/button&gt;
+&lt;button onclick='{{ movingmap.varname }}.markers.map(function(mk){mk.setMap(null)})'&gt;Remove marker&lt;/button&gt;
+&lt;button onclick='{{ movingmap.varname }}.markers.map(function(mk){mk.setMap({{ movingmap.varname }}.map)})'&gt;Restore marker&lt;/button&gt;
+&lt;button onclick='onclick='new google.maps.Marker({title: "New Marker", position: {lat: 37.4640, lng: -122.1350}}).setMap({{ movingmap.varname }}.map)''&gt;Add new marker above&lt;/button&gt;
+{% endraw %}
     </pre>
 
 
