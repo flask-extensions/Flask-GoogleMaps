@@ -330,15 +330,7 @@
                 }
             }
         };
-        if (typeof window.onload === 'function') {
-            func = window.onload;
-            window.onload = function() {
-                func();
-                init_{{gmap.identifier}}_button();
-            }
-        } else {
-            window.onload = init_{{gmap.identifier}}_button;
-        }
+        window.addEventListener('load', init_{{gmap.identifier}}_button);
     {% else %}
         google.maps.event.addDomListener(window, 'load', {{gmap.varname}}.initialize);
     {% endif %}
