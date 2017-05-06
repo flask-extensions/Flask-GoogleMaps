@@ -710,7 +710,7 @@ class Map(object):
             'zoom_control': self.zoom_control,
             'maptype_control': self.maptype_control,
             'scale_control': self.scale_control,
-            'streetview_controle': self.streetview_control,
+            'streetview_control': self.streetview_control,
             'rotate_control': self.rotate_control,
             'fullscreen_control': self.fullscreen_control,
             'cluster': self.cluster,
