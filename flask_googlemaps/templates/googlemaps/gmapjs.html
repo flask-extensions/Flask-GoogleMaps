@@ -1,9 +1,9 @@
 
 {%  if not is_googlemaps_loaded()  %}
     {% if GOOGLEMAPS_KEY %}
-        <script src="//maps.googleapis.com/maps/api/js?key={{GOOGLEMAPS_KEY}}" type="text/javascript"></script>
+        <script src="//maps.googleapis.com/maps/api/js?key={{GOOGLEMAPS_KEY}}&language={{gmap.language}}&region={{gmap.region}}" type="text/javascript"></script>
     {%  else %}
-        <script src="//maps.googleapis.com/maps/api/js" type="text/javascript"></script>
+        <script src="//maps.googleapis.com/maps/api/js?language={{gmap.language}}&region={{gmap.region}}" type="text/javascript"></script>
     {%  endif %}
     {{ set_googlemaps_loaded() }}
 {% endif %}
