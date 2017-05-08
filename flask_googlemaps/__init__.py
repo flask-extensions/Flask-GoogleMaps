@@ -19,6 +19,8 @@ class Map(object):
                  varname='map',
                  style="height:300px;width:300px;margin:0;",
                  cls="map",
+                 language="en",
+                 region="US",
                  rectangles=None,
                  circles=None,
                  polylines=None,
@@ -38,6 +40,8 @@ class Map(object):
         """Builds the Map properties"""
         self.cls = cls
         self.style = style
+        self.language = language
+        self.region = region
         self.varname = varname
         self.center = (lat, lng)
         self.zoom = zoom
@@ -710,7 +714,7 @@ class Map(object):
             'zoom_control': self.zoom_control,
             'maptype_control': self.maptype_control,
             'scale_control': self.scale_control,
-            'streetview_controle': self.streetview_control,
+            'streetview_control': self.streetview_control,
             'rotate_control': self.rotate_control,
             'fullscreen_control': self.fullscreen_control,
             'cluster': self.cluster,

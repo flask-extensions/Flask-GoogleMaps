@@ -125,6 +125,8 @@ if __name__ == "__main__":
 - **style**: A string containing CSS styles. Defaults to `"height:300px;width:300px;margin:0;"`.
 - **identifier**: The CSS ID selector name.
 - **cls**: The CSS Class selector name. Defaults to `"map"`.
+- **language**: The map language. Defaults to `"en"`.
+- **region**: The map region. Defaults to `"US"`.
 
 Also controls True or False:
 
