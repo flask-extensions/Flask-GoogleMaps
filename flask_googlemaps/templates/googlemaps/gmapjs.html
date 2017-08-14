@@ -62,6 +62,15 @@
            }
         }
 
+        {% if gmap.fit_markers_to_bounds %}
+            // fit all markers in bounds
+            var {{gmap.varname}}_bounds = new google.maps.LatLngBounds();
+            for(i=0; i<{{gmap.varname}}_markers.length;i++) {
+                {{gmap.varname}}_bounds.extend({{gmap.varname}}_markers[i].getPosition());
+            };
+            {{gmap.varname}}.fitBounds({{gmap.varname}}_bounds);
+        {% endif %}
+
         // add rectangles
         var raw_rectangles = {{ gmap.rectangles|tojson|safe }};
         for(i = 0; i < {{ gmap.rectangles|length }}; i++) {
@@ -139,7 +148,7 @@
                 );
            }
         }
-    
+
         // add polylines
         var raw_polylines = {{ gmap.polylines|tojson|safe }};
         for(i = 0; i < {{ gmap.polylines|length }}; i++) {
@@ -179,7 +188,7 @@
             infowindow.open(map, this);
         };
     }
-    
+
     {% if gmap.collapsible %}
         function init_{{gmap.identifier}}_button() {
             document.getElementById('{{gmap.identifier}}').style.display = 'none';
