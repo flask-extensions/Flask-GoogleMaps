@@ -36,6 +36,7 @@ class Map(object):
                  cluster=False,
                  cluster_imagepath=DEFAULT_CLUSTER_IMAGE_PATH,
                  cluster_gridsize=60,
+                 fit_markers_to_bounds=False,
                  **kwargs):
         """Builds the Map properties"""
         self.cls = cls
@@ -69,6 +70,8 @@ class Map(object):
         self.cluster = cluster
         self.cluster_imagepath = cluster_imagepath
         self.cluster_gridsize = cluster_gridsize
+
+        self.fit_markers_to_bounds = fit_markers_to_bounds
 
     def build_markers(self, markers):
         if not markers:
@@ -723,6 +726,7 @@ class Map(object):
             'collapsible': self.collapsible,
             'js': dumps(self.js),
             'html': dumps(self.html),
+            'fit_markers_to_bounds': self.fit_markers_to_bounds,
         }
 
         return json_dict
