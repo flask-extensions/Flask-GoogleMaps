@@ -213,6 +213,39 @@ Here's an example snippet of code:
 Which results in something like the following map:
 <img width="1439" alt="screen shot 2015-07-29 at 2 41 52 pm" src="https://cloud.githubusercontent.com/assets/8108300/8969650/13b0de7a-3602-11e5-9ed0-9f328ac9253f.png">
 
+### Fit all markers within bounds
+Allow users to easily fit all markers within view on page load
+
+#### Without bounds
+```python
+@app.route('/map-unbounded/')
+def map_unbounded():
+"""Create map with markers out of bounds."""
+    locations = []    # long list of coordinates
+    map = Map(
+        lat=locations[0].latitude,
+        lng=locations[0].longitude,
+        markers=[(loc.latitude, loc.longitude) for loc in locations]
+    )
+    return render_template('map.html', map=map)
+```
+![image](https://user-images.githubusercontent.com/14223309/29294427-24a8d4e0-8104-11e7-967b-0c55c20d0f7c.png)
+
+#### With bounds
+```python
+@app.route('/map-bounded/')
+def map_bounded():
+"""Create map with all markers within bounds."""
+    locations = []    # long list of coordinates
+    map = Map(
+        lat=locations[0].latitude,
+        lng=locations[0].longitude,
+        markers=[(loc.latitude, loc.longitude) for loc in locations],
+        fit_markers_to_bounds = True
+    )
+    return render_template('map.html', map=map)
+```
+![image](https://user-images.githubusercontent.com/14223309/29294483-6ac3e532-8104-11e7-988c-5c19d700fe5b.png)
 
 ### Run the example app
 
