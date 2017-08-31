@@ -7,35 +7,38 @@ Easy to use Google Maps in your Flask application
 
 Look the Live DEMO: http://flaskgooglemaps.pythonanywhere.com
 
-### requires
+## requires
+
 - Jinja
 - Flask
 - A google api key [get here](https://developers.google.com/maps/documentation/javascript/get-api-key)
 
 
-### Installation
+## Installation
 
 ```pip install flask-googlemaps```
 
 or
 
 ```bash
+
 git clone https://github.com/rochacbruno/Flask-GoogleMaps
 cd Flask-GoogleMaps
 python setup.py install
+
 ```
 
-
-### How it works
+## How it works
 
 Flask-GoogleMaps includes some global functions and template filters in your Jinja environment, also it allows you to use the Map in views if needed.
 
 
-#### registering
+### registering
 
 in your app
 
 ```python
+
 from flask import Flask
 from flask_googlemaps import GoogleMaps
 
@@ -55,7 +58,9 @@ GoogleMaps(app, key="8JZ7i18MjFuM35dJHq70n3Hx4")
 In template
 
 ```html
+
 {{googlemap("my_awesome_map", lat=0.23234234, lng=-0.234234234, markers=[(0.12, -0.45345), ...])}}
+
 ```
 
 That's it! now you have some template filters and functions to use, more details in examples and screenshot below.
@@ -71,6 +76,7 @@ That's it! now you have some template filters and functions to use, more details
 #### 1. View
 
 ```python
+
 from flask import Flask, render_template
 from flask_googlemaps import GoogleMaps
 from flask_googlemaps import Map
@@ -110,9 +116,10 @@ def mapview():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
 ```
 
-##### `Map()` Parameters:
+##### `Map()` Parameters
 
 - **lat**: The latitude coordinate for centering the map.
 - **lng**: The longitutde coordinate for centering the map.
@@ -143,6 +150,7 @@ Also controls True or False:
 #### 2. Template
 
 ```html
+
 <!DOCTYPE html>
     <html>
     <head>
@@ -158,7 +166,6 @@ Also controls True or False:
 
         <h2> Template filter decoupled with single marker </h2>
         {{"decoupled-map"|googlemap_html(37.4419, -122.1419)}}
-
 
         <h2> Template function with multiple markers </h2>
         {% with map=googlemap_obj("another-map", 37.4419, -122.1419, markers=[(37.4419, -122.1419), (37.4300, -122.1400)]) %}
@@ -180,8 +187,9 @@ Also controls True or False:
 
 ### Infobox
 
-Here's an example snippet of code: 
+Here's an example snippet of code:
 ```python
+
     Map(
         identifier="catsmap",
         lat=37.4419,
@@ -213,11 +221,15 @@ Here's an example snippet of code:
 Which results in something like the following map:
 <img width="1439" alt="screen shot 2015-07-29 at 2 41 52 pm" src="https://cloud.githubusercontent.com/assets/8108300/8969650/13b0de7a-3602-11e5-9ed0-9f328ac9253f.png">
 
+
 ### Fit all markers within bounds
+
 Allow users to easily fit all markers within view on page load
 
 #### Without bounds
+
 ```python
+
 @app.route('/map-unbounded/')
 def map_unbounded():
 """Create map with markers out of bounds."""
@@ -228,11 +240,15 @@ def map_unbounded():
         markers=[(loc.latitude, loc.longitude) for loc in locations]
     )
     return render_template('map.html', map=map)
+
 ```
+
 ![image](https://user-images.githubusercontent.com/14223309/29294427-24a8d4e0-8104-11e7-967b-0c55c20d0f7c.png)
 
 #### With bounds
+
 ```python
+
 @app.route('/map-bounded/')
 def map_bounded():
 """Create map with all markers within bounds."""
@@ -244,22 +260,26 @@ def map_bounded():
         fit_markers_to_bounds = True
     )
     return render_template('map.html', map=map)
+
 ```
+
 ![image](https://user-images.githubusercontent.com/14223309/29294483-6ac3e532-8104-11e7-988c-5c19d700fe5b.png)
 
 ### Run the example app
 
 ```bash
+
 $ git clone https://github.com/rochacbruno/Flask-GoogleMaps
 $ cd Flask-GoogleMaps/examples
 $ python setup.py develop
 $ python example.py
+running..
 
 ```
 
 Access: http://localhost:5000/ and http://localhost:5000/fullmap
 
-### TODO (open a Pull Request):
+### TODO (open a Pull Request)
 
 Implement other methods from the api, add layers etc...
 

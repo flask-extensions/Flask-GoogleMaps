@@ -1,4 +1,6 @@
-# coding: utf-8
+"""FlaskGoogleMaps - Google Maps Extension for Flask"""
+
+__version__ = '0.2.5'
 
 from flask import render_template, Blueprint, Markup, g
 from flask_googlemaps.icons import dots
