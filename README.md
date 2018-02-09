@@ -142,10 +142,11 @@ Also controls True or False:
 - scale_control
 - scale_control
 - streetview_control
-- rorate_control
+- rotate_control
 - fullscreen_control
 - scroll_wheel
 - collapsible (map collapses by click on **varname**_collapse button)
+- center on user location (using HTML5 Geolocation)
 
 #### 2. Template
 
