@@ -42,6 +42,16 @@
             fullscreenControl: {% if gmap.fullscreen_control %}true{% else %}false{% endif %}
         });
 
+        //center map location on user location
+        {% if gmap.center_on_user_location %}
+            if (navigator.geolocation) {
+             navigator.geolocation.getCurrentPosition(function (position) {
+                 initialLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+                 map.setCenter(initialLocation);
+             });
+            }
+        {% endif %}
+
         // add gmap markers
         var raw_markers = {{gmap.markers|tojson|safe}};
         for(i=0; i<{{gmap.markers|length}};i++) {

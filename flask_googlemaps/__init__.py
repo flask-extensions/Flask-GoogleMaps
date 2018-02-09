@@ -39,6 +39,7 @@ class Map(object):
                  cluster_imagepath=DEFAULT_CLUSTER_IMAGE_PATH,
                  cluster_gridsize=60,
                  fit_markers_to_bounds=False,
+                 center_on_user_location=False,
                  **kwargs):
         """Builds the Map properties"""
         self.cls = cls
@@ -68,6 +69,7 @@ class Map(object):
         self.scroll_wheel = scroll_wheel
         self.fullscreen_control = fullscreen_control
         self.collapsible = collapsible
+        self.center_on_user_location = center_on_user_location
 
         self.cluster = cluster
         self.cluster_imagepath = cluster_imagepath
@@ -726,6 +728,7 @@ class Map(object):
             'cluster_imagepath': self.cluster_imagepath,
             'cluster_gridsize': self.cluster_gridsize,
             'collapsible': self.collapsible,
+            'center_on_user_location': self.center_on_user_location,
             'js': dumps(self.js),
             'html': dumps(self.html),
             'fit_markers_to_bounds': self.fit_markers_to_bounds,
