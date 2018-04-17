@@ -11,7 +11,7 @@ __all__ = ['dots', 'alpha']
 
 
 class Icon(object):
-    """Dynbamically return dot icon url"""
+    """Dynamically return dot icon url"""
 
     def __init__(self, base_url, options=None):
         self.base_url = base_url
