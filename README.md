@@ -146,7 +146,7 @@ Also controls True or False:
 - fullscreen_control
 - scroll_wheel
 - collapsible (map collapses by click on **varname**_collapse button)
-- center on user location (using HTML5 Geolocation)
+- center_on_user_location (using HTML5 Geolocation)
 
 #### 2. Template
 
