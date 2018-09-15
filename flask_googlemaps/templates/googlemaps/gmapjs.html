@@ -42,6 +42,12 @@
             fullscreenControl: {% if gmap.fullscreen_control %}true{% else %}false{% endif %}
         });
 
+        // add trafficlayer
+		{% if gmap.trafficlayer %}
+			var trafficLayer = new google.maps.TrafficLayer();
+			trafficLayer.setMap(map);
+		{% endif %}
+                                                                    
         //center map location on user location
         {% if gmap.center_on_user_location %}
             if (navigator.geolocation) {
