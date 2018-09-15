@@ -40,6 +40,7 @@ class Map(object):
                  cluster_gridsize=60,
                  fit_markers_to_bounds=False,
                  center_on_user_location=False,
+                 trafficlayer=False,
                  **kwargs):
         """Builds the Map properties"""
         self.cls = cls
@@ -70,6 +71,7 @@ class Map(object):
         self.fullscreen_control = fullscreen_control
         self.collapsible = collapsible
         self.center_on_user_location = center_on_user_location
+        self.trafficlayer = trafficlayer
 
         self.cluster = cluster
         self.cluster_imagepath = cluster_imagepath
@@ -732,6 +734,7 @@ class Map(object):
             'js': dumps(self.js),
             'html': dumps(self.html),
             'fit_markers_to_bounds': self.fit_markers_to_bounds,
+            'trafficlayer': self.trafficlayer,
         }
 
         return json_dict
