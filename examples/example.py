@@ -7,10 +7,15 @@ from flask_googlemaps import Map, icons
 app = Flask(__name__, template_folder="templates")
 
 # you can set key as config
-app.config['GOOGLEMAPS_KEY'] = "AIzaSyAZzeHhs-8JZ7i18MjFuM35dJHq70n3Hx4"
+#app.config['GOOGLEMAPS_KEY'] = "AIzaSyDP0GX-Wsui9TSDxtFNj2XuKrh7JBTPCnU"
 
 # you can also pass key here
-GoogleMaps(app, key="AIzaSyAZzeHhs-8JZ7i18MjFuM35dJHq70n3Hx4")
+GoogleMaps(
+    app,
+    #key="AIzaSyDP0GX-Wsui9TSDxtFNj2XuKrh7JBTPCnU"
+)
+
+# NOTE: this example is using a form to get the apikey
 
 
 @app.route("/")
@@ -306,7 +311,7 @@ def mapview():
             'infobox': 'This is a polyline'
         }]
     )
-    
+
     clickmap = Map(
         identifier="clickmap",
         varname="clickmap",
@@ -332,7 +337,8 @@ def mapview():
         movingmarkers=movingmarkers,
         collapsible=collapsible,
         infoboxmap=infoboxmap,
-        clickmap=clickmap
+        clickmap=clickmap,
+        GOOGLEMAPS_KEY=request.args.get('apikey')
     )
 
 
@@ -380,14 +386,20 @@ def fullmap():
         # maptype = "TERRAIN",
         # zoom="5"
     )
-    return render_template('example_fullmap.html', fullmap=fullmap)
+    return render_template(
+        'example_fullmap.html',
+        fullmap=fullmap,
+        GOOGLEMAPS_KEY=request.args.get('apikey')
+    )
 
 @app.route('/clickpost/', methods=['POST'])
 def clickpost():
-	# Now lat and lon can be accessed as:
-	Lat = request.form['lat']
-	lng = request.form['lng']
-	return "ok"
-	
+    # Now lat and lon can be accessed as:
+    lat = request.form['lat']
+    lng = request.form['lng']
+    print(lat)
+    print(lng)
+    return "ok"
+
 if __name__ == "__main__":
     app.run(debug=True, use_reloader=True)
