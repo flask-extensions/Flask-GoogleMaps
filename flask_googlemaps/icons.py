@@ -28,7 +28,7 @@ dots = Icon(
 
 alpha = Icon(
     base_url='//www.google.com/mapfiles/marker{0}.png',
-    options=['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K'
+    options=['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K',
              'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V',
              'X', 'Z', 'W', 'Y']
 )
