@@ -16,9 +16,18 @@
             {{pgonmap.js}}
             {{collapsible.js}}
             {{infoboxmap.js}}
+	        {{clickmap.js}}
+
     </head>
     <body>
         <h1>Flask Google Maps Example</h1>
+
+        Provide your Google Maps API Key to test it.
+        Get you APIKEY in <a href="https://cloud.google.com/maps-platform/?apis=maps">https://cloud.google.com/maps-platform/?apis=maps</a>
+        <form action="." method="GET">
+            <input type="text" name="apikey" id="apikey"/><input type="submit" value="load"/>
+        </form>
+        <hr>
 
         <h2> Template function centered, no marker </h2>
         {{googlemap("simple-map", 37.4419, -122.1419, varname="simplemap")}}
@@ -330,6 +339,10 @@ in body:
 
         <h2>Infoboxes for map shapes</h2>
         {{infoboxmap.html}}
+
+        <h2>LatLon from click to flask and back:</h2>
+
+        {{clickmap.html}}
 
     </body>
 </html>
