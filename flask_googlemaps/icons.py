@@ -34,7 +34,7 @@ alpha = Icon(
 )
 
 shapes = Icon(
-    base_url='//www.google.com/mapsfiles/kml/shapes/{0}.png',
+    base_url='//maps.google.com/mapfiles/kml/shapes/{0}.png',
     options=['airports', 'arrow', 'arrow-reverse', 'arts', 'bars', 
              'broken_link', 'bus', 'cabs', 'camera', 'campfire', 'campground', 
              'capital_big', 'capital_big_highlight', 'capital_small', 
@@ -58,7 +58,7 @@ shapes = Icon(
              'wheel_chair_accessible', 'woman', 'yen']
 )
 pushpin = Icon(
-    base_url='//www.google.com/mapsfiles/kml/pushpin/{0}.png',
+    base_url='//maps.google.com/mapfiles/kml/pushpin/{0}.png',
     options=['blue-pushpin', 'grn-pushpin', 'ltblu-pushpin', 'pink-pushpin', 
              'purple-pushpin', 'red-pushpin', 'wht-pushpin', 'ylw-pushpin']
 )
