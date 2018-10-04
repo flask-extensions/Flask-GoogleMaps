@@ -1,6 +1,6 @@
 # coding: utf-8
 
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from flask_googlemaps import GoogleMaps
 from flask_googlemaps import Map, icons
 
@@ -306,6 +306,17 @@ def mapview():
             'infobox': 'This is a polyline'
         }]
     )
+    
+    clickmap = Map(
+        identifier="clickmap",
+        varname="clickmap",
+        lat=37.4419,
+        lng=-122.1419,
+        report_clickpos=True,
+        clickpos_uri="/clickpost/"
+    )
+
+
 
     return render_template(
         'example.html',
@@ -320,7 +331,8 @@ def mapview():
         movingmap=movingmap,
         movingmarkers=movingmarkers,
         collapsible=collapsible,
-        infoboxmap=infoboxmap
+        infoboxmap=infoboxmap,
+        clickmap=clickmap
     )
 
 
@@ -370,6 +382,12 @@ def fullmap():
     )
     return render_template('example_fullmap.html', fullmap=fullmap)
 
-
+@app.route('/clickpost/', methods=['POST'])
+def clickpost():
+	# Now lat and lon can be accessed as:
+	Lat = request.form['lat']
+	lng = request.form['lng']
+	return "ok"
+	
 if __name__ == "__main__":
     app.run(debug=True, use_reloader=True)

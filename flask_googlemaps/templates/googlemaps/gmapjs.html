@@ -72,6 +72,14 @@
            }
         }
 
+        {% if gmap.report_clickpos %}
+        google.maps.event.addListener(
+        	{{gmap.varname}},
+            'click',
+			function(event) { clickposCallback('{{gmap.clickpos_uri}}', event.latLng) }
+        );
+        {% endif %}        
+
         {% if gmap.fit_markers_to_bounds %}
             // fit all markers in bounds
             var {{gmap.varname}}_bounds = new google.maps.LatLngBounds();
@@ -197,6 +205,13 @@
             infowindow.setContent(content);
             infowindow.open(map, this);
         };
+    }
+    
+    function clickposCallback(uri, latLng) {
+    	xhttp = new XMLHttpRequest();
+    	xhttp.open("POST", uri);
+    	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp.send("lat=" + latLng.lat() + "&lng="  + latLng.lng());
     }
 
     {% if gmap.collapsible %}
