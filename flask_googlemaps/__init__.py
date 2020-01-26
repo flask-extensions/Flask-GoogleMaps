@@ -5,6 +5,7 @@ __version__ = '0.2.6'
 from flask import render_template, Blueprint, Markup, g
 from flask_googlemaps.icons import dots
 from json import dumps
+import requests as rq
 
 DEFAULT_ICON = dots.red
 DEFAULT_CLUSTER_IMAGE_PATH = "static/images/m"
@@ -753,7 +754,8 @@ class Map(object):
     @property
     def html(self):
         return Markup(self.render('googlemaps/gmap.html', gmap=self))
-
+              
+       
 
 def googlemap_obj(*args, **kwargs):
     map = Map(*args, **kwargs)
@@ -782,6 +784,26 @@ def is_googlemaps_loaded():
     return getattr(g, 'googlemaps_loaded', False)
 
 
+def get_address(API_KEY,lat,lon):
+    add_dict = dict()
+    response = rq.get('https://maps.googleapis.com/maps/api/geocode/json?latlng='+','.join(map(str,[lat,lon]))+'&key='+API_KEY).json()
+    add_dict['zip'] = response['results'][0]['address_components'][-1]['long_name']
+    add_dict['country'] = response['results'][0]['address_components'][-2]['long_name']
+    add_dict['state'] = response['results'][0]['address_components'][-3]['long_name']
+    add_dict['city'] = response['results'][0]['address_components'][-4]['long_name']
+    add_dict['locality'] = response['results'][0]['address_components'][-5]['long_name']
+    add_dict['road'] = response['results'][0]['address_components'][-6]['long_name']
+    add_dict['formatted_address'] = response['results'][0]['formatted_address']
+    return add_dict
+    
+    
+    
+def get_coordinates( API_KEY,address_text):
+    response = rq.get('https://maps.googleapis.com/maps/api/geocode/json?address='+address_text+'&key='+API_KEY).json()
+    return response['results'][0]['geometry']['location']
+    
+    
+
 class GoogleMaps(object):
     def __init__(self, app=None, **kwargs):
         self.key = kwargs.get('key')
@@ -808,3 +830,22 @@ class GoogleMaps(object):
         )
         app.register_blueprint(module)
         return module
+        
+    def get_address(lat,lon):
+        API_KEY = app.config['GOOGLEMAPS_KEY']
+        add_dict = dict()
+        response = rq.get('https://maps.googleapis.com/maps/api/geocode/json?latlng='+','.join(map(str,[lat,lon]))+'&key='+API_KEY).json()
+        add_dict['zip'] = response['results'][0]['address_components'][-1]['long_name']
+        add_dict['country'] = response['results'][0]['address_components'][-2]['long_name']
+        add_dict['state'] = response['results'][0]['address_components'][-3]['long_name']
+        add_dict['city'] = response['results'][0]['address_components'][-4]['long_name']
+        add_dict['locality'] = response['results'][0]['address_components'][-5]['long_name']
+        add_dict['road'] = response['results'][0]['address_components'][-6]['long_name']
+        add_dict['formatted_address'] = response['results'][0]['formatted_address']
+        return add_dict
+        
+    def get_coordinates(address_text):
+        API_KEY = app.config['GOOGLEMAPS_KEY'] 
+        response = rq.get('https://maps.googleapis.com/maps/api/geocode/json?address='+address_text+'&key='+API_KEY).json()
+        return response['results'][0]['geometry']['location']
+    
