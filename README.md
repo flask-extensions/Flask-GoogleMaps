@@ -275,6 +275,24 @@ def map_bounded():
 
 ![image](https://user-images.githubusercontent.com/14223309/29294483-6ac3e532-8104-11e7-988c-5c19d700fe5b.png)
 
+
+### Geocoding and Reverse Geocoding 
+
+```python
+from flask_googlemaps import get_address, get_coordinates
+API_KEY = 'YOUR API KEY'
+
+#Reverse Geocoding: getting detailed address from coordinates of a location
+print(get_address(API_KEY,22.4761596,88.4149326))
+#output: {'zip': '700150', 'country': 'India', 'state': 'West Bengal', 'city': 'Kolkata', 'locality': 'Kolkata', 'road': 'Techno City', 'formatted_address': 'Sirin Rd, Mauza Ranabhutia, Techno City, Kolkata, West Bengal 700150, India'}
+
+
+#Geocoding: getting coordinates from address text
+print(get_coordinates(API_KEY,'Netaji Subhash Engineering College Kolkata'))
+#output: {'lat': 22.4761596, 'lng': 88.4149326}
+```
+
+
 ### Run the example app
 
 ```bash
