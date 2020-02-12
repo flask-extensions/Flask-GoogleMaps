@@ -1,7 +1,13 @@
-# Flask Google Maps
+# Flask Google Maps [![Generic badge](https://img.shields.io/badge/PayPal-Donante-red.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=2UGZHBYZV39XY&source=url)
+
 
 [![Flask Estension](https://img.shields.io/badge/flask-extension-green.svg?style=flat)](https://flaskextensions.com)
-<a target="_blank" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=2UGZHBYZV39XY&source=url"><img alt='Donate with Paypal' src='https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif' /></a>
+[![PyPI version fury.io](https://badge.fury.io/py/flask-googlemaps.svg)](https://pypi.python.org/pypi/flask-googlemaps/)
+[![PyPI download month](https://img.shields.io/pypi/dm/flask-googlemaps.svg)](https://pypi.org/project/flask-googlemaps/)
+[![PyPI license](https://img.shields.io/pypi/l/flask-googlemaps.svg)](https://pypi.python.org/pypi/flask-googlemaps/)
+[![PyPI format](https://img.shields.io/pypi/format/flask-googlemaps.svg)](https://pypi.python.org/pypi/flask-googlemaps/)
+[![PyPI status](https://img.shields.io/pypi/status/flask-googlemaps.svg)](https://pypi.python.org/pypi/flask-googlemaps/)
+[![PyPI pyversions](https://img.shields.io/pypi/pyversions/flask-googlemaps.svg)](https://pypi.python.org/pypi/flask-googlemaps/)
 
 Easy to use Google Maps in your Flask application
 
