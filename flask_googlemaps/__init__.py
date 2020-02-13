@@ -41,6 +41,8 @@ class Map(object):
                  fit_markers_to_bounds=False,
                  center_on_user_location=False,
                  trafficlayer=False,
+                 report_clickpos=False,
+                 clickpos_uri="",
                  **kwargs):
         """Builds the Map properties"""
         self.cls = cls
@@ -72,6 +74,8 @@ class Map(object):
         self.collapsible = collapsible
         self.center_on_user_location = center_on_user_location
         self.trafficlayer = trafficlayer
+        self.report_clickpos = report_clickpos
+        self.clickpos_uri = clickpos_uri
 
         self.cluster = cluster
         self.cluster_imagepath = cluster_imagepath

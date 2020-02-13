@@ -7,7 +7,7 @@ and
 http://mabp.kiev.ua/2010/01/12/google-map-markers/
 """
 
-__all__ = ['dots', 'alpha','shapes','pushpin']
+__all__ = ['dots', 'alpha', 'shapes', 'pushpin', 'paddle']
 
 
 class Icon(object):
@@ -28,13 +28,13 @@ dots = Icon(
 
 alpha = Icon(
     base_url='//www.google.com/mapfiles/marker{0}.png',
-    options=['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K'
+    options=['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K',
              'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V',
              'X', 'Z', 'W', 'Y']
 )
 
 shapes = Icon(
-    base_url='//www.google.com/mapsfiles/kml/shapes/{0}.png',
+    base_url='//maps.google.com/mapfiles/kml/shapes/{0}.png',
     options=['airports', 'arrow', 'arrow-reverse', 'arts', 'bars', 
              'broken_link', 'bus', 'cabs', 'camera', 'campfire', 'campground', 
              'capital_big', 'capital_big_highlight', 'capital_small', 
@@ -58,7 +58,27 @@ shapes = Icon(
              'wheel_chair_accessible', 'woman', 'yen']
 )
 pushpin = Icon(
-    base_url='//www.google.com/mapsfiles/kml/pushpin/{0}.png',
+    base_url='//maps.google.com/mapfiles/kml/pushpin/{0}.png',
     options=['blue-pushpin', 'grn-pushpin', 'ltblu-pushpin', 'pink-pushpin', 
              'purple-pushpin', 'red-pushpin', 'wht-pushpin', 'ylw-pushpin']
+)
+
+paddle = Icon(
+    base_url='//maps.google.com/mapfiles/kml/paddle/{0}.png',
+    options=['1-lv','2-lv','3-lv','4-lv','5-lv','6-lv','7-lv','8-lv','9-lv','10-lv',
+             '1', '2', '3', '4', '5', '6', '7', '8', '9', '10',
+             'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K',
+             'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V',
+             'X', 'W', 'Y', 'Z',
+             'blu-blank-lv', 'blu-blank', 'blu-circle-lv', 'blu-circle', 'blu-diamond-lv', 'blu-diamond', 'blu-square-lv', 'blu-square', 'blu-stars-lv', 'blu-stars', 
+             'grn-blank-lv', 'grn-blank', 'grn-circle-lv', 'grn-circle', 'grn-diamond-lv', 'grn-diamond', 'grn-square-lv', 'grn-square', 'grn-stars-lv', 'grn-stars', 
+             'ltblu-blank', 'ltblu-circle', 'ltblu-diamond', 'ltblu-square', 'ltblu-stars',
+             'pink-blank', 'pink-circle', 'pink-diamond', 'pink-square', 'pink-stars',
+             'purple-blank', 'purple-circle-lv', 'purple-circle', 'purple-diamond-lv', 'purple-diamond', 'purple-square-lv', 'purple-square', 'purple-stars-lv', 'purple-stars',
+             'red-circle-lv', 'red-circle', 'red-diamond-lv', 'red-diamond', 'red-square-lv', 'red-square', 'red-stars-lv', 'red-stars',
+             'wht-blank', 'wht-blank-lv', 'wht-circle-lv', 'wht-circle', 'wht-diamond-lv', 'wht-diamond', 'wht-square-lv', 'wht-square', 'wht-stars-lv', 'wht-stars',
+             'ylw-blank', 'ylw-blank-lv', 'ylw-circle-lv', 'ylw-circle', 'ylw-diamond-lv', 'ylw-diamond', 'ylw-square-lv', 'ylw-square', 'ylw-stars-lv', 'ylw-stars',
+             'orange-blank',  'orange-circle', 'orange-diamond', 'orange-square', 'orange-stars', 
+             'go-lv', 'go', 'pause-lv', 'pause', 'stop-lv', 'stop', 'route'
+            ]
 )
