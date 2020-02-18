@@ -3,8 +3,11 @@
 from flask import Flask, render_template, request
 from flask_googlemaps import GoogleMaps
 from flask_googlemaps import Map, icons
+from dynaconf import FlaskDynaconf
 
 app = Flask(__name__, template_folder="templates")
+FlaskDynaconf(app)  # will read GOOGLEMAPS_KEY from .secrets.toml
+
 
 # you can set key as config
 #app.config['GOOGLEMAPS_KEY'] = "AIzaSyDP0GX-Wsui9TSDxtFNj2XuKrh7JBTPCnU"
