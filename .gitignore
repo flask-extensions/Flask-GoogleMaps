@@ -42,3 +42,4 @@ media/*
 .project
 .pydevproject
 venv
+.secrets.*

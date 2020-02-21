@@ -1,11 +1,9 @@
 # Flask Google Maps
 
-[![Flask Registered](https://img.shields.io/badge/flask-registered-green.svg?style=flat)](https://github.com/pocoo/metaflask)
+[![Flask Estension](https://img.shields.io/badge/flask-extension-green.svg?style=flat)](https://flaskextensions.com)
 <a target="_blank" href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&amp;business=rochacbruno%40gmail%2ecom&amp;lc=BR&amp;item_name=FlaskGoogleMaps&amp;no_note=0&amp;currency_code=USD&amp;bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHostedGuest"><img alt='Donate with Paypal' src='http://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif' /></a>
 
 Easy to use Google Maps in your Flask application
-
-Look the Live DEMO: http://flaskgooglemaps.pythonanywhere.com
 
 ## requires
 
@@ -269,23 +267,33 @@ def map_bounded():
 ### Run the example app
 
 ```bash
-
-$ git clone https://github.com/rochacbruno/Flask-GoogleMaps
+$ git clone https://github.com/flask-extensions/Flask-GoogleMaps
 $ cd Flask-GoogleMaps/
-$ python setup.py develop
-$ cd examples/
-$ python example.py
-running..
+```
 
+If you have Poetry
+
+```bash
+$ poetry install
+```
+
+without poetry
+
+```bash
+$ pip install --upgrade pip
+$ pip install -e .
+$ pip install -r requirements.txt
+```
+
+Run it.
+
+```bash
+$ FLASK_GOOGLEMAPS_KEY="YourKeyHERE" FLASK_APP=examples/example.py flask run
+running on localhost:5000 .....
 ```
 
 Access: http://localhost:5000/ and http://localhost:5000/fullmap
 
-### TODO (open a Pull Request)
-
-Implement other methods from the api, add layers etc...
+## Contribute
 
 Please see this page [developers.google.com/maps/documentation/javascript/tutorial](https://developers.google.com/maps/documentation/javascript/tutorial) and contribute!
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/rochacbruno/flask-googlemaps/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
-
