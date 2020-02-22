@@ -26,15 +26,13 @@ pip-log.txt
 .coverage
 .tox
 nosetests.xml
-
 .email_password.txt
 .db_password.txt
 local_settings.py
+
 # Translations
 *.mo
-
 *.nja
-
 media/*
 
 # Mr Developer
@@ -43,3 +41,8 @@ media/*
 .pydevproject
 venv
 .secrets.*
+
+# IDE's and Text Editor Setting Up
+
+.idea/
+.vscode/
