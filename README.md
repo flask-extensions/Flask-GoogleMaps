@@ -11,19 +11,23 @@ Easy to use Google Maps in your Flask application
 - Flask
 - A google api key [get here](https://developers.google.com/maps/documentation/javascript/get-api-key)
 
+## Contribute
 
-## Installation
-
-```pip install flask-googlemaps```
-
-or
+To contribute with the project, clone it, create a virtualenv and install all of you need to dev, see below:
 
 ```bash
-
-git clone https://github.com/rochacbruno/Flask-GoogleMaps
+git clone https://github.com/flask-extensions/Flask-GoogleMaps.git
 cd Flask-GoogleMaps
-python setup.py install
+poetry use env 3.8  # just to create virtualenv at the first time
+poetry shell # activate virtualenv
+poetry install  # to install all for dev
+```
+## Installation
 
+To use in your project just use your dependency manager to install it, with pip is like this:
+
+```bash
+pip install flask-googlemaps
 ```
 
 ## How it works
@@ -294,6 +298,6 @@ running on localhost:5000 .....
 
 Access: http://localhost:5000/ and http://localhost:5000/fullmap
 
-## Contribute
+## Contribute with the Google Maps API
 
 Please see this page [developers.google.com/maps/documentation/javascript/tutorial](https://developers.google.com/maps/documentation/javascript/tutorial) and contribute!
