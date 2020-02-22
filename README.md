@@ -1,7 +1,7 @@
 # Flask Google Maps
 
 [![Flask Estension](https://img.shields.io/badge/flask-extension-green.svg?style=flat)](https://flaskextensions.com)
-<a target="_blank" href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&amp;business=rochacbruno%40gmail%2ecom&amp;lc=BR&amp;item_name=FlaskGoogleMaps&amp;no_note=0&amp;currency_code=USD&amp;bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHostedGuest"><img alt='Donate with Paypal' src='http://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif' /></a>
+<a target="_blank" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=2UGZHBYZV39XY&source=url"><img alt='Donate with Paypal' src='https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif' /></a>
 
 Easy to use Google Maps in your Flask application
 
