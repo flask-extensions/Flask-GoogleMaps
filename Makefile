@@ -1,4 +1,4 @@
-.PHONY: test pep8 clean install build publish tree reenv
+.PHONY: test pep8 clean install build publish tree env
 
 test: pep8
 	py.test --cov=flask_googlemaps -l --tb=short --maxfail=1 tests/
@@ -15,18 +15,16 @@ clean:
 	@rm -rf *.egg-info
 
 install:
-	@pip install flit pypandoc pygments
-	@flit install -s
+	@poetry install
 
 build:
-	@flit build
+	@poetry build
 
 publish:
-	@flit publish
+	@poetry publish
 
 tree:
 	@tree  -L 1 -a -I __pycache__ --dirsfirst --noreport
 
-reenv:
-	@rm -rf venv
-	@python3.6 -m venv venv
+env:
+	@poetry env use 3.8
