@@ -8,6 +8,7 @@
 [![PyPI format](https://img.shields.io/pypi/format/flask-googlemaps.svg)](https://pypi.python.org/pypi/flask-googlemaps/)
 [![PyPI status](https://img.shields.io/pypi/status/flask-googlemaps.svg)](https://pypi.python.org/pypi/flask-googlemaps/)
 [![PyPI pyversions](https://img.shields.io/pypi/pyversions/flask-googlemaps.svg)](https://pypi.python.org/pypi/flask-googlemaps/)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 Easy to use Google Maps in your Flask application
 

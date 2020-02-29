@@ -1,6 +1,6 @@
 """FlaskGoogleMaps - Google Maps Extension for Flask"""
 
-__version__ = '0.4.0'
+__version__ = "0.4.0"
 
 from flask import render_template, Blueprint, Markup, g
 from flask_googlemaps.icons import dots
@@ -11,38 +11,40 @@ DEFAULT_CLUSTER_IMAGE_PATH = "static/images/m"
 
 
 class Map(object):
-    def __init__(self,
-                 identifier,
-                 lat,
-                 lng,
-                 zoom=13,
-                 maptype="ROADMAP",
-                 markers=None,
-                 varname='map',
-                 style="height:300px;width:300px;margin:0;",
-                 cls="map",
-                 language="en",
-                 region="US",
-                 rectangles=None,
-                 circles=None,
-                 polylines=None,
-                 polygons=None,
-                 zoom_control=True,
-                 maptype_control=True,
-                 scale_control=True,
-                 streetview_control=True,
-                 rotate_control=True,
-                 scroll_wheel=True,
-                 fullscreen_control=True,
-                 collapsible=False,
-                 cluster=False,
-                 cluster_imagepath=DEFAULT_CLUSTER_IMAGE_PATH,
-                 cluster_gridsize=60,
-                 fit_markers_to_bounds=False,
-                 center_on_user_location=False,
-                 report_clickpos=False,
-                 clickpos_uri="",
-                 **kwargs):
+    def __init__(
+        self,
+        identifier,
+        lat,
+        lng,
+        zoom=13,
+        maptype="ROADMAP",
+        markers=None,
+        varname="map",
+        style="height:300px;width:300px;margin:0;",
+        cls="map",
+        language="en",
+        region="US",
+        rectangles=None,
+        circles=None,
+        polylines=None,
+        polygons=None,
+        zoom_control=True,
+        maptype_control=True,
+        scale_control=True,
+        streetview_control=True,
+        rotate_control=True,
+        scroll_wheel=True,
+        fullscreen_control=True,
+        collapsible=False,
+        cluster=False,
+        cluster_imagepath=DEFAULT_CLUSTER_IMAGE_PATH,
+        cluster_gridsize=60,
+        fit_markers_to_bounds=False,
+        center_on_user_location=False,
+        report_clickpos=False,
+        clickpos_uri="",
+        **kwargs
+    ):
         """Builds the Map properties"""
         self.cls = cls
         self.style = style
@@ -85,7 +87,7 @@ class Map(object):
         if not markers:
             return
         if not isinstance(markers, (dict, list, tuple)):
-            raise AttributeError('markers accepts only dict, list and tuple')
+            raise AttributeError("markers accepts only dict, list and tuple")
 
         if isinstance(markers, dict):
             for icon, marker_list in markers.items():
@@ -102,23 +104,23 @@ class Map(object):
 
     def build_marker_dict(self, marker, icon=None):
         marker_dict = {
-            'lat': marker[0],
-            'lng': marker[1],
-            'icon': icon or DEFAULT_ICON
+            "lat": marker[0],
+            "lng": marker[1],
+            "icon": icon or DEFAULT_ICON,
         }
         if len(marker) > 2:
-            marker_dict['infobox'] = marker[2]
+            marker_dict["infobox"] = marker[2]
         if len(marker) > 3:
-            marker_dict['icon'] = marker[3]
+            marker_dict["icon"] = marker[3]
         return marker_dict
 
     def add_marker(self, lat=None, lng=None, **kwargs):
         if lat is not None:
-            kwargs['lat'] = lat
+            kwargs["lat"] = lat
         if lng is not None:
-            kwargs['lng'] = lng
-        if 'lat' not in kwargs or 'lng' not in kwargs:
-            raise AttributeError('lat and lng required')
+            kwargs["lng"] = lng
+        if "lat" not in kwargs or "lng" not in kwargs:
+            raise AttributeError("lat and lng required")
         self.markers.append(kwargs)
 
     def build_rectangles(self, rectangles):
@@ -154,7 +156,7 @@ class Map(object):
         if not rectangles:
             return
         if not isinstance(rectangles, list):
-            raise AttributeError('rectangles only accept lists as parameters')
+            raise AttributeError("rectangles only accept lists as parameters")
         for rect in rectangles:
 
             # Check the instance of one rectangle in the list. Can be
@@ -164,8 +166,7 @@ class Map(object):
                 # If the rectangle bounds doesn't have size 4 or 2
                 # an AttributeError is raised
                 if len(rect) not in (2, 4):
-                    raise AttributeError('The bound must have length'
-                                         ' 4 or 2')
+                    raise AttributeError("The bound must have length" " 4 or 2")
 
                 # If the tuple or list has size 4, the bounds order are
                 # especified as north, west, south, east
@@ -178,28 +179,28 @@ class Map(object):
                 # size, an AttributeError is raised.
                 elif len(rect) == 2:
                     if len(rect[0]) != 2 or len(rect[1]) != 2:
-                        raise AttributeError('Wrong size of rectangle bounds')
-                    rect_dict = self.build_rectangle_dict(rect[0][0],
-                                                          rect[0][1],
-                                                          rect[1][0],
-                                                          rect[1][1])
+                        raise AttributeError("Wrong size of rectangle bounds")
+                    rect_dict = self.build_rectangle_dict(
+                        rect[0][0], rect[0][1], rect[1][0], rect[1][1]
+                    )
                     self.add_rectangle(**rect_dict)
                 else:
-                    raise AttributeError('Wrong bounds input size')
+                    raise AttributeError("Wrong bounds input size")
             elif isinstance(rect, dict):
                 self.add_rectangle(**rect)
 
-    def build_rectangle_dict(self,
-                             north,
-                             west,
-                             south,
-                             east,
-                             stroke_color='#FF0000',
-                             stroke_opacity=.8,
-                             stroke_weight=2,
-                             fill_color='#FF0000',
-                             fill_opacity=.3,
-                             ):
+    def build_rectangle_dict(
+        self,
+        north,
+        west,
+        south,
+        east,
+        stroke_color="#FF0000",
+        stroke_opacity=0.8,
+        stroke_weight=2,
+        fill_color="#FF0000",
+        fill_opacity=0.3,
+    ):
         """ Set a dictionary with the javascript class Rectangle parameters
 
         This function sets a default drawing configuration if the user just
@@ -221,26 +222,24 @@ class Map(object):
             fill_opacity (float): Sets the opacity of the rectangle fill
         """
         rectangle = {
-            'stroke_color': stroke_color,
-            'stroke_opacity': stroke_opacity,
-            'stroke_weight': stroke_weight,
-            'fill_color': fill_color,
-            'fill_opacity': fill_opacity,
-            'bounds': {'north': north,
-                       'west': west,
-                       'south': south,
-                       'east': east,
-                       }
+            "stroke_color": stroke_color,
+            "stroke_opacity": stroke_opacity,
+            "stroke_weight": stroke_weight,
+            "fill_color": fill_color,
+            "fill_opacity": fill_opacity,
+            "bounds": {
+                "north": north,
+                "west": west,
+                "south": south,
+                "east": east,
+            },
         }
 
         return rectangle
 
-    def add_rectangle(self,
-                      north=None,
-                      west=None,
-                      south=None,
-                      east=None,
-                      **kwargs):
+    def add_rectangle(
+        self, north=None, west=None, south=None, east=None, **kwargs
+    ):
         """ Adds a rectangle dict to the Map.rectangles attribute
 
         The Google Maps API describes a rectangle using the LatLngBounds
@@ -264,27 +263,27 @@ class Map(object):
             https://developers.google.com/maps/documen
             tation/javascript/shapes#rectangles
         """
-        kwargs.setdefault('bounds', {})
+        kwargs.setdefault("bounds", {})
 
         if north:
-            kwargs['bounds']['north'] = north
+            kwargs["bounds"]["north"] = north
         if west:
-            kwargs['bounds']['west'] = west
+            kwargs["bounds"]["west"] = west
         if south:
-            kwargs['bounds']['south'] = south
+            kwargs["bounds"]["south"] = south
         if east:
-            kwargs['bounds']['east'] = east
+            kwargs["bounds"]["east"] = east
 
-        if set(
-            ('north', 'east', 'south', 'west')
-        ) != set(kwargs['bounds'].keys()):
-            raise AttributeError('rectangle bounds required to rectangles')
+        if set(("north", "east", "south", "west")) != set(
+            kwargs["bounds"].keys()
+        ):
+            raise AttributeError("rectangle bounds required to rectangles")
 
-        kwargs.setdefault('stroke_color', '#FF0000')
-        kwargs.setdefault('stroke_opacity', .8)
-        kwargs.setdefault('stroke_weight', 2)
-        kwargs.setdefault('fill_color', '#FF0000')
-        kwargs.setdefault('fill_opacity', .3)
+        kwargs.setdefault("stroke_color", "#FF0000")
+        kwargs.setdefault("stroke_opacity", 0.8)
+        kwargs.setdefault("stroke_weight", 2)
+        kwargs.setdefault("fill_color", "#FF0000")
+        kwargs.setdefault("fill_opacity", 0.3)
 
         self.rectangles.append(kwargs)
 
@@ -317,29 +316,30 @@ class Map(object):
         if not circles:
             return
         if not isinstance(circles, list):
-            raise AttributeError('circles accepts only lists')
+            raise AttributeError("circles accepts only lists")
 
         for circle in circles:
             if isinstance(circle, dict):
                 self.add_circle(**circle)
             elif isinstance(circle, (tuple, list)):
                 if len(circle) != 3:
-                    raise AttributeError('circle requires center and radius')
-                circle_dict = self.build_circle_dict(circle[0],
-                                                     circle[1],
-                                                     circle[2])
+                    raise AttributeError("circle requires center and radius")
+                circle_dict = self.build_circle_dict(
+                    circle[0], circle[1], circle[2]
+                )
                 self.add_circle(**circle_dict)
 
-    def build_circle_dict(self,
-                          center_lat,
-                          center_lng,
-                          radius,
-                          stroke_color='#FF0000',
-                          stroke_opacity=.8,
-                          stroke_weight=2,
-                          fill_color='#FF0000',
-                          fill_opacity=.3,
-                          ):
+    def build_circle_dict(
+        self,
+        center_lat,
+        center_lng,
+        radius,
+        stroke_color="#FF0000",
+        stroke_opacity=0.8,
+        stroke_weight=2,
+        fill_color="#FF0000",
+        fill_opacity=0.3,
+    ):
         """ Set a dictionary with the javascript class Circle parameters
 
         This function sets a default drawing configuration if the user just
@@ -361,23 +361,20 @@ class Map(object):
         """
 
         circle = {
-            'stroke_color': stroke_color,
-            'stroke_opacity': stroke_opacity,
-            'stroke_weight': stroke_weight,
-            'fill_color': fill_color,
-            'fill_opacity': fill_opacity,
-            'center': {'lat': center_lat,
-                       'lng': center_lng},
-            'radius': radius,
+            "stroke_color": stroke_color,
+            "stroke_opacity": stroke_opacity,
+            "stroke_weight": stroke_weight,
+            "fill_color": fill_color,
+            "fill_opacity": fill_opacity,
+            "center": {"lat": center_lat, "lng": center_lng},
+            "radius": radius,
         }
 
         return circle
 
-    def add_circle(self,
-                   center_lat=None,
-                   center_lng=None,
-                   radius=None,
-                   **kwargs):
+    def add_circle(
+        self, center_lat=None, center_lng=None, radius=None, **kwargs
+    ):
         """ Adds a circle dict to the Map.circles attribute
 
         The circle in a sphere is called "spherical cap" and is defined in the
@@ -397,24 +394,24 @@ class Map(object):
             tation/javascript/reference#Circle
         """
 
-        kwargs.setdefault('center', {})
+        kwargs.setdefault("center", {})
         if center_lat:
-            kwargs['center']['lat'] = center_lat
+            kwargs["center"]["lat"] = center_lat
         if center_lng:
-            kwargs['center']['lng'] = center_lng
+            kwargs["center"]["lng"] = center_lng
         if radius:
-            kwargs['radius'] = radius
+            kwargs["radius"] = radius
 
-        if set(('lat', 'lng')) != set(kwargs['center'].keys()):
-            raise AttributeError('circle center coordinates required')
-        if 'radius' not in kwargs:
-            raise AttributeError('circle radius definition required')
+        if set(("lat", "lng")) != set(kwargs["center"].keys()):
+            raise AttributeError("circle center coordinates required")
+        if "radius" not in kwargs:
+            raise AttributeError("circle radius definition required")
 
-        kwargs.setdefault('stroke_color', '#FF0000')
-        kwargs.setdefault('stroke_opacity', .8)
-        kwargs.setdefault('stroke_weight', 2)
-        kwargs.setdefault('fill_color', '#FF0000')
-        kwargs.setdefault('fill_opacity', .3)
+        kwargs.setdefault("stroke_color", "#FF0000")
+        kwargs.setdefault("stroke_opacity", 0.8)
+        kwargs.setdefault("stroke_weight", 2)
+        kwargs.setdefault("fill_color", "#FF0000")
+        kwargs.setdefault("fill_opacity", 0.3)
 
         self.circles.append(kwargs)
 
@@ -465,7 +462,7 @@ class Map(object):
         if not polylines:
             return
         if not isinstance(polylines, (list, tuple)):
-            raise AttributeError('A list or tuple of polylines is required')
+            raise AttributeError("A list or tuple of polylines is required")
 
         for points in polylines:
             if isinstance(points, dict):
@@ -474,17 +471,14 @@ class Map(object):
                 path = []
                 for coords in points:
                     if len(coords) != 2:
-                        raise AttributeError('A point needs two coordinates')
-                    path.append({'lat': coords[0],
-                                 'lng': coords[1]})
+                        raise AttributeError("A point needs two coordinates")
+                    path.append({"lat": coords[0], "lng": coords[1]})
                 polyline_dict = self.build_polyline_dict(path)
                 self.add_polyline(**polyline_dict)
 
-    def build_polyline_dict(self,
-                            path,
-                            stroke_color='#FF0000',
-                            stroke_opacity=.8,
-                            stroke_weight=2):
+    def build_polyline_dict(
+        self, path, stroke_color="#FF0000", stroke_opacity=0.8, stroke_weight=2
+    ):
         """ Set a dictionary with the javascript class Polyline parameters
 
         This function sets a default drawing configuration if the user just
@@ -501,14 +495,16 @@ class Map(object):
         """
 
         if not isinstance(path, list):
-            raise AttributeError('To build a map path a list of dictionaries'
-                                 ' of latitude and logitudes is required')
+            raise AttributeError(
+                "To build a map path a list of dictionaries"
+                " of latitude and logitudes is required"
+            )
 
         polyline = {
-            'path': path,
-            'stroke_color': stroke_color,
-            'stroke_opacity': stroke_opacity,
-            'stroke_weight': stroke_weight,
+            "path": path,
+            "stroke_color": stroke_color,
+            "stroke_opacity": stroke_opacity,
+            "stroke_weight": stroke_weight,
         }
 
         return polyline
@@ -536,22 +532,24 @@ class Map(object):
 
         if path:
             if not isinstance(path, list):
-                raise AttributeError('The path is a list of dictionary of'
-                                     'latitude and longitudes por path points')
+                raise AttributeError(
+                    "The path is a list of dictionary of"
+                    "latitude and longitudes por path points"
+                )
             for i, point in enumerate(path):
                 if not isinstance(point, dict):
                     if isinstance(point, (list, tuple)) and len(point) == 2:
-                        path[i] = {'lat': point[0], 'lng': point[1]}
+                        path[i] = {"lat": point[0], "lng": point[1]}
                     else:
                         raise AttributeError(
-                            'All points in the path must be dicts'
-                            ' of latitudes and longitudes, list or tuple'
+                            "All points in the path must be dicts"
+                            " of latitudes and longitudes, list or tuple"
                         )
-            kwargs['path'] = path
+            kwargs["path"] = path
 
-        kwargs.setdefault('stroke_color', '#FF0000')
-        kwargs.setdefault('stroke_opacity', .8)
-        kwargs.setdefault('stroke_weight', 2)
+        kwargs.setdefault("stroke_color", "#FF0000")
+        kwargs.setdefault("stroke_opacity", 0.8)
+        kwargs.setdefault("stroke_weight", 2)
 
         self.polylines.append(kwargs)
 
@@ -604,7 +602,7 @@ class Map(object):
         if not polygons:
             return
         if not isinstance(polygons, (list, tuple)):
-            raise AttributeError('A list or tuple of polylines is required')
+            raise AttributeError("A list or tuple of polylines is required")
 
         for points in polygons:
             if isinstance(points, dict):
@@ -613,19 +611,20 @@ class Map(object):
                 path = []
                 for coords in points:
                     if len(coords) != 2:
-                        raise AttributeError('A point needs two coordinates')
-                    path.append({'lat': coords[0],
-                                 'lng': coords[1]})
+                        raise AttributeError("A point needs two coordinates")
+                    path.append({"lat": coords[0], "lng": coords[1]})
                 polygon_dict = self.build_polygon_dict(path)
                 self.add_polygon(**polygon_dict)
 
-    def build_polygon_dict(self,
-                           path,
-                           stroke_color='#FF0000',
-                           stroke_opacity=.8,
-                           stroke_weight=2,
-                           fill_color='#FF0000',
-                           fill_opacity=0.3):
+    def build_polygon_dict(
+        self,
+        path,
+        stroke_color="#FF0000",
+        stroke_opacity=0.8,
+        stroke_weight=2,
+        fill_color="#FF0000",
+        fill_opacity=0.3,
+    ):
         """ Set a dictionary with the javascript class Polygon parameters
 
         This function sets a default drawing configuration if the user just
@@ -646,16 +645,18 @@ class Map(object):
         """
 
         if not isinstance(path, list):
-            raise AttributeError('To build a map path a list of dictionaries'
-                                 ' of latitude and logitudes is required')
+            raise AttributeError(
+                "To build a map path a list of dictionaries"
+                " of latitude and logitudes is required"
+            )
 
         polygon = {
-            'path': path,
-            'stroke_color': stroke_color,
-            'stroke_opacity': stroke_opacity,
-            'stroke_weight': stroke_weight,
-            'fill_color': fill_color,
-            'fill_opacity': fill_opacity
+            "path": path,
+            "stroke_color": stroke_color,
+            "stroke_opacity": stroke_opacity,
+            "stroke_weight": stroke_weight,
+            "fill_color": fill_color,
+            "fill_opacity": fill_opacity,
         }
 
         return polygon
@@ -684,24 +685,26 @@ class Map(object):
 
         if path:
             if not isinstance(path, list):
-                raise AttributeError('The path is a list of dictionary of'
-                                     'latitude and longitudes por path points')
+                raise AttributeError(
+                    "The path is a list of dictionary of"
+                    "latitude and longitudes por path points"
+                )
             for i, point in enumerate(path):
                 if not isinstance(point, dict):
                     if isinstance(point, (list, tuple)) and len(point) == 2:
-                        path[i] = {'lat': point[0], 'lng': point[1]}
+                        path[i] = {"lat": point[0], "lng": point[1]}
                     else:
                         raise AttributeError(
-                            'All points in the path must be dicts'
-                            ' of latitudes and longitudes, list or tuple'
+                            "All points in the path must be dicts"
+                            " of latitudes and longitudes, list or tuple"
                         )
-            kwargs['path'] = path
+            kwargs["path"] = path
 
-        kwargs.setdefault('stroke_color', '#FF0000')
-        kwargs.setdefault('stroke_opacity', .8)
-        kwargs.setdefault('stroke_weight', 2)
-        kwargs.setdefault('fill_color', '#FF0000')
-        kwargs.setdefault('fill_opacity', .3)
+        kwargs.setdefault("stroke_color", "#FF0000")
+        kwargs.setdefault("stroke_opacity", 0.8)
+        kwargs.setdefault("stroke_weight", 2)
+        kwargs.setdefault("fill_color", "#FF0000")
+        kwargs.setdefault("fill_opacity", 0.3)
 
         self.polygons.append(kwargs)
 
@@ -710,32 +713,32 @@ class Map(object):
 
     def as_json(self):
         json_dict = {
-            'identifier': self.identifier,
-            'center': self.center,
-            'zoom': self.zoom,
-            'maptype': self.maptype,
-            'markers': self.markers,
-            'varname': self.varname,
-            'style': self.style,
-            'cls': self.cls,
-            'rectangles': self.rectangles,
-            'circles': self.circles,
-            'polylines': self.polylines,
-            'polygons': self.polygons,
-            'zoom_control': self.zoom_control,
-            'maptype_control': self.maptype_control,
-            'scale_control': self.scale_control,
-            'streetview_control': self.streetview_control,
-            'rotate_control': self.rotate_control,
-            'fullscreen_control': self.fullscreen_control,
-            'cluster': self.cluster,
-            'cluster_imagepath': self.cluster_imagepath,
-            'cluster_gridsize': self.cluster_gridsize,
-            'collapsible': self.collapsible,
-            'center_on_user_location': self.center_on_user_location,
-            'js': dumps(self.js),
-            'html': dumps(self.html),
-            'fit_markers_to_bounds': self.fit_markers_to_bounds,
+            "identifier": self.identifier,
+            "center": self.center,
+            "zoom": self.zoom,
+            "maptype": self.maptype,
+            "markers": self.markers,
+            "varname": self.varname,
+            "style": self.style,
+            "cls": self.cls,
+            "rectangles": self.rectangles,
+            "circles": self.circles,
+            "polylines": self.polylines,
+            "polygons": self.polygons,
+            "zoom_control": self.zoom_control,
+            "maptype_control": self.maptype_control,
+            "scale_control": self.scale_control,
+            "streetview_control": self.streetview_control,
+            "rotate_control": self.rotate_control,
+            "fullscreen_control": self.fullscreen_control,
+            "cluster": self.cluster,
+            "cluster_imagepath": self.cluster_imagepath,
+            "cluster_gridsize": self.cluster_gridsize,
+            "collapsible": self.collapsible,
+            "center_on_user_location": self.center_on_user_location,
+            "js": dumps(self.js),
+            "html": dumps(self.html),
+            "fit_markers_to_bounds": self.fit_markers_to_bounds,
         }
 
         return json_dict
@@ -744,15 +747,13 @@ class Map(object):
     def js(self):
         return Markup(
             self.render(
-                'googlemaps/gmapjs.html',
-                gmap=self,
-                DEFAULT_ICON=DEFAULT_ICON
+                "googlemaps/gmapjs.html", gmap=self, DEFAULT_ICON=DEFAULT_ICON
             )
         )
 
     @property
     def html(self):
-        return Markup(self.render('googlemaps/gmap.html', gmap=self))
+        return Markup(self.render("googlemaps/gmap.html", gmap=self))
 
 
 def googlemap_obj(*args, **kwargs):
@@ -775,22 +776,22 @@ def googlemap_js(*args, **kwargs):
 
 def set_googlemaps_loaded():
     g.googlemaps_loaded = True
-    return ''
+    return ""
 
 
 def is_googlemaps_loaded():
-    return getattr(g, 'googlemaps_loaded', False)
+    return getattr(g, "googlemaps_loaded", False)
 
 
 class GoogleMaps(object):
     def __init__(self, app=None, **kwargs):
-        self.key = kwargs.get('key')
+        self.key = kwargs.get("key")
         if app:
             self.init_app(app)
 
     def init_app(self, app):
         if self.key:
-            app.config['GOOGLEMAPS_KEY'] = self.key
+            app.config["GOOGLEMAPS_KEY"] = self.key
         self.register_blueprint(app)
         app.add_template_filter(googlemap_html)
         app.add_template_filter(googlemap_js)
@@ -798,13 +799,12 @@ class GoogleMaps(object):
         app.add_template_filter(googlemap)
         app.add_template_global(googlemap)
         app.add_template_global(
-            app.config.get('GOOGLEMAPS_KEY'), name='GOOGLEMAPS_KEY')
+            app.config.get("GOOGLEMAPS_KEY"), name="GOOGLEMAPS_KEY"
+        )
         app.add_template_global(set_googlemaps_loaded)
         app.add_template_global(is_googlemaps_loaded)
 
     def register_blueprint(self, app):
-        module = Blueprint(
-            "googlemaps", __name__, template_folder="templates"
-        )
+        module = Blueprint("googlemaps", __name__, template_folder="templates")
         app.register_blueprint(module)
         return module
