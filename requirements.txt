@@ -113,4 +113,3 @@ wcwidth==0.1.8; python_version >= "3.4" \
 werkzeug==1.0.0 \
     --hash=sha256:6dc65cf9091cf750012f56f2cad759fa9e879f511b5ff8685e456b4e3bf90d16 \
     --hash=sha256:169ba8a33788476292d04186ab33b01d6add475033dfc07215e6d219cc077096
-requests==2.23.0; python_version >= "3.4"
