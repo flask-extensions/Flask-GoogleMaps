@@ -25,6 +25,7 @@ packages = [
 [tool.poetry.dependencies]
 python = ">=3.6"
 flask = ">=0.10"
+pre-commit = "1.21.0"
 
 [tool.poetry.dev-dependencies]
 ipdb = "^0.12.3"

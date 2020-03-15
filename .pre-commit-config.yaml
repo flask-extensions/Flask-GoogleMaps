@@ -1,0 +1,7 @@
+repos:
+  - repo: https://gitlab.com/pycqa/flake8
+    rev: 3.7.9
+    hooks:
+      - id: flake8
+        args: ['--select=E501']
+        language_version: python3
