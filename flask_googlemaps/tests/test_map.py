@@ -19,7 +19,7 @@ class TestFunctionAddMarker:
         )
 
     @pytest.mark.parametrize("marker", [{}, {"lat": 1}, {"lng": 1}])
-    def test_it_should_raise_a_attribute_error_when_is_missing_params(self, marker):
+    def test_should_raise_attribute_error_when_is_missing_params(self, marker):
         """
             Test check the validation of marker.
             This should raise expetion when the lat, lng or both are missing.
