@@ -230,7 +230,7 @@ class Map(object):
             "stroke_weight": stroke_weight,
             "fill_color": fill_color,
             "fill_opacity": fill_opacity,
-            "bounds": {"north": north, "west": west, "south": south, "east": east}
+            "bounds": {"north": north, "west": west, "south": south, "east": east},
         }
 
         return rectangle
