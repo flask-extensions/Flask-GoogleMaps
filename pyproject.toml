@@ -25,6 +25,9 @@ packages = [
 [tool.poetry.dependencies]
 python = ">=3.6"
 flask = ">=0.10"
+mkdocs = "^1.1"
+mkdocs-material = "^5.0.2"
+mkdocs-minify-plugin = "^0.3.0"
 
 [tool.poetry.dev-dependencies]
 ipdb = "^0.12.3"
@@ -33,9 +36,6 @@ flake8 = "^3.7.9"
 black = "^19.10b0"
 gitchangelog = "^3.0.4"
 pylint = "^2.4.4"
-mkdocs = "^1.1"
-mkdocs-material = "^5.0.2"
-mkdocs-minify-plugin = "^0.3.0"
 Pygments = "^2.6.1"
 
 [build-system]
