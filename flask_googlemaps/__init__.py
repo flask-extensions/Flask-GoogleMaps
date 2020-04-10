@@ -2,9 +2,12 @@
 
 __version__ = "0.4.0"
 
-from flask import render_template, Blueprint, Markup, g
-from flask_googlemaps.icons import dots
 from json import dumps
+
+import requests
+from flask import Blueprint, Markup, g, render_template
+
+from flask_googlemaps.icons import dots
 
 DEFAULT_ICON = dots.red
 DEFAULT_CLUSTER_IMAGE_PATH = "static/images/m"
@@ -778,24 +781,45 @@ def set_googlemaps_loaded():
     g.googlemaps_loaded = True
     return ""
 
-def get_address(API_KEY,lat,lon):
+
+def get_address(API_KEY, lat, lon):
     add_dict = dict()
-    response = rq.get('https://maps.googleapis.com/maps/api/geocode/json?latlng='+','.join(map(str,[lat,lon]))+'&key='+API_KEY).json()
-    add_dict['zip'] = response['results'][0]['address_components'][-1]['long_name']
-    add_dict['country'] = response['results'][0]['address_components'][-2]['long_name']
-    add_dict['state'] = response['results'][0]['address_components'][-3]['long_name']
-    add_dict['city'] = response['results'][0]['address_components'][-4]['long_name']
-    add_dict['locality'] = response['results'][0]['address_components'][-5]['long_name']
-    add_dict['road'] = response['results'][0]['address_components'][-6]['long_name']
-    add_dict['formatted_address'] = response['results'][0]['formatted_address']
+    response = requests.get(
+        "https://maps.googleapis.com/maps/api/geocode/json?latlng="
+        + ",".join(map(str, [lat, lon]))
+        + "&key="
+        + API_KEY
+    ).json()
+    add_dict["zip"] = response["results"][0]["address_components"][-1][
+        "long_name"
+    ]
+    add_dict["country"] = response["results"][0]["address_components"][-2][
+        "long_name"
+    ]
+    add_dict["state"] = response["results"][0]["address_components"][-3][
+        "long_name"
+    ]
+    add_dict["city"] = response["results"][0]["address_components"][-4][
+        "long_name"
+    ]
+    add_dict["locality"] = response["results"][0]["address_components"][-5][
+        "long_name"
+    ]
+    add_dict["road"] = response["results"][0]["address_components"][-6][
+        "long_name"
+    ]
+    add_dict["formatted_address"] = response["results"][0]["formatted_address"]
     return add_dict
-    
-    
-    
-def get_coordinates( API_KEY,address_text):
-    response = rq.get('https://maps.googleapis.com/maps/api/geocode/json?address='+address_text+'&key='+API_KEY).json()
-    return response['results'][0]['geometry']['location']
-    
+
+
+def get_coordinates(API_KEY, address_text):
+    response = requests.get(
+        "https://maps.googleapis.com/maps/api/geocode/json?address="
+        + address_text
+        + "&key="
+        + API_KEY
+    ).json()
+    return response["results"][0]["geometry"]["location"]
 
 
 def is_googlemaps_loaded():
