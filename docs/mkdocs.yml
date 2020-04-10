@@ -1,0 +1,27 @@
+site_name: Flask Google Maps
+site_description: Easy to use Google Maps in your Flask application.
+
+theme:
+  name: 'material'
+  palette:
+    primary: 'indigo'
+    accent: 'indigo'
+
+# Repository
+repo_name: 'flask-extensions/Flask-GoogleMaps'
+repo_url: 'https://github.com/flask-extensions/Flask-GoogleMaps'
+
+# Copyright
+copyright: 'Copyright &copy; 2020 - Flask Extensions'
+
+
+markdown_extensions:
+  - codehilite
+
+plugins:
+  - search
+  - minify:
+      minify_html: true
+
+nav:
+  - Introduction: 'index.md'
