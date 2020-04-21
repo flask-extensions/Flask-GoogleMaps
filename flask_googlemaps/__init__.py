@@ -342,6 +342,7 @@ class Map(object):
         stroke_weight=2,
         fill_color="#FF0000",
         fill_opacity=0.3,
+        clickable=True
     ):
         """ Set a dictionary with the javascript class Circle parameters
 
@@ -371,6 +372,7 @@ class Map(object):
             "fill_opacity": fill_opacity,
             "center": {"lat": center_lat, "lng": center_lng},
             "radius": radius,
+            "clickable": clickable
         }
 
         return circle
