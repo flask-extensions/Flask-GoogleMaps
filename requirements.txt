@@ -93,9 +93,6 @@ prompt-toolkit==1.0.18; python_version >= "3.4" \
 ptyprocess==0.6.0; python_version >= "3.4" and sys_platform != "win32" and (python_version == "2.7" and sys_platform != "win32" or python_version >= "3.4" and sys_platform != "win32") \
     --hash=sha256:d7cc528d76e76342423ca640335bd3633420dc1366f258cb31d05e865ef5ca1f \
     --hash=sha256:923f299cc5ad920c68f2bc0bc98b75b9f838b93b599941a6b63ddbc2476394c0
-pygments==2.5.2; python_version >= "3.4" \
-    --hash=sha256:2a3fe295e54a20164a9df49c75fa58526d3be48e14aceba6d6b1e8ac0bfd6f1b \
-    --hash=sha256:98c8aa5a9f778fcd1026a17361ddaf7330d1b7c62ae97c3bb0ae73e0b9b6b0fe
 python-box==3.4.6 \
     --hash=sha256:694a7555e3ff9fbbce734bbaef3aad92b8e4ed0659d3ed04d56b6a0a0eff26a9 \
     --hash=sha256:a71d3dc9dbaa34c8597d3517c89a8041bd62fa875f23c0f3dad55e1958e3ce10
