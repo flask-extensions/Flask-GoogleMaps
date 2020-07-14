@@ -39,6 +39,7 @@ class Map(object):
         scroll_wheel=True,
         fullscreen_control=True,
         collapsible=False,
+        mapdisplay=False,
         cluster=False,
         cluster_imagepath=DEFAULT_CLUSTER_IMAGE_PATH,
         cluster_gridsize=60,
@@ -76,6 +77,7 @@ class Map(object):
         self.scroll_wheel = scroll_wheel
         self.fullscreen_control = fullscreen_control
         self.collapsible = collapsible
+        self.mapdisplay = mapdisplay
         self.center_on_user_location = center_on_user_location
         self.report_clickpos = report_clickpos
         self.clickpos_uri = clickpos_uri

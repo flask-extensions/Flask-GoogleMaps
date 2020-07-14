@@ -233,6 +233,9 @@
                     }
                 }
             }
+            {% if gmap.mapdisplay %}
+            document.getElementById('{{gmap.varname}}_collapse').click();
+            {% endif %}
         };
 
         if (typeof window.onload === 'function') {
