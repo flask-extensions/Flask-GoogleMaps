@@ -2,10 +2,13 @@
 
 __version__ = "0.4.0"
 
-from flask import render_template, Blueprint, Markup, g
-from flask_googlemaps.icons import dots
 from json import dumps
 import requests as rq
+
+import requests
+from flask import Blueprint, Markup, g, render_template
+
+from flask_googlemaps.icons import dots
 
 DEFAULT_ICON = dots.red
 DEFAULT_CLUSTER_IMAGE_PATH = "static/images/m"
@@ -340,6 +343,7 @@ class Map(object):
         stroke_weight=2,
         fill_color="#FF0000",
         fill_opacity=0.3,
+        clickable=True
     ):
         """ Set a dictionary with the javascript class Circle parameters
 
@@ -369,6 +373,7 @@ class Map(object):
             "fill_opacity": fill_opacity,
             "center": {"lat": center_lat, "lng": center_lng},
             "radius": radius,
+            "clickable": clickable
         }
 
         return circle
