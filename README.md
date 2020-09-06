@@ -126,7 +126,7 @@ if __name__ == "__main__":
 ##### `Map()` Parameters
 
 - **lat**: The latitude coordinate for centering the map.
-- **lng**: The longitutde coordinate for centering the map.
+- **lng**: The longitude coordinate for centering the map.
 - **zoom**: The zoom level. Defaults to `13`.
 - **maptype**: The map type - `ROADMAP`, `SATELLITE`, `HYBRID`, `TERRAIN`. Defaults to `ROADMAP`.
 - **markers**: Markers array of tuples having (**lat**, **lng**, infobox, icon, label). Defaults to `None`.
@@ -254,6 +254,7 @@ Map(
 ```
 
 Which results in something like the following map:
+
 <img width="271" alt="Map showing markers with labels" src="https://user-images.githubusercontent.com/708882/92332217-a3363280-f041-11ea-975c-0ac9413ada68.png">
 
 ### Fit all markers within bounds
