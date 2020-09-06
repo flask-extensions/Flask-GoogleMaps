@@ -59,7 +59,8 @@
                 position: new google.maps.LatLng(raw_markers[i].lat, raw_markers[i].lng),
                 map: {{gmap.varname}},
                 icon: raw_markers[i].icon,
-                title: raw_markers[i].title ? raw_markers[i].title : null
+                title: raw_markers[i].title ? raw_markers[i].title : null,
+                label: raw_markers[i].label ? raw_markers[i].label : null
             });
 
            if(raw_markers[i].infobox)
