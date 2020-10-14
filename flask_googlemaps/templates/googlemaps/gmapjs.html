@@ -63,6 +63,13 @@
         map: {{gmap.varname}},
          });
 
+        // add bicycle layer
+        {% if gmap.bicycle_layer %}
+                const bicycleLayer = new google.maps.BicyclingLayer();
+                bicycleLayer.setMap({{gmap.varname}});
+        {% endif %}
+
+
         // add gmap markers
         var raw_markers = {{gmap.markers|tojson|safe}};
         for(i=0; i<{{gmap.markers|length}};i++) {
