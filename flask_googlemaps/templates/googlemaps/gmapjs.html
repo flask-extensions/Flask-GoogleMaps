@@ -40,6 +40,7 @@
             rotateControl: {% if gmap.rotate_control %}true{% else %}false{% endif %},
             scrollwheel: {% if gmap.scroll_wheel %}true{% else %}false{% endif %},
             fullscreenControl: {% if gmap.fullscreen_control %}true{% else %}false{% endif %}
+            styles: {{ gmap.styles | tojson  }}
         });
 
         //center map location on user location

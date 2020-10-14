@@ -47,6 +47,7 @@ class Map(object):
         center_on_user_location=False,
         report_clickpos=False,
         clickpos_uri="",
+        styles="",
         **kwargs
     ):
         """Builds the Map properties"""
@@ -87,6 +88,8 @@ class Map(object):
         self.cluster_gridsize = cluster_gridsize
 
         self.fit_markers_to_bounds = fit_markers_to_bounds
+        self.styles = styles
+
 
     def build_markers(self, markers):
         if not markers:
