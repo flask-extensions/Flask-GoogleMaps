@@ -48,6 +48,7 @@ class Map(object):
         report_clickpos=False,
         clickpos_uri="",
         styles="",
+        layer="",
         **kwargs
     ):
         """Builds the Map properties"""
@@ -89,6 +90,7 @@ class Map(object):
 
         self.fit_markers_to_bounds = fit_markers_to_bounds
         self.styles = styles
+        self.layer = layer
 
 
     def build_markers(self, markers):

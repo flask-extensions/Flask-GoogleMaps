@@ -13,6 +13,10 @@
 {%  endif %}
 
 
+<script src="https://unpkg.com/deck.gl@^7.0.0/dist.min.js"></script>
+
+<script src="https://maps.googleapis.com/maps-api-v3/api/js/42/6/kml.js"></script>
+
 <style type="text/css">
       #{{gmap.identifier}} { {{gmap.style}} }
 </style>
@@ -52,6 +56,12 @@
              });
             }
         {% endif %}
+
+        // add kml layer on map
+        const ctaLayer = new google.maps.KmlLayer({
+        url: "{{gmap.layer }}",
+        map: {{gmap.varname}},
+         });
 
         // add gmap markers
         var raw_markers = {{gmap.markers|tojson|safe}};
