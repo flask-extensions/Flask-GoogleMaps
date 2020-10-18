@@ -55,7 +55,7 @@ class Map(object):
         self.language = language
         self.region = region
         self.varname = varname
-        self.center = (lat, lng)
+        self.center = self.verify_lat_lng_coordinates(lat, lng)
         self.zoom = zoom
         self.maptype = maptype
         self.markers = []
@@ -749,6 +749,14 @@ class Map(object):
         }
 
         return json_dict
+
+    def verify_lat_lng_coordinates(self,lat,lng):
+        if not (90 >= lat >= -90):
+            raise AttributeError("Latitude must be between -90 and 90 degrees inclusive.")
+        if not (180 >= lng >= -180):
+            raise AttributeError("Longitude must be between -180 and 180 degrees inclusive.")
+        
+        return (lat,lng) 
 
     @property
     def js(self):
