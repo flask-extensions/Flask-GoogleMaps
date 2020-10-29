@@ -1,10 +1,13 @@
-.PHONY: test pep8 clean install build publish tree env
+.PHONY: test pep8 types clean install build publish tree env
 
 test: pep8
 	py.test --cov=flask_googlemaps -l --tb=short --maxfail=1 tests/
 
 pep8:
 	@flake8 flask_googlemaps --ignore=F403
+
+types:
+	@mypy --py2 flask_googlemaps
 
 clean:
 	@find ./ -name '*.pyc' -exec rm -f {} \;

@@ -9,11 +9,14 @@ http://mabp.kiev.ua/2010/01/12/google-map-markers/
 
 __all__ = ["dots", "alpha", "shapes", "pushpin", "paddle"]
 
+from typing import Optional, List
+
 
 class Icon(object):
     """Dynamically return dot icon url"""
 
     def __init__(self, base_url, options=None):
+        # type: (str, Optional[List[str]]) -> None
         self.base_url = base_url
         self.options = options
 
@@ -24,7 +27,7 @@ class Icon(object):
 dots = Icon(
     base_url="//maps.google.com/mapfiles/ms/icons/{0}-dot.png",
     options=["blue", "yellow", "green", "red", "pink", "purple", "red"],
-)
+)  # type: Icon
 
 alpha = Icon(
     base_url="//www.google.com/mapfiles/marker{0}.png",
@@ -56,7 +59,7 @@ alpha = Icon(
         "W",
         "Y",
     ],
-)
+)  # type: Icon
 
 shapes = Icon(
     base_url="//maps.google.com/mapfiles/kml/shapes/{0}.png",
@@ -166,7 +169,7 @@ shapes = Icon(
         "woman",
         "yen",
     ],
-)
+)  # type: Icon
 pushpin = Icon(
     base_url="//maps.google.com/mapfiles/kml/pushpin/{0}.png",
     options=[
@@ -179,7 +182,7 @@ pushpin = Icon(
         "wht-pushpin",
         "ylw-pushpin",
     ],
-)
+)  # type: Icon
 
 paddle = Icon(
     base_url="//maps.google.com/mapfiles/kml/paddle/{0}.png",
@@ -310,4 +313,4 @@ paddle = Icon(
         "stop",
         "route",
     ],
-)
+)  # type: Icon
