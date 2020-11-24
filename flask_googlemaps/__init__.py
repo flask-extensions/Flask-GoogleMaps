@@ -22,6 +22,7 @@ class Map(object):
         zoom=13,
         maptype="ROADMAP",
         markers=None,
+        map_ids=None,
         varname="map",
         style="height:300px;width:300px;margin:0;",
         cls="map",
@@ -58,6 +59,7 @@ class Map(object):
         self.center = (lat, lng)
         self.zoom = zoom
         self.maptype = maptype
+        self.map_ids = map_ids,
         self.markers = []
         self.build_markers(markers)
         self.rectangles = []
