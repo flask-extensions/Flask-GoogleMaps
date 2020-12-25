@@ -3,6 +3,7 @@
 __version__ = "0.4.0"
 
 from json import dumps
+import requests as rq
 
 import requests
 from flask import Blueprint, Markup, g, render_template
@@ -788,7 +789,7 @@ def set_googlemaps_loaded():
 
 def get_address(API_KEY, lat, lon):
     add_dict = dict()
-    response = requests.get(
+    response = rq.get(
         "https://maps.googleapis.com/maps/api/geocode/json?latlng="
         + ",".join(map(str, [lat, lon]))
         + "&key="
@@ -817,7 +818,7 @@ def get_address(API_KEY, lat, lon):
 
 
 def get_coordinates(API_KEY, address_text):
-    response = requests.get(
+    response = rq.get(
         "https://maps.googleapis.com/maps/api/geocode/json?address="
         + address_text
         + "&key="
