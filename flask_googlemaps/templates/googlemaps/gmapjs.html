@@ -13,6 +13,10 @@
 {%  endif %}
 
 
+<script src="https://unpkg.com/deck.gl@^7.0.0/dist.min.js"></script>
+
+<script src="https://maps.googleapis.com/maps-api-v3/api/js/42/6/kml.js"></script>
+
 <style type="text/css">
       #{{gmap.identifier}} { {{gmap.style}} }
 </style>
@@ -40,6 +44,7 @@
             rotateControl: {% if gmap.rotate_control %}true{% else %}false{% endif %},
             scrollwheel: {% if gmap.scroll_wheel %}true{% else %}false{% endif %},
             fullscreenControl: {% if gmap.fullscreen_control %}true{% else %}false{% endif %}
+            styles: {{ gmap.styles | tojson  }}
         });
 
         //center map location on user location
@@ -51,6 +56,19 @@
              });
             }
         {% endif %}
+
+        // add kml layer on map
+        const ctaLayer = new google.maps.KmlLayer({
+        url: "{{gmap.layer }}",
+        map: {{gmap.varname}},
+         });
+
+        // add bicycle layer
+        {% if gmap.bicycle_layer %}
+                const bicycleLayer = new google.maps.BicyclingLayer();
+                bicycleLayer.setMap({{gmap.varname}});
+        {% endif %}
+
 
         // add gmap markers
         var raw_markers = {{gmap.markers|tojson|safe}};
