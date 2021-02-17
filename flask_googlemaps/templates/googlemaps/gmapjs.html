@@ -58,10 +58,12 @@
         {% endif %}
 
         // add kml layer on map
-        const ctaLayer = new google.maps.KmlLayer({
-        url: "{{gmap.layer }}",
-        map: {{gmap.varname}},
-         });
+        {% if gmap.layer %}
+            const ctaLayer = new google.maps.KmlLayer({
+            url: "{{gmap.layer }}",
+            map: {{gmap.varname}},
+            });
+        {% endif %}
 
         // add bicycle layer
         {% if gmap.bicycle_layer %}
