@@ -65,8 +65,8 @@
 
         // add bicycle layer
         {% if gmap.bicycle_layer %}
-                const bicycleLayer = new google.maps.BicyclingLayer();
-                bicycleLayer.setMap({{gmap.varname}});
+            const bicycleLayer = new google.maps.BicyclingLayer();
+            bicycleLayer.setMap({{gmap.varname}});
         {% endif %}
 
 
