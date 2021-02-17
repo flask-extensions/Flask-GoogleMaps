@@ -13,7 +13,9 @@
 {%  endif %}
 
 
-<script src="https://unpkg.com/deck.gl@^7.0.0/dist.min.js"></script>
+{% if gmap.layer %}
+        <script src="https://unpkg.com/deck.gl@^7.0.0/dist.min.js"></script>
+{%  endif %}
 
 <style type="text/css">
       #{{gmap.identifier}} { {{gmap.style}} }
