@@ -129,13 +129,10 @@ class Map(object):
             marker_dict["icon"] = marker[3]
         return marker_dict
 
-    def add_marker(self, lat=None, lng=None, **kwargs):
-        if lat is not None:
-            kwargs["lat"] = lat
-        if lng is not None:
-            kwargs["lng"] = lng
+    def add_marker(self, **kwargs):
         if "lat" not in kwargs or "lng" not in kwargs:
             raise AttributeError("lat and lng required")
+
         self.markers.append(kwargs)
 
     def build_rectangles(self, rectangles):
