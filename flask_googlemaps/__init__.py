@@ -2,9 +2,13 @@
 
 __version__ = "0.4.0"
 
-from flask import render_template, Blueprint, Markup, g
-from flask_googlemaps.icons import dots
 from json import dumps
+import requests as rq
+
+import requests
+from flask import Blueprint, Markup, g, render_template
+
+from flask_googlemaps.icons import dots
 
 DEFAULT_ICON = dots.red
 DEFAULT_CLUSTER_IMAGE_PATH = "static/images/m"
@@ -19,6 +23,7 @@ class Map(object):
         zoom=13,
         maptype="ROADMAP",
         markers=None,
+        map_ids=None,
         varname="map",
         style="height:300px;width:300px;margin:0;",
         cls="map",
@@ -36,6 +41,7 @@ class Map(object):
         scroll_wheel=True,
         fullscreen_control=True,
         collapsible=False,
+        mapdisplay=False,
         cluster=False,
         cluster_imagepath=DEFAULT_CLUSTER_IMAGE_PATH,
         cluster_gridsize=60,
@@ -43,6 +49,9 @@ class Map(object):
         center_on_user_location=False,
         report_clickpos=False,
         clickpos_uri="",
+        styles="",
+        layer="",
+        bicycle_layer=False,
         **kwargs
     ):
         """Builds the Map properties"""
@@ -51,9 +60,10 @@ class Map(object):
         self.language = language
         self.region = region
         self.varname = varname
-        self.center = (lat, lng)
+        self.center = self.verify_lat_lng_coordinates(lat, lng)
         self.zoom = zoom
         self.maptype = maptype
+        self.map_ids = map_ids,
         self.markers = []
         self.build_markers(markers)
         self.rectangles = []
@@ -73,6 +83,7 @@ class Map(object):
         self.scroll_wheel = scroll_wheel
         self.fullscreen_control = fullscreen_control
         self.collapsible = collapsible
+        self.mapdisplay = mapdisplay
         self.center_on_user_location = center_on_user_location
         self.report_clickpos = report_clickpos
         self.clickpos_uri = clickpos_uri
@@ -82,6 +93,10 @@ class Map(object):
         self.cluster_gridsize = cluster_gridsize
 
         self.fit_markers_to_bounds = fit_markers_to_bounds
+        self.styles = styles
+        self.layer = layer
+        self.bicycle_layer = bicycle_layer
+
 
     def build_markers(self, markers):
         if not markers:
@@ -336,6 +351,7 @@ class Map(object):
         stroke_weight=2,
         fill_color="#FF0000",
         fill_opacity=0.3,
+        clickable=True
     ):
         """ Set a dictionary with the javascript class Circle parameters
 
@@ -365,6 +381,7 @@ class Map(object):
             "fill_opacity": fill_opacity,
             "center": {"lat": center_lat, "lng": center_lng},
             "radius": radius,
+            "clickable": clickable
         }
 
         return circle
@@ -739,6 +756,14 @@ class Map(object):
         }
 
         return json_dict
+
+    def verify_lat_lng_coordinates(self, lat, lng):
+        if not (90 >= lat >= -90):
+            raise AttributeError("Latitude must be between -90 and 90 degrees inclusive.")
+        if not (180 >= lng >= -180):
+            raise AttributeError("Longitude must be between -180 and 180 degrees inclusive.")
+        
+        return (lat,lng) 
 
     @property
     def js(self):

@@ -1,0 +1,32 @@
+site_name: Flask Google Maps
+site_description: Easy to use Google Maps in your Flask application.
+site_url: "https://flask-googlemaps.com"
+
+theme:
+  name: readthedocs
+  highlightjs: true
+  hljs_languages:
+    - yaml
+
+# Repository
+repo_name: "flask-extensions/Flask-GoogleMaps"
+repo_url: "https://github.com/flask-extensions/Flask-GoogleMaps"
+edit_uri: "/flask-extensions/Flask-GoogleMaps/edit/master/docs/docs/"
+
+# Copyright
+copyright: "Copyright &copy; 2020 - Flask Extensions"
+
+markdown_extensions:
+  - codehilite
+
+plugins:
+  - search
+  - minify:
+      minify_html: true
+
+nav:
+  - Introduction: "index.md"
+  - Requirements: "requirements.md"
+  - How to Contribute: "contribute.md"
+  - Installation: "installation.md"
+  - How it works: "how_it_works.md"

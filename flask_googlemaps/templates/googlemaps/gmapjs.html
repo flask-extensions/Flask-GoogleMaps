@@ -1,7 +1,7 @@
 
 {%  if not is_googlemaps_loaded()  %}
     {% if GOOGLEMAPS_KEY %}
-        <script src="//maps.googleapis.com/maps/api/js?key={{GOOGLEMAPS_KEY}}&language={{gmap.language}}&region={{gmap.region}}" type="text/javascript"></script>
+        <script src="//maps.googleapis.com/maps/api/js?key={{GOOGLEMAPS_KEY}}&map_ids={{gmap.map_ids}}&language={{gmap.language}}&region={{gmap.region}}" type="text/javascript"></script>
     {%  else %}
         <script src="//maps.googleapis.com/maps/api/js?language={{gmap.language}}&region={{gmap.region}}" type="text/javascript"></script>
     {%  endif %}
@@ -12,6 +12,10 @@
         <script src="//cdnjs.cloudflare.com/ajax/libs/js-marker-clusterer/1.0.0/markerclusterer_compiled.js" type="text/javascript"></script>
 {%  endif %}
 
+
+<script src="https://unpkg.com/deck.gl@^7.0.0/dist.min.js"></script>
+
+<script src="https://maps.googleapis.com/maps-api-v3/api/js/42/6/kml.js"></script>
 
 <style type="text/css">
       #{{gmap.identifier}} { {{gmap.style}} }
@@ -39,7 +43,8 @@
             streetViewControl: {% if gmap.streetview_control %}true{% else %}false{% endif %},
             rotateControl: {% if gmap.rotate_control %}true{% else %}false{% endif %},
             scrollwheel: {% if gmap.scroll_wheel %}true{% else %}false{% endif %},
-            fullscreenControl: {% if gmap.fullscreen_control %}true{% else %}false{% endif %}
+            fullscreenControl: {% if gmap.fullscreen_control %}true{% else %}false{% endif %},
+            styles: {{ gmap.styles | tojson  }}
         });
 
         //center map location on user location
@@ -52,6 +57,19 @@
             }
         {% endif %}
 
+        // add kml layer on map
+        const ctaLayer = new google.maps.KmlLayer({
+        url: "{{gmap.layer }}",
+        map: {{gmap.varname}},
+         });
+
+        // add bicycle layer
+        {% if gmap.bicycle_layer %}
+                const bicycleLayer = new google.maps.BicyclingLayer();
+                bicycleLayer.setMap({{gmap.varname}});
+        {% endif %}
+
+
         // add gmap markers
         var raw_markers = {{gmap.markers|tojson|safe}};
         for(i=0; i<{{gmap.markers|length}};i++) {
@@ -59,7 +77,8 @@
                 position: new google.maps.LatLng(raw_markers[i].lat, raw_markers[i].lng),
                 map: {{gmap.varname}},
                 icon: raw_markers[i].icon,
-                title: raw_markers[i].title ? raw_markers[i].title : null
+                title: raw_markers[i].title ? raw_markers[i].title : null,
+                label: raw_markers[i].label ? raw_markers[i].label : null
             });
 
            if(raw_markers[i].infobox)
@@ -130,7 +149,8 @@
                     lat: raw_circles[i].center.lat,
                     lng: raw_circles[i].center.lng,
                 },
-                radius: raw_circles[i].radius
+                radius: raw_circles[i].radius,
+                clickable : raw_circles[i].clickable
             });
 
            if(raw_circles[i].infobox)
@@ -232,6 +252,9 @@
                     }
                 }
             }
+            {% if gmap.mapdisplay %}
+            document.getElementById('{{gmap.varname}}_collapse').click();
+            {% endif %}
         };
 
         if (typeof window.onload === 'function') {
