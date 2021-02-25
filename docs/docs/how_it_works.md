@@ -1,48 +1,8 @@
-# Flask Google Maps [![Generic badge](https://img.shields.io/badge/PayPal-Donante-red.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=2UGZHBYZV39XY&source=url)
-
-[![Flask Estension](https://img.shields.io/badge/flask-extension-green.svg?style=flat)](https://flaskextensions.com)
-[![PyPI version fury.io](https://badge.fury.io/py/flask-googlemaps.svg)](https://pypi.python.org/pypi/flask-googlemaps/)
-[![PyPI download month](https://img.shields.io/pypi/dm/flask-googlemaps.svg)](https://pypi.org/project/flask-googlemaps/)
-[![PyPI license](https://img.shields.io/pypi/l/flask-googlemaps.svg)](https://pypi.python.org/pypi/flask-googlemaps/)
-[![PyPI format](https://img.shields.io/pypi/format/flask-googlemaps.svg)](https://pypi.python.org/pypi/flask-googlemaps/)
-[![PyPI status](https://img.shields.io/pypi/status/flask-googlemaps.svg)](https://pypi.python.org/pypi/flask-googlemaps/)
-[![CI-Github](https://github.com/flask-extensions/Flask-GoogleMaps/workflows/CI/badge.svg)](https://github.com/flask-extensions/Flask-GoogleMaps/workflows/CI/badge.svg)
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-
-Easy to use Google Maps in your Flask application
-
-## requires
-
-- Jinja
-- Flask
-- A google api key [get here](https://developers.google.com/maps/documentation/javascript/get-api-key)
-
-## Contribute
-
-To contribute with the project, clone it, create a virtualenv and install all of you need to dev, see below:
-
-```bash
-git clone https://github.com/flask-extensions/Flask-GoogleMaps.git
-cd Flask-GoogleMaps
-poetry use env 3.8  # just to create virtualenv at the first time
-poetry shell # activate virtualenv
-poetry install  # to install all for dev
-pre-commit install # to install pre-commit hooks
-```
-
-## Installation
-
-To use in your project just use your dependency manager to install it, with pip is like this:
-
-```bash
-pip install flask-googlemaps
-```
-
-## How it works
+# How it works
 
 Flask-GoogleMaps includes some global functions and template filters in your Jinja environment, also it allows you to use the Map in views if needed.
 
-### registering
+## registering
 
 in your app
 
@@ -73,12 +33,12 @@ In template
 
 That's it! now you have some template filters and functions to use, more details in examples and screenshot below.
 
-### Usage
+## Usage
 
 - You can create the map in the view and then send to the template context
 - you can use the template functions and filters directly
 
-#### 1. View
+### 1. View
 
 ```python
 
@@ -124,14 +84,14 @@ if __name__ == "__main__":
 
 ```
 
-##### `Map()` Parameters
+#### `Map()` Parameters
 
 - **lat**: The latitude coordinate for centering the map.
-- **lng**: The longitude coordinate for centering the map.
+- **lng**: The longitutde coordinate for centering the map.
 - **zoom**: The zoom level. Defaults to `13`.
 - **maptype**: The map type - `ROADMAP`, `SATELLITE`, `HYBRID`, `TERRAIN`. Defaults to `ROADMAP`.
-- **markers**: Markers array of tuples having (**lat**, **lng**, infobox, icon, label). Defaults to `None`.
-- or **markers**: a list of dicts containing **lat**, **lng**, infobox, icon, label.
+- **markers**: Markers array of tuples having (**lat**, **lng**, infobox, icon). Defaults to `None`.
+- or **markers**: a list of dicts containing **icon, lat, lng, infobox**.
 - or **markers**: Markers dictionary with icon urls as keys and markers array as values.
 - **varname**: The instance variable name.
 - **style**: A string containing CSS styles. Defaults to `"height:300px;width:300px;margin:0;"`.
@@ -154,7 +114,7 @@ Also controls True or False:
 - mapdisplay (show a collapsible map by default or not)
 - center_on_user_location (using HTML5 Geolocation)
 
-#### 2. Template
+### 2. Template
 
 ```html
 <!DOCTYPE html>
@@ -187,7 +147,7 @@ Also controls True or False:
 </html>
 ```
 
-### Infobox
+## Infobox
 
 Here's an example snippet of code:
 
@@ -224,45 +184,11 @@ Here's an example snippet of code:
 Which results in something like the following map:
 <img width="1439" alt="screen shot 2015-07-29 at 2 41 52 pm" src="https://cloud.githubusercontent.com/assets/8108300/8969650/13b0de7a-3602-11e5-9ed0-9f328ac9253f.png">
 
-### Label
-
-Here's an example snippet of code:
-```python
-
-Map(
-        identifier="labelsmap",
-        lat=37.4419,
-        lng=-122.1419,
-        markers=[
-            {
-                'lat': 37.4500,
-                'lng': -122.1350,
-                'label': "X"
-            },
-            {
-                'lat':  37.4419,
-                'lng':  -122.1419,
-                'label': "Y"
-            },
-            {
-                'lat': 37.4300,
-                'lng': -122.1400,
-                'label': "Z"
-            }
-        ]
-    )
-
-```
-
-Which results in something like the following map:
-
-<img width="271" alt="Map showing markers with labels" src="https://user-images.githubusercontent.com/708882/92332217-a3363280-f041-11ea-975c-0ac9413ada68.png">
-
-### Fit all markers within bounds
+## Fit all markers within bounds
 
 Allow users to easily fit all markers within view on page load
 
-#### Without bounds
+### Without bounds
 
 ```python
 
@@ -281,7 +207,7 @@ def map_unbounded():
 
 ![image](https://user-images.githubusercontent.com/14223309/29294427-24a8d4e0-8104-11e7-967b-0c55c20d0f7c.png)
 
-#### With bounds
+### With bounds
 
 ```python
 
@@ -301,7 +227,7 @@ def map_bounded():
 
 ![image](https://user-images.githubusercontent.com/14223309/29294483-6ac3e532-8104-11e7-988c-5c19d700fe5b.png)
 
-### Geocoding and Reverse Geocoding
+## Geocoding and Reverse Geocoding
 
 ```python
 from flask_googlemaps import get_address, get_coordinates
@@ -317,7 +243,7 @@ print(get_coordinates(API_KEY,'Netaji Subhash Engineering College Kolkata'))
 #output: {'lat': 22.4761596, 'lng': 88.4149326}
 ```
 
-### Run the example app
+## Run the example app
 
 ```bash
 $ git clone https://github.com/flask-extensions/Flask-GoogleMaps
@@ -347,6 +273,6 @@ running on localhost:5000 .....
 
 Access: http://localhost:5000/ and http://localhost:5000/fullmap
 
-## Contribute with the Google Maps API
+# Contribute with the Google Maps API
 
 Please see this page [developers.google.com/maps/documentation/javascript/tutorial](https://developers.google.com/maps/documentation/javascript/tutorial) and contribute!

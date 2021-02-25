@@ -2,6 +2,17 @@ Changelog
 =========
 
 
+0.4.1 (2020-02-21)
+------------
+- Added support for marker labels [jackcarter]
+- Added KML layer: User can add hyperlink of KML file to apply on the map [bhuveshsharma09]
+- Added Bicycle lane layer: User can turn on/off bicycle lane using the new attribute [bhuveshsharma09]
+- Added Custom Styles: User can add custom style JSON file for the map style [bhuveshsharma09]
+- Validated the lat lng coordinates when initialize the Map object [JacobGeoGeek]
+- Added map id support [markmelnic]
+- Updated some dependencies [Vicente Marçal]
+
+
 0.4.0 (2020-02-21)
 ------------
 - Added Trafficlayer support [wimpruijsers]
