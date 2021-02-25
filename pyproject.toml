@@ -26,6 +26,7 @@ include = ["flask_googlemaps/py.typed"]
 [tool.poetry.dependencies]
 python = ">=3.6"
 flask = ">=0.10"
+pre-commit = "1.21.0"
 mkdocs = "^1.1"
 mkdocs-material = "^5.0.2"
 mkdocs-minify-plugin = "^0.3.0"
