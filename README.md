@@ -126,11 +126,11 @@ if __name__ == "__main__":
 ##### `Map()` Parameters
 
 - **lat**: The latitude coordinate for centering the map.
-- **lng**: The longitutde coordinate for centering the map.
+- **lng**: The longitude coordinate for centering the map.
 - **zoom**: The zoom level. Defaults to `13`.
 - **maptype**: The map type - `ROADMAP`, `SATELLITE`, `HYBRID`, `TERRAIN`. Defaults to `ROADMAP`.
-- **markers**: Markers array of tuples having (**lat**, **lng**, infobox, icon). Defaults to `None`.
-- or **markers**: a list of dicts containing **icon, lat, lng, infobox**.
+- **markers**: Markers array of tuples having (**lat**, **lng**, infobox, icon, label). Defaults to `None`.
+- or **markers**: a list of dicts containing **lat**, **lng**, infobox, icon, label.
 - or **markers**: Markers dictionary with icon urls as keys and markers array as values.
 - **varname**: The instance variable name.
 - **style**: A string containing CSS styles. Defaults to `"height:300px;width:300px;margin:0;"`.
@@ -222,6 +222,40 @@ Here's an example snippet of code:
 
 Which results in something like the following map:
 <img width="1439" alt="screen shot 2015-07-29 at 2 41 52 pm" src="https://cloud.githubusercontent.com/assets/8108300/8969650/13b0de7a-3602-11e5-9ed0-9f328ac9253f.png">
+
+### Label
+
+Here's an example snippet of code:
+```python
+
+Map(
+        identifier="labelsmap",
+        lat=37.4419,
+        lng=-122.1419,
+        markers=[
+            {
+                'lat': 37.4500,
+                'lng': -122.1350,
+                'label': "X"
+            },
+            {
+                'lat':  37.4419,
+                'lng':  -122.1419,
+                'label': "Y"
+            },
+            {
+                'lat': 37.4300,
+                'lng': -122.1400,
+                'label': "Z"
+            }
+        ]
+    )
+
+```
+
+Which results in something like the following map:
+
+<img width="271" alt="Map showing markers with labels" src="https://user-images.githubusercontent.com/708882/92332217-a3363280-f041-11ea-975c-0ac9413ada68.png">
 
 ### Fit all markers within bounds
 

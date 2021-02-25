@@ -4,6 +4,7 @@ __version__ = "0.4.0"
 
 from json import dumps
 from typing import Optional, Dict, Any, List, Union, Tuple, Text
+import requests as rq
 
 import requests
 from flask import Blueprint, Markup, g, render_template
@@ -48,6 +49,41 @@ class Map(object):
         center_on_user_location=False,  # type: bool
         report_clickpos=False,  # type: bool
         clickpos_uri="",  # type: str
+        identifier,
+        lat,
+        lng,
+        zoom=13,
+        maptype="ROADMAP",
+        markers=None,
+        map_ids=None,
+        varname="map",
+        style="height:300px;width:300px;margin:0;",
+        cls="map",
+        language="en",
+        region="US",
+        rectangles=None,
+        circles=None,
+        polylines=None,
+        polygons=None,
+        zoom_control=True,
+        maptype_control=True,
+        scale_control=True,
+        streetview_control=True,
+        rotate_control=True,
+        scroll_wheel=True,
+        fullscreen_control=True,
+        collapsible=False,
+        mapdisplay=False,
+        cluster=False,
+        cluster_imagepath=DEFAULT_CLUSTER_IMAGE_PATH,
+        cluster_gridsize=60,
+        fit_markers_to_bounds=False,
+        center_on_user_location=False,
+        report_clickpos=False,
+        clickpos_uri="",
+        styles="",
+        layer="",
+        bicycle_layer=False,
         **kwargs
     ):
         # type: (...) -> None
@@ -57,10 +93,11 @@ class Map(object):
         self.language = language
         self.region = region
         self.varname = varname
-        self.center = (lat, lng)
+        self.center = self.verify_lat_lng_coordinates(lat, lng)
         self.zoom = zoom
         self.maptype = maptype
         self.markers = []  # type: List[Any]
+        self.map_ids = map_ids,
         self.build_markers(markers)
         self.rectangles = []  # type: List[Any]
         self.build_rectangles(rectangles)
@@ -89,6 +126,10 @@ class Map(object):
         self.cluster_gridsize = cluster_gridsize
 
         self.fit_markers_to_bounds = fit_markers_to_bounds
+        self.styles = styles
+        self.layer = layer
+        self.bicycle_layer = bicycle_layer
+
 
     def build_markers(self, markers):
         # type: (Optional[Union[Dict, List, Tuple]]) -> None
@@ -131,6 +172,7 @@ class Map(object):
             kwargs["lng"] = lng
         if "lat" not in kwargs or "lng" not in kwargs:
             raise AttributeError("lat and lng required")
+
         self.markers.append(kwargs)
 
     def build_rectangles(self, rectangles):
@@ -756,6 +798,14 @@ class Map(object):
 
         return json_dict
 
+    def verify_lat_lng_coordinates(self, lat, lng):
+        if not (90 >= lat >= -90):
+            raise AttributeError("Latitude must be between -90 and 90 degrees inclusive.")
+        if not (180 >= lng >= -180):
+            raise AttributeError("Longitude must be between -180 and 180 degrees inclusive.")
+        
+        return (lat,lng) 
+
     @property
     def js(self):
         # type: () -> Markup
@@ -800,7 +850,7 @@ def set_googlemaps_loaded():
 def get_address(API_KEY, lat, lon):
     # type: (str, float, float) -> dict
     add_dict = dict()
-    response = requests.get(
+    response = rq.get(
         "https://maps.googleapis.com/maps/api/geocode/json?latlng="
         + ",".join(map(str, [lat, lon]))
         + "&key="
@@ -819,6 +869,7 @@ def get_address(API_KEY, lat, lon):
 def get_coordinates(API_KEY, address_text):
     # type: (str, str) -> Dict
     response = requests.get(
+    response = rq.get(
         "https://maps.googleapis.com/maps/api/geocode/json?address="
         + address_text
         + "&key="
