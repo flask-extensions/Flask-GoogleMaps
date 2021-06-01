@@ -3,13 +3,12 @@
 __version__ = "0.4.0"
 
 from json import dumps
-from typing import Optional, Dict, Any, List, Union, Tuple, Text
 import requests as rq
 
 import requests
 from flask import Blueprint, Markup, g, render_template
 
-from flask_googlemaps.icons import dots, Icon
+from flask_googlemaps.icons import dots
 
 DEFAULT_ICON = dots.red
 DEFAULT_CLUSTER_IMAGE_PATH = "static/images/m"
@@ -18,37 +17,6 @@ DEFAULT_CLUSTER_IMAGE_PATH = "static/images/m"
 class Map(object):
     def __init__(
         self,
-        identifier,  # type: str
-        lat,  # type: float
-        lng,  # type: float
-        zoom=13,  # type: int
-        maptype="ROADMAP",  # type: str
-        markers=None,  # type: Optional[Union[Dict, List, Tuple]]
-        varname="map",  # type: str
-        style="height:300px;width:300px;margin:0;",  # type: str
-        cls="map",  # type: str
-        language="en",  # type: str
-        region="US",  # type: str
-        rectangles=None,  # type: Optional[List[Union[List, Tuple, Tuple[Tuple], Dict]]]
-        circles=None,  # type: Optional[List[Union[List, Tuple, Dict]]]
-        polylines=None,  # type: Optional[List[Union[List, Tuple, Dict]]]
-        polygons=None,  # type: Optional[List[Union[List, Tuple, Dict]]]
-        zoom_control=True,  # type: bool
-        maptype_control=True,  # type: bool
-        scale_control=True,  # type: bool
-        streetview_control=True,  # type: bool
-        rotate_control=True,  # type: bool
-        scroll_wheel=True,  # type: bool
-        fullscreen_control=True,  # type: bool
-        collapsible=False,  # type: bool
-        mapdisplay=False,  # type: bool
-        cluster=False,  # type: bool
-        cluster_imagepath=DEFAULT_CLUSTER_IMAGE_PATH,  # type: str
-        cluster_gridsize=60,  # type: int
-        fit_markers_to_bounds=False,  # type: bool
-        center_on_user_location=False,  # type: bool
-        report_clickpos=False,  # type: bool
-        clickpos_uri="",  # type: str
         identifier,
         lat,
         lng,
@@ -80,13 +48,14 @@ class Map(object):
         fit_markers_to_bounds=False,
         center_on_user_location=False,
         report_clickpos=False,
+        report_markerClickpos=False,  # type: bool
         clickpos_uri="",
+        markerClickpos_uri="",  # type: str
         styles="",
         layer="",
         bicycle_layer=False,
         **kwargs
     ):
-        # type: (...) -> None
         """Builds the Map properties"""
         self.cls = cls
         self.style = style
@@ -96,16 +65,16 @@ class Map(object):
         self.center = self.verify_lat_lng_coordinates(lat, lng)
         self.zoom = zoom
         self.maptype = maptype
-        self.markers = []  # type: List[Any]
         self.map_ids = map_ids,
+        self.markers = []
         self.build_markers(markers)
-        self.rectangles = []  # type: List[Any]
+        self.rectangles = []
         self.build_rectangles(rectangles)
-        self.circles = []  # type: List[Any]
+        self.circles = []
         self.build_circles(circles)
-        self.polylines = []  # type: List[Any]
+        self.polylines = []
         self.build_polylines(polylines)
-        self.polygons = []  # type: List[Any]
+        self.polygons = []
         self.build_polygons(polygons)
         self.identifier = identifier
         self.zoom_control = zoom_control
@@ -120,6 +89,8 @@ class Map(object):
         self.center_on_user_location = center_on_user_location
         self.report_clickpos = report_clickpos
         self.clickpos_uri = clickpos_uri
+        self.report_markerClickpos = report_markerClickpos
+        self.markerClickpos_uri = markerClickpos_uri
 
         self.cluster = cluster
         self.cluster_imagepath = cluster_imagepath
@@ -130,9 +101,7 @@ class Map(object):
         self.layer = layer
         self.bicycle_layer = bicycle_layer
 
-
     def build_markers(self, markers):
-        # type: (Optional[Union[Dict, List, Tuple]]) -> None
         if not markers:
             return
         if not isinstance(markers, (dict, list, tuple)):
@@ -152,7 +121,6 @@ class Map(object):
                     self.add_marker(**marker_dict)
 
     def build_marker_dict(self, marker, icon=None):
-        # type: (Union[List, Tuple], Optional[Icon]) -> Dict
         marker_dict = {
             "lat": marker[0],
             "lng": marker[1],
@@ -165,18 +133,15 @@ class Map(object):
         return marker_dict
 
     def add_marker(self, lat=None, lng=None, **kwargs):
-        # type: (Optional[float], Optional[float], **Any) -> None
         if lat is not None:
             kwargs["lat"] = lat
         if lng is not None:
             kwargs["lng"] = lng
         if "lat" not in kwargs or "lng" not in kwargs:
             raise AttributeError("lat and lng required")
-
         self.markers.append(kwargs)
 
     def build_rectangles(self, rectangles):
-        # type: (Optional[List[Union[List, Tuple, Tuple[Tuple], Dict]]]) -> None
         """ Process data to construct rectangles
 
         This method is built from the assumption that the rectangles parameter
@@ -219,7 +184,8 @@ class Map(object):
                 # If the rectangle bounds doesn't have size 4 or 2
                 # an AttributeError is raised
                 if len(rect) not in (2, 4):
-                    raise AttributeError("The bound must have length" " 4 or 2")
+                    raise AttributeError(
+                        "The bound must have length" " 4 or 2")
 
                 # If the tuple or list has size 4, the bounds order are
                 # especified as north, west, south, east
@@ -244,17 +210,16 @@ class Map(object):
 
     def build_rectangle_dict(
         self,
-        north,  # type: float
-        west,  # type: float
-        south,  # type: float
-        east,  # type: float
-        stroke_color="#FF0000",  # type: str
-        stroke_opacity=0.8,  # type: float
-        stroke_weight=2,  # type: int
-        fill_color="#FF0000",  # type: str
-        fill_opacity=0.3,  # type: float
+        north,
+        west,
+        south,
+        east,
+        stroke_color="#FF0000",
+        stroke_opacity=0.8,
+        stroke_weight=2,
+        fill_color="#FF0000",
+        fill_opacity=0.3,
     ):
-        # type: (...) -> Dict
         """ Set a dictionary with the javascript class Rectangle parameters
 
         This function sets a default drawing configuration if the user just
@@ -281,13 +246,19 @@ class Map(object):
             "stroke_weight": stroke_weight,
             "fill_color": fill_color,
             "fill_opacity": fill_opacity,
-            "bounds": {"north": north, "west": west, "south": south, "east": east},
+            "bounds": {
+                "north": north,
+                "west": west,
+                "south": south,
+                "east": east,
+            },
         }
 
         return rectangle
 
-    def add_rectangle(self, north=None, west=None, south=None, east=None, **kwargs):
-        # type: (Optional[float], Optional[float], Optional[float], Optional[float], **Any) -> None
+    def add_rectangle(
+        self, north=None, west=None, south=None, east=None, **kwargs
+    ):
         """ Adds a rectangle dict to the Map.rectangles attribute
 
         The Google Maps API describes a rectangle using the LatLngBounds
@@ -322,7 +293,9 @@ class Map(object):
         if east:
             kwargs["bounds"]["east"] = east
 
-        if set(("north", "east", "south", "west")) != set(kwargs["bounds"].keys()):
+        if set(("north", "east", "south", "west")) != set(
+            kwargs["bounds"].keys()
+        ):
             raise AttributeError("rectangle bounds required to rectangles")
 
         kwargs.setdefault("stroke_color", "#FF0000")
@@ -334,7 +307,6 @@ class Map(object):
         self.rectangles.append(kwargs)
 
     def build_circles(self, circles):
-        # type: (Optional[List[Union[List, Tuple, Dict]]]) -> None
         """ Process data to construct rectangles
 
         This method is built from the assumption that the circles parameter
@@ -371,22 +343,23 @@ class Map(object):
             elif isinstance(circle, (tuple, list)):
                 if len(circle) != 3:
                     raise AttributeError("circle requires center and radius")
-                circle_dict = self.build_circle_dict(circle[0], circle[1], circle[2])
+                circle_dict = self.build_circle_dict(
+                    circle[0], circle[1], circle[2]
+                )
                 self.add_circle(**circle_dict)
 
     def build_circle_dict(
         self,
-        center_lat,  # type: float
-        center_lng,  # type: float
-        radius,  # type: float
-        stroke_color="#FF0000",  # type: str
-        stroke_opacity=0.8,  # type: float
-        stroke_weight=2,  # type: int
-        fill_color="#FF0000",  # type: str
-        fill_opacity=0.3,  # type: float
-        clickable=True,  # type: bool
+        center_lat,
+        center_lng,
+        radius,
+        stroke_color="#FF0000",
+        stroke_opacity=0.8,
+        stroke_weight=2,
+        fill_color="#FF0000",
+        fill_opacity=0.3,
+        clickable=True
     ):
-        # type: (...) -> Dict
         """ Set a dictionary with the javascript class Circle parameters
 
         This function sets a default drawing configuration if the user just
@@ -415,13 +388,14 @@ class Map(object):
             "fill_opacity": fill_opacity,
             "center": {"lat": center_lat, "lng": center_lng},
             "radius": radius,
-            "clickable": clickable,
+            "clickable": clickable
         }
 
         return circle
 
-    def add_circle(self, center_lat=None, center_lng=None, radius=None, **kwargs):
-        # type: (Optional[float], Optional[float], Optional[float], **Any) -> None
+    def add_circle(
+        self, center_lat=None, center_lng=None, radius=None, **kwargs
+    ):
         """ Adds a circle dict to the Map.circles attribute
 
         The circle in a sphere is called "spherical cap" and is defined in the
@@ -463,7 +437,6 @@ class Map(object):
         self.circles.append(kwargs)
 
     def build_polylines(self, polylines):
-        # type: (Optional[List[Union[List, Tuple, Dict]]]) -> None
         """ Process data to construct polylines
 
         This method is built from the assumption that the polylines parameter
@@ -527,7 +500,6 @@ class Map(object):
     def build_polyline_dict(
         self, path, stroke_color="#FF0000", stroke_opacity=0.8, stroke_weight=2
     ):
-        # type: (List[Dict], str, float, int) -> Dict
         """ Set a dictionary with the javascript class Polyline parameters
 
         This function sets a default drawing configuration if the user just
@@ -559,7 +531,6 @@ class Map(object):
         return polyline
 
     def add_polyline(self, path=None, **kwargs):
-        # type: (Optional[List[Dict]], **Any) -> None
         """ Adds a polyline dict to the Map.polylines attribute
 
         The Google Maps API describes a polyline as a "linear overlay of
@@ -604,7 +575,6 @@ class Map(object):
         self.polylines.append(kwargs)
 
     def build_polygons(self, polygons):
-        # type: (Optional[List[Union[List, Tuple, Dict]]]) -> None
         """ Process data to construct polygons
 
         This method is built from the assumption that the polygons parameter
@@ -669,14 +639,13 @@ class Map(object):
 
     def build_polygon_dict(
         self,
-        path,  # type: List[Dict]
-        stroke_color="#FF0000",  # type: str
-        stroke_opacity=0.8,  # type: float
-        stroke_weight=2,  # type: int
-        fill_color="#FF0000",  # type: str
-        fill_opacity=0.3,  # type: float
+        path,
+        stroke_color="#FF0000",
+        stroke_opacity=0.8,
+        stroke_weight=2,
+        fill_color="#FF0000",
+        fill_opacity=0.3,
     ):
-        # type: (...) -> Dict
         """ Set a dictionary with the javascript class Polygon parameters
 
         This function sets a default drawing configuration if the user just
@@ -714,7 +683,6 @@ class Map(object):
         return polygon
 
     def add_polygon(self, path=None, **kwargs):
-        # type: (Optional[List[Dict]], **Any) -> None
         """ Adds a polygon dict to the Map.polygons attribute
 
         The Google Maps API describes a polyline as a "linear overlay of
@@ -762,11 +730,9 @@ class Map(object):
         self.polygons.append(kwargs)
 
     def render(self, *args, **kwargs):
-        # type: (*Any, **Any) -> Text
         return render_template(*args, **kwargs)
 
     def as_json(self):
-        # type: () -> Dict
         json_dict = {
             "identifier": self.identifier,
             "center": self.center,
@@ -800,55 +766,51 @@ class Map(object):
 
     def verify_lat_lng_coordinates(self, lat, lng):
         if not (90 >= lat >= -90):
-            raise AttributeError("Latitude must be between -90 and 90 degrees inclusive.")
+            raise AttributeError(
+                "Latitude must be between -90 and 90 degrees inclusive.")
         if not (180 >= lng >= -180):
-            raise AttributeError("Longitude must be between -180 and 180 degrees inclusive.")
-        
-        return (lat,lng) 
+            raise AttributeError(
+                "Longitude must be between -180 and 180 degrees inclusive.")
+
+        return (lat, lng)
 
     @property
     def js(self):
-        # type: () -> Markup
         return Markup(
-            self.render("googlemaps/gmapjs.html", gmap=self, DEFAULT_ICON=DEFAULT_ICON)
+            self.render(
+                "googlemaps/gmapjs.html", gmap=self, DEFAULT_ICON=DEFAULT_ICON
+            )
         )
 
     @property
     def html(self):
-        # type: () -> Markup
         return Markup(self.render("googlemaps/gmap.html", gmap=self))
 
 
 def googlemap_obj(*args, **kwargs):
-    # type: (*Any, **Any) -> Map
     map = Map(*args, **kwargs)
     return map
 
 
 def googlemap(*args, **kwargs):
-    # type: (*Any, **Any) -> Markup
     map = googlemap_obj(*args, **kwargs)
     return Markup("".join((map.js, map.html)))
 
 
 def googlemap_html(*args, **kwargs):
-    # type: (*Any, **Any) -> Markup
     return googlemap_obj(*args, **kwargs).html
 
 
 def googlemap_js(*args, **kwargs):
-    # type: (*Any, **Any) -> Markup
     return googlemap_obj(*args, **kwargs).js
 
 
 def set_googlemaps_loaded():
-    # type: () -> str
     g.googlemaps_loaded = True
     return ""
 
 
 def get_address(API_KEY, lat, lon):
-    # type: (str, float, float) -> dict
     add_dict = dict()
     response = rq.get(
         "https://maps.googleapis.com/maps/api/geocode/json?latlng="
@@ -856,19 +818,29 @@ def get_address(API_KEY, lat, lon):
         + "&key="
         + API_KEY
     ).json()
-    add_dict["zip"] = response["results"][0]["address_components"][-1]["long_name"]
-    add_dict["country"] = response["results"][0]["address_components"][-2]["long_name"]
-    add_dict["state"] = response["results"][0]["address_components"][-3]["long_name"]
-    add_dict["city"] = response["results"][0]["address_components"][-4]["long_name"]
-    add_dict["locality"] = response["results"][0]["address_components"][-5]["long_name"]
-    add_dict["road"] = response["results"][0]["address_components"][-6]["long_name"]
+    add_dict["zip"] = response["results"][0]["address_components"][-1][
+        "long_name"
+    ]
+    add_dict["country"] = response["results"][0]["address_components"][-2][
+        "long_name"
+    ]
+    add_dict["state"] = response["results"][0]["address_components"][-3][
+        "long_name"
+    ]
+    add_dict["city"] = response["results"][0]["address_components"][-4][
+        "long_name"
+    ]
+    add_dict["locality"] = response["results"][0]["address_components"][-5][
+        "long_name"
+    ]
+    add_dict["road"] = response["results"][0]["address_components"][-6][
+        "long_name"
+    ]
     add_dict["formatted_address"] = response["results"][0]["formatted_address"]
     return add_dict
 
 
 def get_coordinates(API_KEY, address_text):
-    # type: (str, str) -> Dict
-    response = requests.get(
     response = rq.get(
         "https://maps.googleapis.com/maps/api/geocode/json?address="
         + address_text
@@ -879,19 +851,16 @@ def get_coordinates(API_KEY, address_text):
 
 
 def is_googlemaps_loaded():
-    # type: () -> bool
     return getattr(g, "googlemaps_loaded", False)
 
 
 class GoogleMaps(object):
     def __init__(self, app=None, **kwargs):
-        # type: (Optional[Any], **str) -> None
         self.key = kwargs.get("key")
         if app:
             self.init_app(app)
 
     def init_app(self, app):
-        # type: (Any) -> None
         if self.key:
             app.config["GOOGLEMAPS_KEY"] = self.key
         self.register_blueprint(app)
@@ -900,7 +869,9 @@ class GoogleMaps(object):
         app.add_template_global(googlemap_obj)
         app.add_template_filter(googlemap)
         app.add_template_global(googlemap)
-        app.add_template_global(app.config.get("GOOGLEMAPS_KEY"), name="GOOGLEMAPS_KEY")
+        app.add_template_global(
+            app.config.get("GOOGLEMAPS_KEY"), name="GOOGLEMAPS_KEY"
+        )
         app.add_template_global(set_googlemaps_loaded)
         app.add_template_global(is_googlemaps_loaded)
 
