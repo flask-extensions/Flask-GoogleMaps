@@ -6,10 +6,6 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/js-marker-clusterer/1.0.0/markerclusterer_compiled.js" type="text/javascript"></script>
 {% endif %}
 
-<script src="https://unpkg.com/deck.gl@^7.0.0/dist.min.js"></script>
-
-<script src="https://maps.googleapis.com/maps-api-v3/api/js/42/6/kml.js"></script>
-
 <style type="text/css">
 	#{{gmap.identifier}} { {{gmap.style}} }
 </style>
@@ -51,28 +47,30 @@
 	     {% endif %}
 
 	     // add kml layer on map
-	     const ctaLayer = new google.maps.KmlLayer({
-	     url: "{{gmap.layer }}",
-	     map: {{gmap.varname}},
-	      });
+	     {% if gmap.layer %}
+	         const ctaLayer = new google.maps.KmlLayer({
+	         url: "{{gmap.layer }}",
+	         map: {{gmap.varname}},
+	         });
+	     {% endif %}
 
 	     // add bicycle layer
 	     {% if gmap.bicycle_layer %}
-	             const bicycleLayer = new google.maps.BicyclingLayer();
-	             bicycleLayer.setMap({{gmap.varname}});
+	         const bicycleLayer = new google.maps.BicyclingLayer();
+	         bicycleLayer.setMap({{gmap.varname}});
 	     {% endif %}
 
 
 	     // add gmap markers
 	     var raw_markers = {{gmap.markers|tojson|safe}};
 	     for(i=0; i<{{gmap.markers|length}};i++) {
-	         tempMarker = new google.maps.Marker({
+	           tempMarker = new google.maps.Marker({
 	             position: new google.maps.LatLng(raw_markers[i].lat, raw_markers[i].lng),
 	             map: {{gmap.varname}},
 	             icon: raw_markers[i].icon,
 	             title: raw_markers[i].title ? raw_markers[i].title : null,
 	             label: raw_markers[i].label ? raw_markers[i].label : null
-	         });
+	   	        });
 
 	        if(raw_markers[i].infobox)
 	        {
@@ -92,8 +90,6 @@
 	          }
 			  {{gmap.varname}}_markers[i] = tempMarker;
 	     }
-
-
 
 	     {% if gmap.report_clickpos %}
 	     google.maps.event.addListener(
@@ -231,14 +227,13 @@
 	     };
 	 }
 
-	 function clickposCallback(uri, latLng) {
+	function clickposCallback(uri, latLng) {
 	 	xhttp = new XMLHttpRequest();
 	 	xhttp.open("POST", uri);
 	 	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-	    xhttp.send("lat=" + latLng.lat() + "&lng="  + latLng.lng());
-	 }
-
-	 function markerClickposCallback(uri, latLng, title, label) {
+	     xhttp.send("lat=" + latLng.lat() + "&lng="  + latLng.lng());
+	}
+	function markerClickposCallback(uri, latLng, title, label) {
 		{{gmap.varname}}_clickedMarker = [latLng.lat(),latLng.lng()]
 		xhttp = new XMLHttpRequest();
 		xhttp.open("POST", uri);
