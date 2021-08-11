@@ -1,270 +1,279 @@
-
-{%  if not is_googlemaps_loaded()  %}
-    {% if GOOGLEMAPS_KEY %}
-        <script src="//maps.googleapis.com/maps/api/js?key={{GOOGLEMAPS_KEY}}&map_ids={{gmap.map_ids}}&language={{gmap.language}}&region={{gmap.region}}" type="text/javascript"></script>
-    {%  else %}
-        <script src="//maps.googleapis.com/maps/api/js?language={{gmap.language}}&region={{gmap.region}}" type="text/javascript"></script>
-    {%  endif %}
-    {{ set_googlemaps_loaded() }}
+{% if not is_googlemaps_loaded() %} {% if GOOGLEMAPS_KEY %}
+<script src="//maps.googleapis.com/maps/api/js?key={{GOOGLEMAPS_KEY}}&map_ids={{gmap.map_ids}}&language={{gmap.language}}&region={{gmap.region}}" type="text/javascript"></script>
+{% else %}
+<script src="//maps.googleapis.com/maps/api/js?language={{gmap.language}}&region={{gmap.region}}" type="text/javascript"></script>
+{% endif %} {{ set_googlemaps_loaded() }} {% endif %} {% if gmap.cluster %}
+<script src="//cdnjs.cloudflare.com/ajax/libs/js-marker-clusterer/1.0.0/markerclusterer_compiled.js" type="text/javascript"></script>
 {% endif %}
 
-{% if gmap.cluster %}
-        <script src="//cdnjs.cloudflare.com/ajax/libs/js-marker-clusterer/1.0.0/markerclusterer_compiled.js" type="text/javascript"></script>
-{%  endif %}
-
 <style type="text/css">
-      #{{gmap.identifier}} { {{gmap.style}} }
+	#{{gmap.identifier}} { {{gmap.style}} }
 </style>
 
 <script type="text/javascript">
-    var {{gmap.varname}} = null;
-    var {{gmap.varname}}_markers = [];
-    var {{gmap.varname}}_rectangles = [];
-    var {{gmap.varname}}_circles = [];
-    var {{gmap.varname}}_polygons = [];
-    var {{gmap.varname}}_polylines = [];
-    var prev_infowindow_{{gmap.varname}} = null;
+	 var {{gmap.varname}} = null;
+	 var {{gmap.varname}}_markers = [];
+	 var {{gmap.varname}}_rectangles = [];
+	 var {{gmap.varname}}_circles = [];
+	 var {{gmap.varname}}_polygons = [];
+	 var {{gmap.varname}}_polylines = [];
+	 var prev_infowindow_{{gmap.varname}} = null;
 
-    function initialize_{{gmap.varname}}() {
-        document.getElementById('{{gmap.identifier}}').style.display = 'block';
-        {{gmap.varname}} = new google.maps.Map(
-        document.getElementById('{{gmap.identifier}}'), {
-            center: new google.maps.LatLng({{gmap.center.0}}, {{gmap.center.1}}),
-            zoom: {{gmap.zoom}},
-            mapTypeId: google.maps.MapTypeId.{{gmap.maptype}},
-            zoomControl: {% if gmap.zoom_control %}true{% else %}false{% endif %},
-            mapTypeControl: {% if gmap.maptype_control %}true{% else %}false{% endif %},
-            scaleControl: {% if gmap.scale_control %}true{% else %}false{% endif %},
-            streetViewControl: {% if gmap.streetview_control %}true{% else %}false{% endif %},
-            rotateControl: {% if gmap.rotate_control %}true{% else %}false{% endif %},
-            scrollwheel: {% if gmap.scroll_wheel %}true{% else %}false{% endif %},
-            fullscreenControl: {% if gmap.fullscreen_control %}true{% else %}false{% endif %},
-            styles: {{ gmap.styles | tojson  }}
-        });
+	 function initialize_{{gmap.varname}}() {
+	     document.getElementById('{{gmap.identifier}}').style.display = 'block';
+	     {{gmap.varname}} = new google.maps.Map(
+	     document.getElementById('{{gmap.identifier}}'), {
+	         center: new google.maps.LatLng({{gmap.center.0}}, {{gmap.center.1}}),
+	         zoom: {{gmap.zoom}},
+	         mapTypeId: google.maps.MapTypeId.{{gmap.maptype}},
+	         zoomControl: {% if gmap.zoom_control %}true{% else %}false{% endif %},
+	         mapTypeControl: {% if gmap.maptype_control %}true{% else %}false{% endif %},
+	         scaleControl: {% if gmap.scale_control %}true{% else %}false{% endif %},
+	         streetViewControl: {% if gmap.streetview_control %}true{% else %}false{% endif %},
+	         rotateControl: {% if gmap.rotate_control %}true{% else %}false{% endif %},
+	         scrollwheel: {% if gmap.scroll_wheel %}true{% else %}false{% endif %},
+	         fullscreenControl: {% if gmap.fullscreen_control %}true{% else %}false{% endif %},
+	         styles: {{ gmap.styles | tojson  }}
+	     });
 
-        //center map location on user location
-        {% if gmap.center_on_user_location %}
-            if (navigator.geolocation) {
-             navigator.geolocation.getCurrentPosition(function (position) {
-                 initialLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-                 {{gmap.varname}}.setCenter(initialLocation);
-             });
-            }
-        {% endif %}
+	     //center map location on user location
+	     {% if gmap.center_on_user_location %}
+	         if (navigator.geolocation) {
+	          navigator.geolocation.getCurrentPosition(function (position) {
+	              initialLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+	              {{gmap.varname}}.setCenter(initialLocation);
+	          });
+	         }
+	     {% endif %}
 
-        // add kml layer on map
-        {% if gmap.layer %}
-            const ctaLayer = new google.maps.KmlLayer({
-            url: "{{gmap.layer }}",
-            map: {{gmap.varname}},
-            });
-        {% endif %}
+	     // add kml layer on map
+	     {% if gmap.layer %}
+	         const ctaLayer = new google.maps.KmlLayer({
+	         url: "{{gmap.layer }}",
+	         map: {{gmap.varname}},
+	         });
+	     {% endif %}
 
-        // add bicycle layer
-        {% if gmap.bicycle_layer %}
-            const bicycleLayer = new google.maps.BicyclingLayer();
-            bicycleLayer.setMap({{gmap.varname}});
-        {% endif %}
+	     // add bicycle layer
+	     {% if gmap.bicycle_layer %}
+	         const bicycleLayer = new google.maps.BicyclingLayer();
+	         bicycleLayer.setMap({{gmap.varname}});
+	     {% endif %}
 
 
-        // add gmap markers
-        var raw_markers = {{gmap.markers|tojson|safe}};
-        for(i=0; i<{{gmap.markers|length}};i++) {
-            {{gmap.varname}}_markers[i] = new google.maps.Marker({
-                position: new google.maps.LatLng(raw_markers[i].lat, raw_markers[i].lng),
-                map: {{gmap.varname}},
-                icon: raw_markers[i].icon,
-                title: raw_markers[i].title ? raw_markers[i].title : null,
-                label: raw_markers[i].label ? raw_markers[i].label : null
-            });
+	     // add gmap markers
+	     var raw_markers = {{gmap.markers|tojson|safe}};
+	     for(i=0; i<{{gmap.markers|length}};i++) {
+	           tempMarker = new google.maps.Marker({
+	             position: new google.maps.LatLng(raw_markers[i].lat, raw_markers[i].lng),
+	             map: {{gmap.varname}},
+	             icon: raw_markers[i].icon,
+	             title: raw_markers[i].title ? raw_markers[i].title : null,
+	             label: raw_markers[i].label ? raw_markers[i].label : null
+	   	        });
 
-           if(raw_markers[i].infobox)
-           {
-                google.maps.event.addListener(
-                        {{gmap.varname}}_markers[i],
-                        'click',
-                        getInfoCallback({{gmap.varname}}, raw_markers[i].infobox)
-                );
-           }
-        }
+	        if(raw_markers[i].infobox)
+	        {
+	             google.maps.event.addListener(
+						tempMarker,
+	                    'click',
+	                    getInfoCallback({{gmap.varname}}, raw_markers[i].infobox)
+	             );
+	        }
+			if("{{gmap.report_markerClickpos}}" === "True" )
+	          {
+	              google.maps.event.addListener(
+						tempMarker,
+	                    'click',
+	                    function (event) { markerClickposCallback('{{gmap.markerClickpos_uri}}', event.latLng, raw_markers[i].title, raw_markers[i].label)}
+	            );
+	          }
+			  {{gmap.varname}}_markers[i] = tempMarker;
+	     }
 
-        {% if gmap.report_clickpos %}
-        google.maps.event.addListener(
-        	{{gmap.varname}},
-            'click',
-			function(event) { clickposCallback('{{gmap.clickpos_uri}}', event.latLng) }
-        );
-        {% endif %}        
+	     {% if gmap.report_clickpos %}
+	     google.maps.event.addListener(
+	     	{{gmap.varname}},
+	         'click',
+	function(event) { clickposCallback('{{gmap.clickpos_uri}}', event.latLng) }
+	     );
+	     {% endif %}
 
-        {% if gmap.fit_markers_to_bounds %}
-            // fit all markers in bounds
-            var {{gmap.varname}}_bounds = new google.maps.LatLngBounds();
-            for(i=0; i<{{gmap.varname}}_markers.length;i++) {
-                {{gmap.varname}}_bounds.extend({{gmap.varname}}_markers[i].getPosition());
-            };
-            {{gmap.varname}}.fitBounds({{gmap.varname}}_bounds);
-        {% endif %}
+	     {% if gmap.fit_markers_to_bounds %}
+	         // fit all markers in bounds
+	         var {{gmap.varname}}_bounds = new google.maps.LatLngBounds();
+	         for(i=0; i<{{gmap.varname}}_markers.length;i++) {
+	             {{gmap.varname}}_bounds.extend({{gmap.varname}}_markers[i].getPosition());
+	         };
+	         {{gmap.varname}}.fitBounds({{gmap.varname}}_bounds);
+	     {% endif %}
 
-        // add rectangles
-        var raw_rectangles = {{ gmap.rectangles|tojson|safe }};
-        for(i = 0; i < {{ gmap.rectangles|length }}; i++) {
-            {{ gmap.varname }}_rectangles[i] = new google.maps.Rectangle({
-                strokeColor: raw_rectangles[i].stroke_color,
-                strokeOpacity: raw_rectangles[i].stroke_opacity,
-                strokeWeight: raw_rectangles[i].stroke_weight,
-                fillColor: raw_rectangles[i].fill_color,
-                fillOpacity: raw_rectangles[i].fill_opacity,
-                map: {{gmap.varname}},
-                bounds: {
-                    north: raw_rectangles[i].bounds.north,
-                    east: raw_rectangles[i].bounds.east,
-                    south: raw_rectangles[i].bounds.south,
-                    west: raw_rectangles[i].bounds.west },
-            });
+	     // add rectangles
+	     var raw_rectangles = {{ gmap.rectangles|tojson|safe }};
+	     for(i = 0; i < {{ gmap.rectangles|length }}; i++) {
+	         {{ gmap.varname }}_rectangles[i] = new google.maps.Rectangle({
+	             strokeColor: raw_rectangles[i].stroke_color,
+	             strokeOpacity: raw_rectangles[i].stroke_opacity,
+	             strokeWeight: raw_rectangles[i].stroke_weight,
+	             fillColor: raw_rectangles[i].fill_color,
+	             fillOpacity: raw_rectangles[i].fill_opacity,
+	             map: {{gmap.varname}},
+	             bounds: {
+	                 north: raw_rectangles[i].bounds.north,
+	                 east: raw_rectangles[i].bounds.east,
+	                 south: raw_rectangles[i].bounds.south,
+	                 west: raw_rectangles[i].bounds.west },
+	         });
 
-           if(raw_rectangles[i].infobox)
-           {
-                google.maps.event.addListener(
-                        {{gmap.varname}}_rectangles[i],
-                        'click',
-                        getInfoCallback({{gmap.varname}}, raw_rectangles[i].infobox)
-                );
-           }
-        }
+	        if(raw_rectangles[i].infobox)
+	        {
+	             google.maps.event.addListener(
+	                     {{gmap.varname}}_rectangles[i],
+	                     'click',
+	                     getInfoCallback({{gmap.varname}}, raw_rectangles[i].infobox)
+	             );
+	        }
+	     }
 
-        // add circles
-        var raw_circles = {{ gmap.circles|tojson|safe }};
-        for(i = 0; i < {{ gmap.circles|length }}; i++) {
-            {{ gmap.varname }}_circles[i] = new google.maps.Circle({
-                strokeColor: raw_circles[i].stroke_color,
-                strokeOpacity: raw_circles[i].stroke_opacity,
-                strokeWeight: raw_circles[i].stroke_weight,
-                fillColor: raw_circles[i].fill_color,
-                fillOpacity: raw_circles[i].fill_opacity,
-                map: {{gmap.varname}},
-                center: {
-                    lat: raw_circles[i].center.lat,
-                    lng: raw_circles[i].center.lng,
-                },
-                radius: raw_circles[i].radius,
-                clickable : raw_circles[i].clickable
-            });
+	     // add circles
+	     var raw_circles = {{ gmap.circles|tojson|safe }};
+	     for(i = 0; i < {{ gmap.circles|length }}; i++) {
+	         {{ gmap.varname }}_circles[i] = new google.maps.Circle({
+	             strokeColor: raw_circles[i].stroke_color,
+	             strokeOpacity: raw_circles[i].stroke_opacity,
+	             strokeWeight: raw_circles[i].stroke_weight,
+	             fillColor: raw_circles[i].fill_color,
+	             fillOpacity: raw_circles[i].fill_opacity,
+	             map: {{gmap.varname}},
+	             center: {
+	                 lat: raw_circles[i].center.lat,
+	                 lng: raw_circles[i].center.lng,
+	             },
+	             radius: raw_circles[i].radius,
+	             clickable : raw_circles[i].clickable
+	         });
 
-           if(raw_circles[i].infobox)
-           {
-                google.maps.event.addListener(
-                        {{gmap.varname}}_circles[i],
-                        'click',
-                        getInfoCallback({{gmap.varname}}, raw_circles[i].infobox)
-                );
-           }
-        }
+	        if(raw_circles[i].infobox)
+	        {
+	             google.maps.event.addListener(
+	                     {{gmap.varname}}_circles[i],
+	                     'click',
+	                     getInfoCallback({{gmap.varname}}, raw_circles[i].infobox)
+	             );
+	        }
+	     }
 
-        // add polygons
-        var raw_polygons = {{ gmap.polygons|tojson|safe }};
-        for(i = 0; i < {{ gmap.polygons|length }}; i++) {
-            {{ gmap.varname }}_polygons[i] = new google.maps.Polygon({
-                strokeColor: raw_polygons[i].stroke_color,
-                strokeOpacity: raw_polygons[i].stroke_opacity,
-                strokeWeight: raw_polygons[i].stroke_weight,
-                fillOpacity: raw_polygons[i].fill_opacity,
-                fillColor: raw_polygons[i].fill_color,
-                path: raw_polygons[i].path,
-                map: {{gmap.varname}},
-                geodesic: true
-            });
+	     // add polygons
+	     var raw_polygons = {{ gmap.polygons|tojson|safe }};
+	     for(i = 0; i < {{ gmap.polygons|length }}; i++) {
+	         {{ gmap.varname }}_polygons[i] = new google.maps.Polygon({
+	             strokeColor: raw_polygons[i].stroke_color,
+	             strokeOpacity: raw_polygons[i].stroke_opacity,
+	             strokeWeight: raw_polygons[i].stroke_weight,
+	             fillOpacity: raw_polygons[i].fill_opacity,
+	             fillColor: raw_polygons[i].fill_color,
+	             path: raw_polygons[i].path,
+	             map: {{gmap.varname}},
+	             geodesic: true
+	         });
 
-           if(raw_polygons[i].infobox)
-           {
-                google.maps.event.addListener(
-                        {{gmap.varname}}_polygons[i],
-                        'click',
-                        getInfoCallback({{gmap.varname}}, raw_polygons[i].infobox)
-                );
-           }
-        }
+	        if(raw_polygons[i].infobox)
+	        {
+	             google.maps.event.addListener(
+	                     {{gmap.varname}}_polygons[i],
+	                     'click',
+	                     getInfoCallback({{gmap.varname}}, raw_polygons[i].infobox)
+	             );
+	        }
+	     }
 
-        // add polylines
-        var raw_polylines = {{ gmap.polylines|tojson|safe }};
-        for(i = 0; i < {{ gmap.polylines|length }}; i++) {
-            {{ gmap.varname }}_polylines[i] = new google.maps.Polyline({
-                strokeColor: raw_polylines[i].stroke_color,
-                strokeOpacity: raw_polylines[i].stroke_opacity,
-                strokeWeight: raw_polylines[i].stroke_weight,
-                path: raw_polylines[i].path,
-                map: {{gmap.varname}},
-                geodesic: true
-            });
+	     // add polylines
+	     var raw_polylines = {{ gmap.polylines|tojson|safe }};
+	     for(i = 0; i < {{ gmap.polylines|length }}; i++) {
+	         {{ gmap.varname }}_polylines[i] = new google.maps.Polyline({
+	             strokeColor: raw_polylines[i].stroke_color,
+	             strokeOpacity: raw_polylines[i].stroke_opacity,
+	             strokeWeight: raw_polylines[i].stroke_weight,
+	             path: raw_polylines[i].path,
+	             map: {{gmap.varname}},
+	             geodesic: true
+	         });
 
-           if(raw_polylines[i].infobox)
-           {
-                google.maps.event.addListener(
-                        {{gmap.varname}}_polylines[i],
-                        'click',
-                        getInfoCallback({{gmap.varname}}, raw_polylines[i].infobox)
-                );
-           }
-        }
+	        if(raw_polylines[i].infobox)
+	        {
+	             google.maps.event.addListener(
+	                     {{gmap.varname}}_polylines[i],
+	                     'click',
+	                     getInfoCallback({{gmap.varname}}, raw_polylines[i].infobox)
+	             );
+	        }
+	     }
 
-        {% if gmap.cluster %}
-    	    var markerCluster = new MarkerClusterer({{gmap.varname}}, {{gmap.varname}}_markers, {'imagePath': "{{gmap.cluster_imagepath}}", 'gridSize': {{gmap.cluster_gridsize}}});
-        {% endif %}
-    }
+	     {% if gmap.cluster %}
+	 	    var markerCluster = new MarkerClusterer({{gmap.varname}}, {{gmap.varname}}_markers, {'imagePath': "{{gmap.cluster_imagepath}}", 'gridSize': {{gmap.cluster_gridsize}}});
+	     {% endif %}
+	 }
 
-    function getInfoCallback(map, content) {
-        var infowindow = new google.maps.InfoWindow({content: content});
-        return function(ev) {
-            if( prev_infowindow_{{gmap.varname}} ) {
-                prev_infowindow_{{gmap.varname}}.close();
-            }
-            prev_infowindow_{{gmap.varname}} = infowindow;
-            infowindow.setPosition(ev.latLng);
-            infowindow.setContent(content);
-            infowindow.open(map, this);
-        };
-    }
-    
-    function clickposCallback(uri, latLng) {
-    	xhttp = new XMLHttpRequest();
-    	xhttp.open("POST", uri);
-    	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        xhttp.send("lat=" + latLng.lat() + "&lng="  + latLng.lng());
-    }
+	 function getInfoCallback(map, content) {
+	     var infowindow = new google.maps.InfoWindow({content: content});
+	     return function(ev) {
+	         if( prev_infowindow_{{gmap.varname}} ) {
+	             prev_infowindow_{{gmap.varname}}.close();
+	         }
+	         prev_infowindow_{{gmap.varname}} = infowindow;
+	         infowindow.setPosition(ev.latLng);
+	         infowindow.setContent(content);
+	         infowindow.open(map, this);
+	     };
+	 }
 
-    {% if gmap.collapsible %}
-        function init_{{gmap.identifier}}_button() {
-            document.getElementById('{{gmap.identifier}}').style.display = 'none';
-            document.getElementById('{{gmap.varname}}_collapse').onclick = function() {
-            if ({{gmap.varname}} === null) {
-                    initialize_{{gmap.varname}}();
-                    document.getElementById('{{gmap.varname}}_collapse').textContent = "Hide map";
-                } else {
-                    var m = document.getElementById('{{gmap.identifier}}');
-                    if (m.style.display !== 'none') {
-                        m.style.display = 'none';
-                        document.getElementById('{{gmap.varname}}_collapse').textContent = "Show map";
-                    } else {
-                        m.style.display = 'block';
-                        document.getElementById('{{gmap.varname}}_collapse').textContent = "Hide map";
-                    }
-                }
-            }
-            {% if gmap.mapdisplay %}
-            document.getElementById('{{gmap.varname}}_collapse').click();
-            {% endif %}
-        };
+	function clickposCallback(uri, latLng) {
+	 	xhttp = new XMLHttpRequest();
+	 	xhttp.open("POST", uri);
+	 	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	     xhttp.send("lat=" + latLng.lat() + "&lng="  + latLng.lng());
+	}
+	function markerClickposCallback(uri, latLng, title, label) {
+		{{gmap.varname}}_clickedMarker = [latLng.lat(),latLng.lng()]
+		xhttp = new XMLHttpRequest();
+		xhttp.open("POST", uri);
+		xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	    xhttp.send("lat=" + latLng.lat() + "&lng="  + latLng.lng()+"&title=" + title + "&label="  + label);
+	}
 
-        if (typeof window.onload === 'function') {
-            func = window.onload;
-            window.onload = function() {
-                func();
-                init_{{gmap.identifier}}_button();
-            }
-        } else {
-            window.onload = init_{{gmap.identifier}}_button;
-        }
-    {% else %}
-        google.maps.event.addDomListener(window, 'load', initialize_{{gmap.varname}});
-    {% endif %}
+	 {% if gmap.collapsible %}
+	     function init_{{gmap.identifier}}_button() {
+	         document.getElementById('{{gmap.identifier}}').style.display = 'none';
+	         document.getElementById('{{gmap.varname}}_collapse').onclick = function() {
+	         if ({{gmap.varname}} === null) {
+	                 initialize_{{gmap.varname}}();
+	                 document.getElementById('{{gmap.varname}}_collapse').textContent = "Hide map";
+	             } else {
+	                 var m = document.getElementById('{{gmap.identifier}}');
+	                 if (m.style.display !== 'none') {
+	                     m.style.display = 'none';
+	                     document.getElementById('{{gmap.varname}}_collapse').textContent = "Show map";
+	                 } else {
+	                     m.style.display = 'block';
+	                     document.getElementById('{{gmap.varname}}_collapse').textContent = "Hide map";
+	                 }
+	             }
+	         }
+	         {% if gmap.mapdisplay %}
+	         document.getElementById('{{gmap.varname}}_collapse').click();
+	         {% endif %}
+	     };
 
+	     if (typeof window.onload === 'function') {
+	         func = window.onload;
+	         window.onload = function() {
+	             func();
+	             init_{{gmap.identifier}}_button();
+	         }
+	     } else {
+	         window.onload = init_{{gmap.identifier}}_button;
+	     }
+	 {% else %}
+	     google.maps.event.addDomListener(window, 'load', initialize_{{gmap.varname}});
+	 {% endif %}
 </script>

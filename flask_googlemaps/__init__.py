@@ -47,42 +47,13 @@ class Map(object):
         cluster_gridsize=60,  # type: int
         fit_markers_to_bounds=False,  # type: bool
         center_on_user_location=False,  # type: bool
+        report_markerClickpos=False,  # type: bool
         report_clickpos=False,  # type: bool
+        markerClickpos_uri="",  # type: str
         clickpos_uri="",  # type: str
-        identifier,
-        lat,
-        lng,
-        zoom=13,
-        maptype="ROADMAP",
-        markers=None,
-        map_ids=None,
-        varname="map",
-        style="height:300px;width:300px;margin:0;",
-        cls="map",
-        language="en",
-        region="US",
-        rectangles=None,
-        circles=None,
-        polylines=None,
-        polygons=None,
-        zoom_control=True,
-        maptype_control=True,
-        scale_control=True,
-        streetview_control=True,
-        rotate_control=True,
-        scroll_wheel=True,
-        fullscreen_control=True,
-        collapsible=False,
-        mapdisplay=False,
-        cluster=False,
-        cluster_imagepath=DEFAULT_CLUSTER_IMAGE_PATH,
-        cluster_gridsize=60,
-        fit_markers_to_bounds=False,
-        center_on_user_location=False,
-        report_clickpos=False,
-        clickpos_uri="",
         styles="",
         layer="",
+        map_ids=None,
         bicycle_layer=False,
         **kwargs
     ):
@@ -120,6 +91,8 @@ class Map(object):
         self.center_on_user_location = center_on_user_location
         self.report_clickpos = report_clickpos
         self.clickpos_uri = clickpos_uri
+        self.report_markerClickpos = report_markerClickpos
+        self.markerClickpos_uri = markerClickpos_uri
 
         self.cluster = cluster
         self.cluster_imagepath = cluster_imagepath
@@ -129,7 +102,6 @@ class Map(object):
         self.styles = styles
         self.layer = layer
         self.bicycle_layer = bicycle_layer
-
 
     def build_markers(self, markers):
         # type: (Optional[Union[Dict, List, Tuple]]) -> None
@@ -800,11 +772,13 @@ class Map(object):
 
     def verify_lat_lng_coordinates(self, lat, lng):
         if not (90 >= lat >= -90):
-            raise AttributeError("Latitude must be between -90 and 90 degrees inclusive.")
+            raise AttributeError(
+                "Latitude must be between -90 and 90 degrees inclusive.")
         if not (180 >= lng >= -180):
-            raise AttributeError("Longitude must be between -180 and 180 degrees inclusive.")
-        
-        return (lat,lng) 
+            raise AttributeError(
+                "Longitude must be between -180 and 180 degrees inclusive.")
+
+        return (lat, lng)
 
     @property
     def js(self):
@@ -869,7 +843,6 @@ def get_address(API_KEY, lat, lon):
 def get_coordinates(API_KEY, address_text):
     # type: (str, str) -> Dict
     response = requests.get(
-    response = rq.get(
         "https://maps.googleapis.com/maps/api/geocode/json?address="
         + address_text
         + "&key="
