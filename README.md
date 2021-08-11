@@ -1,3 +1,8 @@
+---------------------------------
+I'm very busy in the last few months and I need someone to assume this project. If no one volunteers itself I'll archive this project. Thanks for comprehension.
+---------------------------------
+
+
 # Flask Google Maps [![Generic badge](https://img.shields.io/badge/PayPal-Donante-red.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=2UGZHBYZV39XY&source=url)
 
 [![Flask Estension](https://img.shields.io/badge/flask-extension-green.svg?style=flat)](https://flaskextensions.com)
