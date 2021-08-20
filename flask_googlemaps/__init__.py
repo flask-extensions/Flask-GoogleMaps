@@ -70,7 +70,7 @@ class Map(object):
         self.zoom = zoom
         self.maptype = maptype
         self.markers = []  # type: List[Any]
-        self.map_ids = (map_ids,)
+        self.map_ids = map_ids
         self.build_markers(markers)
         self.rectangles = []  # type: List[Any]
         self.build_rectangles(rectangles)
