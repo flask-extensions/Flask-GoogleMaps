@@ -55,6 +55,8 @@ class Map(object):
         layer="",
         map_ids=None,
         bicycle_layer=False,
+        heatmap_data=None,
+        heatmap_layer=False,
         **kwargs
     ):
         # type: (...) -> None
@@ -68,7 +70,7 @@ class Map(object):
         self.zoom = zoom
         self.maptype = maptype
         self.markers = []  # type: List[Any]
-        self.map_ids = map_ids,
+        self.map_ids = map_ids
         self.build_markers(markers)
         self.rectangles = []  # type: List[Any]
         self.build_rectangles(rectangles)
@@ -102,6 +104,9 @@ class Map(object):
         self.styles = styles
         self.layer = layer
         self.bicycle_layer = bicycle_layer
+        self.heatmap_layer = heatmap_layer
+        self.heatmap_data = []
+        self.build_heatmap(heatmap_data, heatmap_layer)
 
     def build_markers(self, markers):
         # type: (Optional[Union[Dict, List, Tuple]]) -> None
@@ -149,7 +154,7 @@ class Map(object):
 
     def build_rectangles(self, rectangles):
         # type: (Optional[List[Union[List, Tuple, Tuple[Tuple], Dict]]]) -> None
-        """ Process data to construct rectangles
+        """Process data to construct rectangles
 
         This method is built from the assumption that the rectangles parameter
         is a list of:
@@ -227,7 +232,7 @@ class Map(object):
         fill_opacity=0.3,  # type: float
     ):
         # type: (...) -> Dict
-        """ Set a dictionary with the javascript class Rectangle parameters
+        """Set a dictionary with the javascript class Rectangle parameters
 
         This function sets a default drawing configuration if the user just
         pass the rectangle bounds, but also allows to set each parameter
@@ -260,7 +265,7 @@ class Map(object):
 
     def add_rectangle(self, north=None, west=None, south=None, east=None, **kwargs):
         # type: (Optional[float], Optional[float], Optional[float], Optional[float], **Any) -> None
-        """ Adds a rectangle dict to the Map.rectangles attribute
+        """Adds a rectangle dict to the Map.rectangles attribute
 
         The Google Maps API describes a rectangle using the LatLngBounds
         object, which defines the bounds to be drawn. The bounds use the
@@ -307,7 +312,7 @@ class Map(object):
 
     def build_circles(self, circles):
         # type: (Optional[List[Union[List, Tuple, Dict]]]) -> None
-        """ Process data to construct rectangles
+        """Process data to construct rectangles
 
         This method is built from the assumption that the circles parameter
         is a list of:
@@ -359,7 +364,7 @@ class Map(object):
         clickable=True,  # type: bool
     ):
         # type: (...) -> Dict
-        """ Set a dictionary with the javascript class Circle parameters
+        """Set a dictionary with the javascript class Circle parameters
 
         This function sets a default drawing configuration if the user just
         pass the rectangle bounds, but also allows to set each parameter
@@ -394,7 +399,7 @@ class Map(object):
 
     def add_circle(self, center_lat=None, center_lng=None, radius=None, **kwargs):
         # type: (Optional[float], Optional[float], Optional[float], **Any) -> None
-        """ Adds a circle dict to the Map.circles attribute
+        """Adds a circle dict to the Map.circles attribute
 
         The circle in a sphere is called "spherical cap" and is defined in the
         Google Maps API by at least the center coordinates and its radius, in
@@ -436,7 +441,7 @@ class Map(object):
 
     def build_polylines(self, polylines):
         # type: (Optional[List[Union[List, Tuple, Dict]]]) -> None
-        """ Process data to construct polylines
+        """Process data to construct polylines
 
         This method is built from the assumption that the polylines parameter
         is a list of:
@@ -500,7 +505,7 @@ class Map(object):
         self, path, stroke_color="#FF0000", stroke_opacity=0.8, stroke_weight=2
     ):
         # type: (List[Dict], str, float, int) -> Dict
-        """ Set a dictionary with the javascript class Polyline parameters
+        """Set a dictionary with the javascript class Polyline parameters
 
         This function sets a default drawing configuration if the user just
         pass the polyline path, but also allows to set each parameter
@@ -532,7 +537,7 @@ class Map(object):
 
     def add_polyline(self, path=None, **kwargs):
         # type: (Optional[List[Dict]], **Any) -> None
-        """ Adds a polyline dict to the Map.polylines attribute
+        """Adds a polyline dict to the Map.polylines attribute
 
         The Google Maps API describes a polyline as a "linear overlay of
         connected line segments on the map". The linear paths are defined
@@ -577,7 +582,7 @@ class Map(object):
 
     def build_polygons(self, polygons):
         # type: (Optional[List[Union[List, Tuple, Dict]]]) -> None
-        """ Process data to construct polygons
+        """Process data to construct polygons
 
         This method is built from the assumption that the polygons parameter
         is a list of:
@@ -649,7 +654,7 @@ class Map(object):
         fill_opacity=0.3,  # type: float
     ):
         # type: (...) -> Dict
-        """ Set a dictionary with the javascript class Polygon parameters
+        """Set a dictionary with the javascript class Polygon parameters
 
         This function sets a default drawing configuration if the user just
         pass the polygon path, but also allows to set each parameter
@@ -687,7 +692,7 @@ class Map(object):
 
     def add_polygon(self, path=None, **kwargs):
         # type: (Optional[List[Dict]], **Any) -> None
-        """ Adds a polygon dict to the Map.polygons attribute
+        """Adds a polygon dict to the Map.polygons attribute
 
         The Google Maps API describes a polyline as a "linear overlay of
         connected line segments on the map" and "form a closed loop and define
@@ -733,6 +738,37 @@ class Map(object):
 
         self.polygons.append(kwargs)
 
+    def build_heatmap(self, heatmap_data, heatmap_layer):
+        # type: (list, bool) -> dict
+        if not heatmap_layer:
+            return
+        if heatmap_layer and not heatmap_data:
+            raise AttributeError("heatmap_later requires 'heatmap_data'")
+        if not isinstance(heatmap_data, (list)):
+            raise AttributeError(
+                "heatmap_data only accepts a list of dicts with keys 'lat' 'lng' and their corresponding values"
+            )
+        for hm in heatmap_data:
+            if isinstance(hm, dict):
+                self.add_heatmap(**hm)
+            else:
+                raise AttributeError(
+                    "elements of list 'heatmap_data' must be a dict of keys 'lat' and 'lng' with their corresponding values"
+                )
+
+    def add_heatmap(self, lat=None, lng=None, **kwargs):
+        # type: (Optional[float], Optional[float], **Any) -> None
+        if lat is not None:
+            kwargs["lat"] = lat
+        if lng is not None:
+            kwargs["lng"] = lng
+        if "lat" not in kwargs or "lng" not in kwargs:
+            raise AttributeError("heatmap_data requires 'lat' and 'lng' values")
+        if len(kwargs) > 2:
+            raise AttributeError("heatmap_data can only contain 'lat' and 'lng' values")
+
+        self.heatmap_data.append(kwargs)
+
     def render(self, *args, **kwargs):
         # type: (*Any, **Any) -> Text
         return render_template(*args, **kwargs)
@@ -773,10 +809,12 @@ class Map(object):
     def verify_lat_lng_coordinates(self, lat, lng):
         if not (90 >= lat >= -90):
             raise AttributeError(
-                "Latitude must be between -90 and 90 degrees inclusive.")
+                "Latitude must be between -90 and 90 degrees inclusive."
+            )
         if not (180 >= lng >= -180):
             raise AttributeError(
-                "Longitude must be between -180 and 180 degrees inclusive.")
+                "Longitude must be between -180 and 180 degrees inclusive."
+            )
 
         return (lat, lng)
 

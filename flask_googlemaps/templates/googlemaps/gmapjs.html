@@ -1,10 +1,13 @@
-{% if not is_googlemaps_loaded() %} {% if GOOGLEMAPS_KEY %}
+{% if not is_googlemaps_loaded() and not gmap.heatmap_layer %} {% if GOOGLEMAPS_KEY %}
 <script src="//maps.googleapis.com/maps/api/js?key={{GOOGLEMAPS_KEY}}&map_ids={{gmap.map_ids}}&language={{gmap.language}}&region={{gmap.region}}" type="text/javascript"></script>
 {% else %}
 <script src="//maps.googleapis.com/maps/api/js?language={{gmap.language}}&region={{gmap.region}}" type="text/javascript"></script>
-{% endif %} {{ set_googlemaps_loaded() }} {% endif %} {% if gmap.cluster %}
+{% endif %} {{ set_googlemaps_loaded() }} {% endif %}{% if gmap.cluster %}
 <script src="//cdnjs.cloudflare.com/ajax/libs/js-marker-clusterer/1.0.0/markerclusterer_compiled.js" type="text/javascript"></script>
-{% endif %}
+{% endif %}{% if gmap.heatmap_layer %}{% if GOOGLEMAPS_KEY %}
+<script src="//maps.googleapis.com/maps/api/js?key={{GOOGLEMAPS_KEY}}&map_ids={{gmap.map_ids}}&language={{gmap.language}}&region={{gmap.region}}&libraries=visualization" type="text/javascript"></script>
+{% endif %}{% endif%}
+
 
 <style type="text/css">
 	#{{gmap.identifier}} { {{gmap.style}} }
@@ -13,6 +16,7 @@
 <script type="text/javascript">
 	 var {{gmap.varname}} = null;
 	 var {{gmap.varname}}_markers = [];
+	 var {{gmap.varname}}_heatmap_data = [];
 	 var {{gmap.varname}}_rectangles = [];
 	 var {{gmap.varname}}_circles = [];
 	 var {{gmap.varname}}_polygons = [];
@@ -61,6 +65,21 @@
 	     {% endif %}
 
 
+		 // add heatmap layer
+		 {% if gmap.heatmap_layer %}
+		 	var heatmapData = [];
+			var raw_heatmap_data = {{gmap.heatmap_data|tojson|safe}};
+			 for(i=0; i < {{gmap.heatmap_data|length}}; i++) {
+				 pos = new google.maps.LatLng(raw_heatmap_data[i].lat, raw_heatmap_data[i].lng);
+				 heatmapData.push(pos);
+			 }
+			var heatmap = new google.maps.visualization.HeatmapLayer({
+				data: heatmapData
+			});
+			heatmap.setMap({{gmap.varname}});
+
+		{% endif %}
+
 	     // add gmap markers
 	     var raw_markers = {{gmap.markers|tojson|safe}};
 	     for(i=0; i<{{gmap.markers|length}};i++) {
@@ -72,6 +91,7 @@
 	             label: raw_markers[i].label ? raw_markers[i].label : null
 	   	        });
 
+
 	        if(raw_markers[i].infobox)
 	        {
 	             google.maps.event.addListener(
@@ -80,6 +100,7 @@
 	                    getInfoCallback({{gmap.varname}}, raw_markers[i].infobox)
 	             );
 	        }
+
 			if("{{gmap.report_markerClickpos}}" === "True" )
 	          {
 	              google.maps.event.addListener(
@@ -89,12 +110,15 @@
 	            );
 	          }
 			  {{gmap.varname}}_markers[i] = tempMarker;
+
 	     }
+
 
 	     {% if gmap.report_clickpos %}
 	     google.maps.event.addListener(
 	     	{{gmap.varname}},
 	         'click',
+
 	function(event) { clickposCallback('{{gmap.clickpos_uri}}', event.latLng) }
 	     );
 	     {% endif %}
