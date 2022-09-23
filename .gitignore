@@ -46,3 +46,6 @@ venv
 
 .idea/
 .vscode/
+
+#venv files
+Scripts/
