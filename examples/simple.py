@@ -1,10 +1,8 @@
 from flask import Flask, render_template
 from flask_googlemaps import GoogleMaps, Map, icons
-from dynaconf import FlaskDynaconf
 
 app = Flask(__name__)
 GoogleMaps(app)
-FlaskDynaconf(app)
 
 
 @app.route("/")
