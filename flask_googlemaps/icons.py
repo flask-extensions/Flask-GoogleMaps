@@ -26,7 +26,7 @@ class Icon(object):
 
 dots = Icon(
     base_url="//maps.google.com/mapfiles/ms/icons/{0}-dot.png",
-    options=["blue", "yellow", "green", "red", "pink", "purple", "red"],
+    options=["blue", "yellow", "green", "red", "pink", "purple", "orange"],
 )  # type: Icon
 
 alpha = Icon(
