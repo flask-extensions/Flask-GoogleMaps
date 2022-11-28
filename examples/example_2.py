@@ -1,11 +1,11 @@
 from flask import Flask, render_template
 from flask_googlemaps import GoogleMaps, Map, icons
-from dynaconf import FlaskDynaconf
+#from dynaconf import FlaskDynaconf
 #enter the api key below
 api = ''
 app = Flask(__name__)
 GoogleMaps(app, key = api)
-FlaskDynaconf(app)
+#FlaskDynaconf(app)
 
 import json
 
@@ -59,9 +59,6 @@ def map_created_in_view():
 
   #  print(get_address(api, 22.4761596, 88.4149326))
     return render_template("example_2.html", dmap=dmap ,gmap = gmap, wmap = wmap,key = api)
-
-
-
 
 
 if __name__ == "__main__":

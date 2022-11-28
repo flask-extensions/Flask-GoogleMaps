@@ -1,10 +1,8 @@
 from flask import Flask, render_template
 from flask_googlemaps import GoogleMaps, Map, icons
-from dynaconf import FlaskDynaconf
 
 app = Flask(__name__)
 GoogleMaps(app)
-FlaskDynaconf(app)
 
 
 @app.route("/")
@@ -26,4 +24,4 @@ def map_created_in_view():
 
 
 if __name__ == "__main__":
-    app.run(port=5050)
+    app.run(port=5050, debug=True)
