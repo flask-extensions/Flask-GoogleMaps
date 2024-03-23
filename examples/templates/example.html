@@ -151,7 +151,8 @@ in body:
 <br />
 <button onclick='movingmap_markers.map(function(mk){mk.setMap(null)})'>Remove marker</button>
 <button onclick='movingmap_markers.map(function(mk){mk.setMap(movingmap)})'>Restore marker</button>
-<button onclick='new google.maps.Marker({title: "New Marker", position: {lat: 37.4640, lng: -122.1350}}).setMap(movingmap)'>Add New Marker Above</button>
+const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
+<button onclick='new AdvancedMarkerElement({title: "New Marker", position: {lat: 37.4640, lng: -122.1350}}).setMap(movingmap)'>Add New Marker Above</button>
 
 
     <pre>
@@ -161,7 +162,7 @@ in body:
 &lt;button onclick='movingmap_markers.map(function(mk){mk.setPosition({lat: 37.449, lng:-122.135})})'&gt;Go to position 4 &lt;/button&gt;
 &lt;button onclick='movingmap_markers.map(function(mk){mk.setMap(null)})'&gt;Remove marker&lt;/button&gt;
 &lt;button onclick='movingmap_markers.map(function(mk){mk.setMap(movingmap)})'&gt;Restore marker&lt;/button&gt;
-&lt;button onclick='onclick='new google.maps.Marker({title: "New Marker", position: {lat: 37.4640, lng: -122.1350}}).setMap(movingmap)''&gt;Add new marker above&lt;/button&gt;
+&lt;button onclick='onclick='AdvancedMarkerElement({title: "New Marker", position: {lat: 37.4640, lng: -122.1350}}).setMap(movingmap)''&gt;Add new marker above&lt;/button&gt;
     </pre>
 
 
