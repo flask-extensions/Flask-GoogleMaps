@@ -8,9 +8,9 @@ import requests
 from flask import Blueprint, g, render_template
 from markupsafe import Markup
 
-from flask_googlemaps.icons import dots, Icon
+from flask_googlemaps.pin import Pin
 
-DEFAULT_ICON = dots.red
+DEFAULT_PIN = Pin(border_color="", glyph_color="", background="")
 DEFAULT_CLUSTER_IMAGE_PATH = "static/images/m"
 
 
@@ -115,9 +115,9 @@ class Map(object):
             raise AttributeError("markers accepts only dict, list and tuple")
 
         if isinstance(markers, dict):
-            for icon, marker_list in markers.items():
+            for pin, marker_list in markers.items():
                 for marker in marker_list:
-                    marker_dict = self.build_marker_dict(marker, icon=icon)
+                    marker_dict = self.build_marker_dict(marker, pin=pin)
                     self.add_marker(**marker_dict)
         else:
             for marker in markers:
@@ -127,17 +127,17 @@ class Map(object):
                     marker_dict = self.build_marker_dict(marker)
                     self.add_marker(**marker_dict)
 
-    def build_marker_dict(self, marker, icon=None):
-        # type: (Union[List, Tuple], Optional[Icon]) -> Dict
+    def build_marker_dict(self, marker, pin=None):
+        # type: (Union[List, Tuple], Optional[Pin]) -> Dict
         marker_dict = {
             "lat": marker[0],
             "lng": marker[1],
-            "icon": icon or DEFAULT_ICON,
+            "pin": pin or DEFAULT_PIN,
         }
         if len(marker) > 2:
             marker_dict["infobox"] = marker[2]
         if len(marker) > 3:
-            marker_dict["icon"] = marker[3]
+            marker_dict["pin"] = marker[3]
         return marker_dict
 
     def add_marker(self, lat=None, lng=None, **kwargs):
@@ -821,7 +821,7 @@ class Map(object):
     def js(self):
         # type: () -> Markup
         return Markup(
-            self.render("googlemaps/gmapjs.html", gmap=self, DEFAULT_ICON=DEFAULT_ICON)
+            self.render("googlemaps/gmapjs.html", gmap=self, DEFAULT_PIN=DEFAULT_PIN)
         )
 
     @property
