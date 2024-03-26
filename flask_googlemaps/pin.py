@@ -1,4 +1,5 @@
-from dataclasses import dataclass
+import uuid
+from dataclasses import dataclass, field
 from typing import Optional
 
 
@@ -8,4 +9,5 @@ class Pin:
     glyph_color: str
     background: str
     glyph: Optional[str] = None
+    uuid: Optional[str] = field(default_factory=lambda: f"_{str(uuid.uuid1())[0:8]}")
     scale: float = 1.0
