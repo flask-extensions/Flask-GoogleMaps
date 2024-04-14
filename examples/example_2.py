@@ -57,9 +57,7 @@ def map_created_in_view():
     )
 
     #  print(get_address(api, 22.4761596, 88.4149326))
-    return render_template(
-        "example_2.html", dmap=dmap, gmap=gmap, wmap=wmap, key=api
-    )
+    return render_template("example_2.html", dmap=dmap, gmap=gmap, wmap=wmap, key=api)
 
 
 if __name__ == "__main__":

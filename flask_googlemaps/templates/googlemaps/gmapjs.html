@@ -84,50 +84,39 @@
 	     // add gmap markers
          const { AdvancedMarkerElement, PinElement } = await google.maps.importLibrary("marker");
          {% for marker in gmap.markers %}
-{#             {% if "http" in marker.pin.glyph %}#}
-                 const {{ marker['pin'].uuid }} = document.createElement("img");
-                 {{ marker['pin'].uuid }}.src = "{{marker['pin'].glyph}}";
-{#             {% else %}#}
-{#                 const {{ marker.pin.uuid }} = new PinElement({#}
-{#                     glyphColor: marker.pin.glyph_color,#}
-{#                     background: marker.pin.background,#}
-{#                     borderColor: marker.pin.border_color,#}
-{#                     glyph: marker.pin.glyph,#}
-{#                                        }).element#}
-{#             {% endif %}#}
-
-             tempMarker = new AdvancedMarkerElement({
-	             position: new google.maps.LatLng({{marker['lat']}}, {{marker['lng']}}),
+             {% if marker.dom_element %}
+             {{ marker.dom_element |safe }}
+             {%endif%}
+         {% endfor %}
+         for (const marker of {{gmap.markers|tojson|safe}}) {
+	           tempMarker = new AdvancedMarkerElement({
+	             position: new google.maps.LatLng(marker.latitude, marker.longitude),
 	             map: {{gmap.varname}},
-	             title: {{marker['title'] if marker['title'] is defined else 'null'}},
-                 content: {{ marker['pin'].uuid }}
+	             title: marker.title ? marker.title : null,
+                 content: eval(marker.content),
 	   	        });
 
 
-             {% if marker['infobox'] is defined %}
-
+	        if(marker.infobox)
+	        {
 	             google.maps.event.addListener(
 						tempMarker,
 	                    'click',
-	                    getInfoCallback({{gmap.varname}}, "{{marker['infobox']}}")
+	                    getInfoCallback({{gmap.varname}}, marker.infobox)
 	             );
+	        }
 
-             {% endif %}
-
-             {% if gmap.report_markerClickpos %}
+			if("{{gmap.report_markerClickpos}}" === "True" )
+	          {
 	              google.maps.event.addListener(
 						tempMarker,
 	                    'click',
-	                    function (event) { markerClickposCallback('{{gmap.markerClickpos_uri}}', event.latLng, marker['title'], marker['label'])}
+	                    function (event) { markerClickposCallback('{{gmap.markerClickpos_uri}}', event.latLng, marker.title, marker.label)}
 	            );
-             {% endif %}
+	          }
 			  {{gmap.varname}}_markers.push(tempMarker);
 
-         {% endfor %}
-
-         {#for (const marker of {{gmap.markers|tojson|safe}}) {#}
-         {##}
-	     {#}#}
+	     }
 
 
 	     {% if gmap.report_clickpos %}

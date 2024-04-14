@@ -1,17 +1,11 @@
 from flask import Flask, render_template
 
 from flask_googlemaps import GoogleMaps, Map
+from flask_googlemaps.image import Image
 from flask_googlemaps.pin import Pin
 
 app = Flask(__name__)
 GoogleMaps(app)
-
-red = Pin(border_color="", glyph_color="",
-          background="",
-          glyph="https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png")
-blue = Pin(border_color="blue", glyph_color="",
-           background="black",
-           glyph="https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png")
 
 
 @app.route("/")
@@ -21,10 +15,20 @@ def map_created_in_view():
         varname="gmap",
         lat=37.4419,
         lng=-122.1419,
-        markers={
-            red: [(37.4419, -122.1419),],
-            blue: [(37.4300, -122.1400, "Hello World")],
-        },
+        markers=[
+            {
+                "latitude": 37.4419,
+                "longitude": -122.1419,
+                "label": "1",
+                # 'content': Pin(border_color="blue", background="blue")
+                "content": Pin(border_color="blue", background="blue"),
+            },
+            {
+                "latitude": 37.4519,
+                "longitude": -122.1519,
+                "content": Pin(border_color="blue", background="blue"),
+            },
+        ],
         style="height:400px;width:600px;margin:0;",
     )
 
