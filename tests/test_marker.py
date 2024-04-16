@@ -11,7 +11,7 @@ def marker_pin_object() -> Marker:
     return Marker(
         latitude=37.4419,
         longitude=-122.1419,
-        pin=Pin(border_color="", glyph_color="", background=""),
+        content=dict(border_color="", glyph_color="", background=""),
         infobox="<b>Hello World</b>",
     )
 
@@ -21,9 +21,11 @@ def marker_pin_url() -> Marker:
     return Marker(
         latitude=37.4419,
         longitude=-122.1419,
-        pin="https://developers.google.com/maps/"
-        "documentation/javascript/examples/"
-        "full/images/beachflag.png",
+        content={
+            "icon_url": "https://developers.google.com/maps/"
+            "documentation/javascript/examples/"
+            "full/images/beachflag.png"
+        },
         infobox="<b>Hello World</b>",
     )
 
@@ -68,4 +70,4 @@ def test_marker_with_wrong_longitude():
 
 
 def test_marker_with_pin_object(marker_pin_object):
-    assert isinstance(marker_pin_object.pin, Pin)
+    assert isinstance(marker_pin_object.marker_content, Pin)

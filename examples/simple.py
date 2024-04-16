@@ -1,11 +1,18 @@
 from flask import Flask, render_template
 
 from flask_googlemaps import GoogleMaps, Map
-from flask_googlemaps.image import Image
-from flask_googlemaps.pin import Pin
 
 app = Flask(__name__)
 GoogleMaps(app)
+
+pin_content = {
+    "border_color": "",
+    "glyph_colors": "",
+    "background": "",
+    "glyph": "",
+    "scale": 2.0,
+}
+image_content = {"icon_urls": "https://img.shields.io/badge/PayPal-Donante-red.svg"}
 
 
 @app.route("/")
@@ -20,13 +27,12 @@ def map_created_in_view():
                 "latitude": 37.4419,
                 "longitude": -122.1419,
                 "label": "1",
-                # 'content': Pin(border_color="blue", background="blue")
-                "content": Pin(border_color="blue", background="blue"),
+                "content": pin_content,
             },
             {
                 "latitude": 37.4519,
                 "longitude": -122.1519,
-                "content": Pin(border_color="blue", background="blue"),
+                "content": image_content,
             },
         ],
         style="height:400px;width:600px;margin:0;",

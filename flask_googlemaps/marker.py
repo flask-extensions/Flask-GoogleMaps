@@ -1,23 +1,9 @@
 from typing import Optional, List, Any, Dict
 
-from flask_googlemaps.marker_content import MarkerContent
+from flask_googlemaps.marker_content_factory import MarkerContentFactory
 from flask_googlemaps.pin import Pin
 
 DEFAULT_PIN = Pin()
-
-
-# from json import JSONEncoder
-#
-#
-# def wrapped_default(self, obj):
-#     return getattr(obj.__class__, "__json__", wrapped_default.default)(obj)
-#
-#
-# wrapped_default.default = JSONEncoder().default
-#
-# # apply the patch
-# JSONEncoder.original_default = JSONEncoder.default
-# JSONEncoder.default = wrapped_default
 
 
 class Marker(dict):
@@ -27,15 +13,15 @@ class Marker(dict):
         latitude: float,
         longitude: float,
         infobox: Optional[str] = None,
-        content: Optional[MarkerContent] = None,
+        content: Optional[dict] = None,
         label: Optional[str] = None,
     ):
         self.latitude = Marker.verify_latitude(latitude)
         self.longitude = Marker.verify_longitude(longitude)
         self.infobox = infobox
-        self.marker_icon = content
-        self.content = content.content()
-        self.dom_element = content.dom_element()
+        self.marker_content = MarkerContentFactory(**content).marker_content
+        self.content = self.marker_content.content()
+        self.dom_element = self.marker_content.dom_element()
         self.label = label
 
         dict.__init__(
@@ -45,7 +31,7 @@ class Marker(dict):
                 "longitude": self.longitude,
                 "infobox": self.infobox,
                 "content": self.content,
-                "id": self.marker_icon.name,
+                "id": self.marker_content.name,
             },
         )
 

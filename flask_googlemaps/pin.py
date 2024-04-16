@@ -1,7 +1,24 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, fields
+from enum import Enum
 from typing import Optional
 
 from flask_googlemaps.marker_content import MarkerContent
+
+pin_property_mapping = {
+    "glyph_color": "glyphColor",
+    "background": "background",
+    "border_color": "borderColor",
+    "glyph": "glyph",
+    "scale": "scale",
+}
+
+
+class PinPropertyMapping(Enum):
+    glyph_color = "glyphColor"
+    background = "background"
+    border_color = "borderColor"
+    glyph = "glyph"
+    scale = "scale"
 
 
 @dataclass
@@ -10,14 +27,13 @@ class Pin(MarkerContent):
     def __post_init__(self):
         MarkerContent.__post_init__(self)
         self.dom = []
-        if self.glyph_color:
-            self.dom.append(f"\tglyphColor: '{self.glyph_color}',")
-        if self.background:
-            self.dom.append(f"\tbackground: '{self.background}',")
-        if self.border_color:
-            self.dom.append(f"\tborderColor: '{self.border_color}',")
-        if self.glyph:
-            self.dom.append(f"\tglyph: '{self.glyph}',")
+        for field in fields(Pin):
+            if self.__getattribute__(field.name):
+                self.dom.append(
+                    f"\t{PinPropertyMapping.__getitem__(field.name).value}: "
+                    f"'{self.__getattribute__(field.name)}',"
+                )
+
         if self.dom:
             self.dom.insert(0, f"const {self.name} = new PinElement({{")
             self.dom.append("\t\t});\n")
@@ -32,7 +48,7 @@ class Pin(MarkerContent):
     glyph_color: str = ""
     background: str = ""
     glyph: Optional[str] = ""
-    scale: float = 1.0
+    scale: Optional[float] = None
 
     def content(self) -> str:
         if self.dom:

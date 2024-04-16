@@ -6,7 +6,7 @@ from flask_googlemaps.image import Image
 @pytest.fixture
 def image():
     return Image(
-        url="https://developers.google.com/maps/documentation/"
+        icon_url="https://developers.google.com/maps/documentation/"
         "javascript/examples/full/images/beachflag.png"
     )
 
@@ -20,4 +20,4 @@ def test_content(image):
 def test_dom_image_element(image):
     variable, url_set = image.dom_element().split("\n")
     assert variable == f"const {image.name} = document.createElement('img');"
-    assert url_set == f"{image.name}.src = '{image.url}';"
+    assert url_set == f"{image.name}.src = '{image.icon_url}';"
