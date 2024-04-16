@@ -12,7 +12,9 @@ pin_content = {
     "glyph": "",
     "scale": 2.0,
 }
-image_content = {"icon_urls": "https://img.shields.io/badge/PayPal-Donante-red.svg"}
+image_content = {
+    "icon_urls": "https://img.shields.io/badge/PayPal-Donante-red.svg"
+}
 
 
 @app.route("/")

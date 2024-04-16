@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "flask_googlemaps"
-version = "0.4.2"
+version = "0.5.0"
 description = "Easy way to add GoogleMaps to Flask Applications"
 authors = ["Riverfount - Vulgo Vicente Marçal <vicente.marcal@gmail.com>"]
 license = "MIT"
@@ -29,8 +29,9 @@ flask = ">=3.0.2"
 pre-commit = "1.21.0"
 mkdocs = "^1.1"
 mkdocs-material = "^5.0.2"
-mkdocs-minify-plugin = "^0.3.0"
+mkdocs-minify-plugin = "^0.8.0"
 requests = "^2.25.1"
+jsmin = "^3.0.1"
 
 [tool.poetry.dev-dependencies]
 ipdb = "^0.12.3"

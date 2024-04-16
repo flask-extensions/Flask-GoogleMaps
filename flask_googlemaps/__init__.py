@@ -213,12 +213,19 @@ class Map(object):
             "stroke_weight": stroke_weight,
             "fill_color": fill_color,
             "fill_opacity": fill_opacity,
-            "bounds": {"north": north, "west": west, "south": south, "east": east},
+            "bounds": {
+                "north": north,
+                "west": west,
+                "south": south,
+                "east": east,
+            },
         }
 
         return rectangle
 
-    def add_rectangle(self, north=None, west=None, south=None, east=None, **kwargs):
+    def add_rectangle(
+        self, north=None, west=None, south=None, east=None, **kwargs
+    ):
         # type: (Optional[float], Optional[float], Optional[float], Optional[float], **Any) -> None
         """Adds a rectangle dict to the Map.rectangles attribute
 
@@ -254,7 +261,9 @@ class Map(object):
         if east:
             kwargs["bounds"]["east"] = east
 
-        if set(("north", "east", "south", "west")) != set(kwargs["bounds"].keys()):
+        if set(("north", "east", "south", "west")) != set(
+            kwargs["bounds"].keys()
+        ):
             raise AttributeError("rectangle bounds required to rectangles")
 
         kwargs.setdefault("stroke_color", "#FF0000")
@@ -303,7 +312,9 @@ class Map(object):
             elif isinstance(circle, (tuple, list)):
                 if len(circle) != 3:
                     raise AttributeError("circle requires center and radius")
-                circle_dict = self.build_circle_dict(circle[0], circle[1], circle[2])
+                circle_dict = self.build_circle_dict(
+                    circle[0], circle[1], circle[2]
+                )
                 self.add_circle(**circle_dict)
 
     def build_circle_dict(
@@ -352,7 +363,9 @@ class Map(object):
 
         return circle
 
-    def add_circle(self, center_lat=None, center_lng=None, radius=None, **kwargs):
+    def add_circle(
+        self, center_lat=None, center_lng=None, radius=None, **kwargs
+    ):
         # type: (Optional[float], Optional[float], Optional[float], **Any) -> None
         """Adds a circle dict to the Map.circles attribute
 
@@ -720,7 +733,9 @@ class Map(object):
         if "lat" not in kwargs or "lng" not in kwargs:
             raise AttributeError("heatmap_data requires 'lat' and 'lng' values")
         if len(kwargs) > 2:
-            raise AttributeError("heatmap_data can only contain 'lat' and 'lng' values")
+            raise AttributeError(
+                "heatmap_data can only contain 'lat' and 'lng' values"
+            )
 
         self.heatmap_data.append(kwargs)
 
@@ -764,7 +779,9 @@ class Map(object):
     @property
     def js(self):
         # type: () -> Markup
-        return Markup(self.render("googlemaps/gmapjs.html", gmap=self, DEFAULT_PIN=""))
+        return Markup(
+            self.render("googlemaps/gmapjs.html", gmap=self, DEFAULT_PIN="")
+        )
 
     @property
     def html(self):
@@ -809,12 +826,24 @@ def get_address(API_KEY, lat, lon):
         + "&key="
         + API_KEY
     ).json()
-    add_dict["zip"] = response["results"][0]["address_components"][-1]["long_name"]
-    add_dict["country"] = response["results"][0]["address_components"][-2]["long_name"]
-    add_dict["state"] = response["results"][0]["address_components"][-3]["long_name"]
-    add_dict["city"] = response["results"][0]["address_components"][-4]["long_name"]
-    add_dict["locality"] = response["results"][0]["address_components"][-5]["long_name"]
-    add_dict["road"] = response["results"][0]["address_components"][-6]["long_name"]
+    add_dict["zip"] = response["results"][0]["address_components"][-1][
+        "long_name"
+    ]
+    add_dict["country"] = response["results"][0]["address_components"][-2][
+        "long_name"
+    ]
+    add_dict["state"] = response["results"][0]["address_components"][-3][
+        "long_name"
+    ]
+    add_dict["city"] = response["results"][0]["address_components"][-4][
+        "long_name"
+    ]
+    add_dict["locality"] = response["results"][0]["address_components"][-5][
+        "long_name"
+    ]
+    add_dict["road"] = response["results"][0]["address_components"][-6][
+        "long_name"
+    ]
     add_dict["formatted_address"] = response["results"][0]["formatted_address"]
     return add_dict
 
@@ -852,7 +881,9 @@ class GoogleMaps(object):
         app.add_template_global(googlemap_obj)
         app.add_template_filter(googlemap)
         app.add_template_global(googlemap)
-        app.add_template_global(app.config.get("GOOGLEMAPS_KEY"), name="GOOGLEMAPS_KEY")
+        app.add_template_global(
+            app.config.get("GOOGLEMAPS_KEY"), name="GOOGLEMAPS_KEY"
+        )
         app.add_template_global(set_googlemaps_loaded)
         app.add_template_global(is_googlemaps_loaded)
 
