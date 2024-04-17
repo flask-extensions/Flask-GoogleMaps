@@ -7,18 +7,17 @@ from flask_googlemaps import Map
 
 @pytest.fixture
 def map_properties() -> Dict[str, Any]:
-    return dict(identifier="gmap",
-                varname="gmap",
-                lat=37.4419,
-                lng=-122.1419)
+    return dict(identifier="gmap", varname="gmap", lat=37.4419, lng=-122.1419)
 
 
 @pytest.fixture
 def markers() -> List[Dict]:
     return [
         {
-            "content": {"icon_url": "http://maps.google.com/"
-                                    "mapfiles/ms/icons/green-dot.png"},
+            "content": {
+                "icon_url": "http://maps.google.com/"
+                "mapfiles/ms/icons/green-dot.png"
+            },
             "latitude": 37.4419,
             "longitude": -122.1419,
             "infobox": "<b>Hello World</b>",
@@ -33,7 +32,7 @@ def markers() -> List[Dict]:
                 "background": "",
                 "glyph": "",
                 "scale": 2.0,
-            }
+            },
         },
     ]
 

@@ -21,8 +21,8 @@ def marker_pin_url() -> Marker:
         longitude=-122.1419,
         content={
             "icon_url": "https://developers.google.com/maps/"
-                        "documentation/javascript/examples/"
-                        "full/images/beachflag.png"
+            "documentation/javascript/examples/"
+            "full/images/beachflag.png"
         },
         infobox="<b>Hello World</b>",
     )
