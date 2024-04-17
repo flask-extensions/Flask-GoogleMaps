@@ -23,7 +23,7 @@ packages = [
 include = ["flask_googlemaps/py.typed"]
 
 [tool.poetry.dependencies]
-python = ">=3.8"
+python = ">=3.9"
 flask = ">=3.0.3"
 pre-commit = "3.7.0"
 mkdocs = "^1.5.3"

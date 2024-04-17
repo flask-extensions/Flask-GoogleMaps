@@ -1,6 +1,6 @@
 repos:
   - repo: https://gitlab.com/pycqa/flake8
-    rev: 3.7.9
+    rev: 7.0.0
     hooks:
       - id: flake8
         args: ['--select=E501']
