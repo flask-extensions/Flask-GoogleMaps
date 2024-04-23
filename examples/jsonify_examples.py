@@ -154,7 +154,11 @@ def circle_view():
         varname="circlemap",
         lat=33.678,
         lng=-116.243,
-        circles=[circle, [33.685, -116.251, 1000], (33.685, -116.251, 1500),],
+        circles=[
+            circle,
+            [33.685, -116.251, 1000],
+            (33.685, -116.251, 1500),
+        ],
     )
 
     return jsonify(circlemap.as_json())

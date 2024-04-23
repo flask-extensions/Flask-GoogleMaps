@@ -3,10 +3,11 @@
 from flask import Flask, render_template, request
 from flask_googlemaps import GoogleMaps
 from flask_googlemaps import Map, icons
-#from dynaconf import FlaskDynaconf
+
+# from dynaconf import FlaskDynaconf
 
 app = Flask(__name__, template_folder="templates")
-#FlaskDynaconf(app)  # will read GOOGLEMAPS_KEY from .secrets.toml
+# FlaskDynaconf(app)  # will read GOOGLEMAPS_KEY from .secrets.toml
 
 
 # you can set key as config
@@ -148,7 +149,11 @@ def mapview():
         varname="circlemap",
         lat=33.678,
         lng=-116.243,
-        circles=[circle, [33.685, -116.251, 1000], (33.685, -116.251, 1500),],
+        circles=[
+            circle,
+            [33.685, -116.251, 1000],
+            (33.685, -116.251, 1500),
+        ],
     )
 
     polyline = {

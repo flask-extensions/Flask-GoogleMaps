@@ -1,11 +1,12 @@
 from flask import Flask, render_template
 from flask_googlemaps import GoogleMaps, Map, icons
-#from dynaconf import FlaskDynaconf
-#enter the api key below
-api = ''
+
+# from dynaconf import FlaskDynaconf
+# enter the api key below
+api = ""
 app = Flask(__name__)
-GoogleMaps(app, key = api)
-#FlaskDynaconf(app)
+GoogleMaps(app, key=api)
+# FlaskDynaconf(app)
 
 import json
 
@@ -13,7 +14,7 @@ import json
 @app.route("/")
 def map_created_in_view():
 
-    with open('dark_mode.json') as d:
+    with open("dark_mode.json") as d:
         dark_data = json.load(d)
 
     wmap = Map(
@@ -26,9 +27,8 @@ def map_created_in_view():
             icons.dots.blue: [(37.4300, -122.1400, "Hello World")],
         },
         style="height:400px;width:600px;margin:0;color:#242f3e;",
-        bicycle_layer = True,
+        bicycle_layer=True,
     )
-
 
     gmap = Map(
         identifier="gmap",
@@ -40,7 +40,7 @@ def map_created_in_view():
             icons.dots.blue: [(37.4300, -122.1400, "Hello World")],
         },
         style="height:400px;width:600px;margin:0;color:#242f3e;",
-        layer = "https://geo.data.gov.sg/dengue-cluster/2020/09/02/kml/dengue-cluster.kml"
+        layer="https://geo.data.gov.sg/dengue-cluster/2020/09/02/kml/dengue-cluster.kml",
     )
 
     dmap = Map(
@@ -54,11 +54,12 @@ def map_created_in_view():
         },
         style="height:400px;width:600px;margin:0;color:#242f3e;",
         styles=dark_data,
-
     )
 
-  #  print(get_address(api, 22.4761596, 88.4149326))
-    return render_template("example_2.html", dmap=dmap ,gmap = gmap, wmap = wmap,key = api)
+    #  print(get_address(api, 22.4761596, 88.4149326))
+    return render_template(
+        "example_2.html", dmap=dmap, gmap=gmap, wmap=wmap, key=api
+    )
 
 
 if __name__ == "__main__":
