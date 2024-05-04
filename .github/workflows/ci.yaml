@@ -29,12 +29,10 @@ jobs:
           cache-dependency-path: poetry.lock
 
       - name: Install dependencies
-        run: poetry install
+        run: make install
 
       - name: Code Quality
-        run: |
-          poetry run black -l 80 --check .
+        run: make quality
 
       - name: Unit tests
-        run: |
-          poetry run pytest --cov .    
+        run: make test

@@ -9,7 +9,7 @@ http://mabp.kiev.ua/2010/01/12/google-map-markers/
 
 __all__ = ["dots", "alpha", "shapes", "pushpin", "paddle"]
 
-from typing import Optional, List
+from typing import Optional, List  # noqa: F401
 
 
 class Icon(object):

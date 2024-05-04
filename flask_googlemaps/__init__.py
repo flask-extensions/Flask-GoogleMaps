@@ -3,11 +3,12 @@
 __version__ = "0.4.1"
 
 from json import dumps
-from typing import Optional, Dict, Any, List, Union, Tuple, Text
+from typing import Optional, Dict, Any, List, Union, Tuple, Text  # noqa: F401
+
 import requests
 from flask import Blueprint, Markup, g, render_template
 
-from flask_googlemaps.icons import dots, Icon
+from flask_googlemaps.icons import dots, Icon  # noqa: F401
 
 DEFAULT_ICON = dots.red
 DEFAULT_CLUSTER_IMAGE_PATH = "static/images/m"
@@ -27,7 +28,8 @@ class Map(object):
         cls="map",  # type: str
         language="en",  # type: str
         region="US",  # type: str
-        rectangles=None,  # type: Optional[List[Union[List, Tuple, Tuple[Tuple], Dict]]]
+        rectangles=None,
+        # type: Optional[List[Union[List, Tuple, Tuple[Tuple], Dict]]]
         circles=None,  # type: Optional[List[Union[List, Tuple, Dict]]]
         polylines=None,  # type: Optional[List[Union[List, Tuple, Dict]]]
         polygons=None,  # type: Optional[List[Union[List, Tuple, Dict]]]
@@ -269,7 +271,7 @@ class Map(object):
     def add_rectangle(
         self, north=None, west=None, south=None, east=None, **kwargs
     ):
-        # type: (Optional[float], Optional[float], Optional[float], Optional[float], **Any) -> None
+        # type: (Optional[float], Optional[float], Optional[float], Optional[float], **Any) -> None # noqa: E501
         """Adds a rectangle dict to the Map.rectangles attribute
 
         The Google Maps API describes a rectangle using the LatLngBounds
@@ -757,14 +759,16 @@ class Map(object):
             raise AttributeError("heatmap_later requires 'heatmap_data'")
         if not isinstance(heatmap_data, (list)):
             raise AttributeError(
-                "heatmap_data only accepts a list of dicts with keys 'lat' 'lng' and their corresponding values"
+                "heatmap_data only accepts a list of dicts with keys "
+                "'lat' 'lng' and their corresponding values"
             )
         for hm in heatmap_data:
             if isinstance(hm, dict):
                 self.add_heatmap(**hm)
             else:
                 raise AttributeError(
-                    "elements of list 'heatmap_data' must be a dict of keys 'lat' and 'lng' with their corresponding values"
+                    "elements of list 'heatmap_data' must be a dict of keys "
+                    "'lat' and 'lng' with their corresponding values"
                 )
 
     def add_heatmap(self, lat=None, lng=None, **kwargs):
@@ -877,7 +881,7 @@ def set_googlemaps_loaded():
 def get_address(API_KEY, lat, lon):
     # type: (str, float, float) -> dict
     add_dict = dict()
-    response = rq.get(
+    response = requests.get(
         "https://maps.googleapis.com/maps/api/geocode/json?latlng="
         + ",".join(map(str, [lat, lon]))
         + "&key="
