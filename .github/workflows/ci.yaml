@@ -6,26 +6,33 @@ jobs:
   test:
     runs-on: ubuntu-latest
     strategy:
-      fail-fast: false
+      fail-fast: true
       matrix:
-        python: ["3.6", "3.7", "3.8"]
+        python: ["3.9", "3.10", "3.11", "3.12"]
+        poetry-version: [1.8.2]
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 1
 
-      - name: Set up Python
-        uses: actions/setup-python@v1
+      - name: Set up Poetry ${{ matrix.poetry-version }}
+        uses: abatilo/actions-poetry@v2.0.0
+        with:
+          poetry-version: ${{ matrix.poetry-version }}
+
+      - name: Set up Python ${{ matrix.python }}
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python }}
+          cache: 'poetry'
+          cache-dependency-path: poetry.lock
 
-      - name: Install Dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
+      - name: Install dependencies
+        run: make install
 
       - name: Code Quality
-        run: |
-          pip install black
-          black -l 80 --check
+        run: make quality
+
+      - name: Unit tests
+        run: make test

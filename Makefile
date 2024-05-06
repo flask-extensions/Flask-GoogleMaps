@@ -1,10 +1,15 @@
-.PHONY: test pep8 types clean install build publish tree env
+.PHONY: test quality pep8 black types clean install build publish tree env
 
-test: pep8
-	py.test --cov=flask_googlemaps -l --tb=short --maxfail=1 tests/
+test:
+	@poetry run pytest --cov .
+
+quality: pep8 black
 
 pep8:
-	@flake8 flask_googlemaps --ignore=F403
+	@poetry run flake8 flask_googlemaps --ignore=F403
+
+black:
+	@poetry run black -l 80 --check .
 
 types:
 	@mypy --py2 flask_googlemaps
