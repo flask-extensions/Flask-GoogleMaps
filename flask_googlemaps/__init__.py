@@ -3,7 +3,7 @@
 __version__ = "0.5.0"
 
 from json import dumps
-from typing import Optional, Dict, Any, List, Union, Tuple, Text
+from typing import Optional, Dict, Any, List, Union, Tuple, Text  # noqa: F401
 
 import requests
 from flask import Blueprint, g, render_template
@@ -226,7 +226,7 @@ class Map(object):
     def add_rectangle(
         self, north=None, west=None, south=None, east=None, **kwargs
     ):
-        # type: (Optional[float], Optional[float], Optional[float], Optional[float], **Any) -> None
+        # type: (Optional[float], Optional[float], Optional[float], Optional[float], **Any) -> None  # noqa E501
         """Adds a rectangle dict to the Map.rectangles attribute
 
         The Google Maps API describes a rectangle using the LatLngBounds
@@ -714,14 +714,16 @@ class Map(object):
             raise AttributeError("heatmap_later requires 'heatmap_data'")
         if not isinstance(heatmap_data, (list)):
             raise AttributeError(
-                "heatmap_data only accepts a list of dicts with keys 'lat' 'lng' and their corresponding values"
+                "heatmap_data only accepts a list of dicts with keys "
+                "'lat' 'lng' and their corresponding values"
             )
         for hm in heatmap_data:
             if isinstance(hm, dict):
                 self.add_heatmap(**hm)
             else:
                 raise AttributeError(
-                    "elements of list 'heatmap_data' must be a dict of keys 'lat' and 'lng' with their corresponding values"
+                    "elements of list 'heatmap_data' must be a dict of keys "
+                    "'lat' and 'lng' with their corresponding values"
                 )
 
     def add_heatmap(self, lat=None, lng=None, **kwargs):
@@ -820,7 +822,7 @@ def set_googlemaps_loaded():
 def get_address(API_KEY, lat, lon):
     # type: (str, float, float) -> dict
     add_dict = dict()
-    response = rq.get(
+    response = requests.get(
         "https://maps.googleapis.com/maps/api/geocode/json?latlng="
         + ",".join(map(str, [lat, lon]))
         + "&key="
