@@ -1,11 +1,11 @@
 {% if not is_googlemaps_loaded() and not gmap.heatmap_layer %} {% if GOOGLEMAPS_KEY %}
-<script src="//maps.googleapis.com/maps/api/js?key={{GOOGLEMAPS_KEY}}&map_ids={{gmap.map_ids}}&language={{gmap.language}}&region={{gmap.region}}" type="text/javascript"></script>
+<script async src="//maps.googleapis.com/maps/api/js?key={{GOOGLEMAPS_KEY}}&map_ids={{gmap.map_ids}}&language={{gmap.language}}&region={{gmap.region}}&loading=async" type="text/javascript"></script>
 {% else %}
-<script src="//maps.googleapis.com/maps/api/js?language={{gmap.language}}&region={{gmap.region}}" type="text/javascript"></script>
+<script async src="//maps.googleapis.com/maps/api/js?language={{gmap.language}}&region={{gmap.region}}&loading=async" type="text/javascript"></script>
 {% endif %} {{ set_googlemaps_loaded() }} {% endif %}{% if gmap.cluster %}
 <script src="//cdnjs.cloudflare.com/ajax/libs/js-marker-clusterer/1.0.0/markerclusterer_compiled.js" type="text/javascript"></script>
 {% endif %}{% if gmap.heatmap_layer %}{% if GOOGLEMAPS_KEY %}
-<script src="//maps.googleapis.com/maps/api/js?key={{GOOGLEMAPS_KEY}}&map_ids={{gmap.map_ids}}&language={{gmap.language}}&region={{gmap.region}}&libraries=visualization" type="text/javascript"></script>
+<script async src="//maps.googleapis.com/maps/api/js?key={{GOOGLEMAPS_KEY}}&map_ids={{gmap.map_ids}}&language={{gmap.language}}&region={{gmap.region}}&libraries=visualization&loading=async" type="text/javascript"></script>
 {% endif %}{% endif%}
 
 
@@ -23,7 +23,7 @@
 	 var {{gmap.varname}}_polylines = [];
 	 var prev_infowindow_{{gmap.varname}} = null;
 
-	 function initialize_{{gmap.varname}}() {
+	 async function initialize_{{gmap.varname}}() {
 	     document.getElementById('{{gmap.identifier}}').style.display = 'block';
 	     {{gmap.varname}} = new google.maps.Map(
 	     document.getElementById('{{gmap.identifier}}'), {
@@ -37,7 +37,8 @@
 	         rotateControl: {% if gmap.rotate_control %}true{% else %}false{% endif %},
 	         scrollwheel: {% if gmap.scroll_wheel %}true{% else %}false{% endif %},
 	         fullscreenControl: {% if gmap.fullscreen_control %}true{% else %}false{% endif %},
-	         styles: {{ gmap.styles | tojson  }}
+	         styles: {{ gmap.styles | tojson  }},
+             mapId: "{{ gmap.mapId if gmap.mapId is defined else 'DEMO_MAP_ID' }}"
 	     });
 
 	     //center map location on user location
@@ -81,23 +82,27 @@
 		{% endif %}
 
 	     // add gmap markers
-	     var raw_markers = {{gmap.markers|tojson|safe}};
-	     for(i=0; i<{{gmap.markers|length}};i++) {
-	           tempMarker = new google.maps.Marker({
-	             position: new google.maps.LatLng(raw_markers[i].lat, raw_markers[i].lng),
+         const { AdvancedMarkerElement, PinElement } = await google.maps.importLibrary("marker");
+         {% for marker in gmap.markers %}
+             {% if marker.dom_element %}
+             {{ marker.dom_element |safe }}
+             {%endif%}
+         {% endfor %}
+         for (const marker of {{gmap.markers|tojson|safe}}) {
+	           tempMarker = new AdvancedMarkerElement({
+	             position: new google.maps.LatLng(marker.latitude, marker.longitude),
 	             map: {{gmap.varname}},
-	             icon: raw_markers[i].icon,
-	             title: raw_markers[i].title ? raw_markers[i].title : null,
-	             label: raw_markers[i].label ? raw_markers[i].label : null
+	             title: null,
+                 content: eval(marker.content),
 	   	        });
 
 
-	        if(raw_markers[i].infobox)
+	        if(marker.infobox)
 	        {
 	             google.maps.event.addListener(
 						tempMarker,
 	                    'click',
-	                    getInfoCallback({{gmap.varname}}, raw_markers[i].infobox)
+	                    getInfoCallback({{gmap.varname}}, marker.infobox)
 	             );
 	        }
 
@@ -106,10 +111,10 @@
 	              google.maps.event.addListener(
 						tempMarker,
 	                    'click',
-	                    function (event) { markerClickposCallback('{{gmap.markerClickpos_uri}}', event.latLng, raw_markers[i].title, raw_markers[i].label)}
+	                    function (event) { markerClickposCallback('{{gmap.markerClickpos_uri}}', event.latLng, marker.title, marker.label)}
 	            );
 	          }
-			  {{gmap.varname}}_markers[i] = tempMarker;
+			  {{gmap.varname}}_markers.push(tempMarker);
 
 	     }
 
@@ -298,6 +303,6 @@
 	         window.onload = init_{{gmap.identifier}}_button;
 	     }
 	 {% else %}
-	     google.maps.event.addDomListener(window, 'load', initialize_{{gmap.varname}});
+	     window.addEventListener('load', initialize_{{gmap.varname}});
 	 {% endif %}
 </script>

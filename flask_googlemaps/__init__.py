@@ -1,16 +1,16 @@
 """FlaskGoogleMaps - Google Maps Extension for Flask"""
 
-__version__ = "0.4.1"
+__version__ = "0.5.0"
 
 from json import dumps
 from typing import Optional, Dict, Any, List, Union, Tuple, Text  # noqa: F401
 
 import requests
-from flask import Blueprint, Markup, g, render_template
+from flask import Blueprint, g, render_template
+from markupsafe import Markup
 
-from flask_googlemaps.icons import dots, Icon  # noqa: F401
+from flask_googlemaps.marker import Marker
 
-DEFAULT_ICON = dots.red
 DEFAULT_CLUSTER_IMAGE_PATH = "static/images/m"
 
 
@@ -66,12 +66,11 @@ class Map(object):
         self.language = language
         self.region = region
         self.varname = varname
-        self.center = self.verify_lat_lng_coordinates(lat, lng)
+        self.center = Marker.verify_latitude(lat), Marker.verify_longitude(lng)
         self.zoom = zoom
         self.maptype = maptype
-        self.markers = []  # type: List[Any]
+        self.markers = Marker.from_list(markers)  # type: List[Marker]
         self.map_ids = map_ids
-        self.build_markers(markers)
         self.rectangles = []  # type: List[Any]
         self.build_rectangles(rectangles)
         self.circles = []  # type: List[Any]
@@ -107,50 +106,6 @@ class Map(object):
         self.heatmap_layer = heatmap_layer
         self.heatmap_data = []
         self.build_heatmap(heatmap_data, heatmap_layer)
-
-    def build_markers(self, markers):
-        # type: (Optional[Union[Dict, List, Tuple]]) -> None
-        if not markers:
-            return
-        if not isinstance(markers, (dict, list, tuple)):
-            raise AttributeError("markers accepts only dict, list and tuple")
-
-        if isinstance(markers, dict):
-            for icon, marker_list in markers.items():
-                for marker in marker_list:
-                    marker_dict = self.build_marker_dict(marker, icon=icon)
-                    self.add_marker(**marker_dict)
-        else:
-            for marker in markers:
-                if isinstance(marker, dict):
-                    self.add_marker(**marker)
-                elif isinstance(marker, (tuple, list)):
-                    marker_dict = self.build_marker_dict(marker)
-                    self.add_marker(**marker_dict)
-
-    def build_marker_dict(self, marker, icon=None):
-        # type: (Union[List, Tuple], Optional[Icon]) -> Dict
-        marker_dict = {
-            "lat": marker[0],
-            "lng": marker[1],
-            "icon": icon or DEFAULT_ICON,
-        }
-        if len(marker) > 2:
-            marker_dict["infobox"] = marker[2]
-        if len(marker) > 3:
-            marker_dict["icon"] = marker[3]
-        return marker_dict
-
-    def add_marker(self, lat=None, lng=None, **kwargs):
-        # type: (Optional[float], Optional[float], **Any) -> None
-        if lat is not None:
-            kwargs["lat"] = lat
-        if lng is not None:
-            kwargs["lng"] = lng
-        if "lat" not in kwargs or "lng" not in kwargs:
-            raise AttributeError("lat and lng required")
-
-        self.markers.append(kwargs)
 
     def build_rectangles(self, rectangles):
         # type: (Optional[List[Union[List, Tuple, Tuple[Tuple], Dict]]]) -> None
@@ -271,7 +226,7 @@ class Map(object):
     def add_rectangle(
         self, north=None, west=None, south=None, east=None, **kwargs
     ):
-        # type: (Optional[float], Optional[float], Optional[float], Optional[float], **Any) -> None # noqa: E501
+        # type: (Optional[float], Optional[float], Optional[float], Optional[float], **Any) -> None  # noqa E501
         """Adds a rectangle dict to the Map.rectangles attribute
 
         The Google Maps API describes a rectangle using the LatLngBounds
@@ -823,25 +778,11 @@ class Map(object):
 
         return json_dict
 
-    def verify_lat_lng_coordinates(self, lat, lng):
-        if not (90 >= lat >= -90):
-            raise AttributeError(
-                "Latitude must be between -90 and 90 degrees inclusive."
-            )
-        if not (180 >= lng >= -180):
-            raise AttributeError(
-                "Longitude must be between -180 and 180 degrees inclusive."
-            )
-
-        return (lat, lng)
-
     @property
     def js(self):
         # type: () -> Markup
         return Markup(
-            self.render(
-                "googlemaps/gmapjs.html", gmap=self, DEFAULT_ICON=DEFAULT_ICON
-            )
+            self.render("googlemaps/gmapjs.html", gmap=self, DEFAULT_PIN="")
         )
 
     @property
