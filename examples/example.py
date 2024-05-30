@@ -1,14 +1,11 @@
 # coding: utf-8
 
 from flask import Flask, render_template, request
-from flask_googlemaps import GoogleMaps
-from flask_googlemaps import Map, icons
 
-# from dynaconf import FlaskDynaconf
+from flask_googlemaps import GoogleMaps
+from flask_googlemaps import Map
 
 app = Flask(__name__, template_folder="templates")
-# FlaskDynaconf(app)  # will read GOOGLEMAPS_KEY from .secrets.toml
-
 
 # you can set key as config
 # app.config['GOOGLEMAPS_KEY'] = "AIzaSyDP0GX-Wsui9TSDxtFNj2XuKrh7JBTPCnU"
@@ -20,6 +17,26 @@ GoogleMaps(
 )
 
 # NOTE: this example is using a form to get the apikey
+
+
+markers = [
+    {
+        "latitude": 37.4419,
+        "longitude": -122.1419,
+        "content": {"background": "green"},
+    },
+    {
+        "latitude": 37.4500,
+        "longitude": -122.1350,
+        "content": {"background": "green"},
+    },
+    {
+        "latitude": 37.4300,
+        "longitude": -122.1400,
+        "content": {"background": "blue"},
+        "infobox": "Hello World",
+    },
+]
 
 
 @app.route("/")
@@ -36,10 +53,7 @@ def mapview():
         varname="sndmap",
         lat=37.4419,
         lng=-122.1419,
-        markers={
-            icons.dots.green: [(37.4419, -122.1419), (37.4500, -122.1350)],
-            icons.dots.blue: [(37.4300, -122.1400, "Hello World")],
-        },
+        markers=markers,
     )
 
     trdmap = Map(
@@ -49,21 +63,21 @@ def mapview():
         lng=-122.1419,
         markers=[
             {
-                "icon": icons.alpha.B,
-                "lat": 37.4419,
-                "lng": -122.1419,
+                "content": {"background": "green"},
+                "latitude": 37.4419,
+                "longitude": -122.1419,
                 "infobox": "Hello I am <b style='color:green;'>GREEN</b>!",
             },
             {
-                "icon": icons.dots.blue,
-                "lat": 37.4300,
-                "lng": -122.1400,
+                "content": {"background": "blue"},
+                "latitude": 37.4300,
+                "longitude": -122.1400,
                 "infobox": "Hello I am <b style='color:blue;'>BLUE</b>!",
             },
             {
-                "icon": "//maps.google.com/mapfiles/ms/icons/yellow-dot.png",
-                "lat": 37.4500,
-                "lng": -122.1350,
+                "content": {"background": "yellow"},
+                "latitude": 37.4500,
+                "longitude": -122.1350,
                 "infobox": (
                     "Hello I am <b style='color:#ffcc00;'>YELLOW</b>!"
                     "<h2>It is HTML title</h2>"
@@ -80,11 +94,11 @@ def mapview():
         lat=37.4419,
         lng=-122.1419,
         markers=[
-            {"lat": 37.4500, "lng": -122.1350},
-            {"lat": 37.4400, "lng": -122.1350},
-            {"lat": 37.4300, "lng": -122.1350},
-            {"lat": 36.4200, "lng": -122.1350},
-            {"lat": 36.4100, "lng": -121.1350},
+            {"latitude": 37.4500, "longitude": -122.1350},
+            {"latitude": 37.4400, "longitude": -122.1350},
+            {"latitude": 37.4300, "longitude": -122.1350},
+            {"latitude": 36.4200, "longitude": -122.1350},
+            {"latitude": 36.4100, "longitude": -121.1350},
         ],
         zoom=12,
         cluster=True,
@@ -95,15 +109,15 @@ def mapview():
         varname="movingmap",
         lat=37.4419,
         lng=-122.1419,
-        markers=[{"lat": 37.4500, "lng": -122.1350}],
+        markers=[{"latitude": 37.4500, "longitude": -122.1350}],
         zoom=12,
     )
 
     movingmarkers = [
-        {"lat": 37.4400, "lng": -122.1350},
-        {"lat": 37.4430, "lng": -122.1350},
-        {"lat": 37.4450, "lng": -122.1350},
-        {"lat": 37.4490, "lng": -122.1350},
+        {"latitude": 37.4400, "longitude": -122.1350},
+        {"latitude": 37.4430, "longitude": -122.1350},
+        {"latitude": 37.4450, "longitude": -122.1350},
+        {"latitude": 37.4490, "longitude": -122.1350},
     ]
 
     rectangle = {
@@ -242,7 +256,13 @@ def mapview():
         zoom=12,
         lat=59.939012,
         lng=30.315707,
-        markers=[{"lat": 59.939, "lng": 30.315, "infobox": "This is a marker"}],
+        markers=[
+            {
+                "latitude": 59.939,
+                "longitude": 30.315,
+                "infobox": "This is a marker",
+            }
+        ],
         circles=[
             {
                 "stroke_color": "#FF00FF",
@@ -347,22 +367,22 @@ def fullmap():
         lng=-122.1419,
         markers=[
             {
-                "icon": "//maps.google.com/mapfiles/ms/icons/green-dot.png",
-                "lat": 37.4419,
-                "lng": -122.1419,
+                "content": {"background": "green"},
+                "latitude": 37.4419,
+                "longitude": -122.1419,
                 "infobox": "Hello I am <b style='color:green;'>GREEN</b>!",
             },
             {
-                "icon": "//maps.google.com/mapfiles/ms/icons/blue-dot.png",
-                "lat": 37.4300,
-                "lng": -122.1400,
+                "content": {"background": "blue"},
+                "latitude": 37.4300,
+                "longitude": -122.1400,
                 "infobox": "Hello I am <b style='color:blue;'>BLUE</b>!",
             },
             {
-                "icon": icons.dots.yellow,
+                "content": {"background": "yellow"},
                 "title": "Click Here",
-                "lat": 37.4500,
-                "lng": -122.1350,
+                "latitude": 37.4500,
+                "longitude": -122.1350,
                 "infobox": (
                     "Hello I am <b style='color:#ffcc00;'>YELLOW</b>!"
                     "<h2>It is HTML title</h2>"

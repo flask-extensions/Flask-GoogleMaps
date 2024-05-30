@@ -1,9 +1,9 @@
-from flask import Flask, jsonify
-from flask_googlemaps import Map, GoogleMaps, icons
+from flask import Flask, jsonify, render_template
+
+from flask_googlemaps import Map, GoogleMaps
 
 app = Flask(__name__, template_folder="templates")
-app.config["GOOGLEMAPS_KEY"] = "AIzaSyAZzeHhs-8JZ7i18MjFuM35dJHq70n3Hx4"
-GoogleMaps(app, key="AIzaSyAZzeHhs-8JZ7i18MjFuM35dJHq70n3Hx4")
+GoogleMaps(app)
 
 
 @app.route("/")
@@ -15,7 +15,6 @@ def tst_jsonify():
         lng=-122.1419,
         markers=[(37.4419, -122.1419)],
     )
-
     return jsonify(mymap.as_json())
 
 
@@ -38,10 +37,7 @@ def simple_view_two():
         varname="sndmap",
         lat=37.4419,
         lng=-122.1419,
-        markers={
-            icons.dots.green: [(37.4419, -122.1419), (37.4500, -122.1350)],
-            icons.dots.blue: [(37.4300, -122.1400, "Hello World")],
-        },
+        markers=[(37.4419, -122.1419), (37.4500, -122.1350)],
     )
     return jsonify(sndmap.as_json())
 
@@ -55,21 +51,21 @@ def simple_view_three():
         lng=-122.1419,
         markers=[
             {
-                "icon": icons.alpha.B,
-                "lat": 37.4419,
-                "lng": -122.1419,
+                "content": {"background": "green"},
+                "latitude": 37.4419,
+                "longitude": -122.1419,
                 "infobox": "Hello I am <b style='color:green;'>GREEN</b>!",
             },
             {
-                "icon": icons.dots.blue,
-                "lat": 37.4300,
-                "lng": -122.1400,
+                "content": {"background": "blue"},
+                "latitude": 37.4300,
+                "longitude": -122.1400,
                 "infobox": "Hello I am <b style='color:blue;'>BLUE</b>!",
             },
             {
-                "icon": "//maps.google.com/mapfiles/ms/icons/yellow-dot.png",
-                "lat": 37.4500,
-                "lng": -122.1350,
+                "content": {"background": "yellow"},
+                "latitude": 37.4500,
+                "longitude": -122.1350,
                 "infobox": (
                     "Hello I am <b style='color:#ffcc00;'>YELLOW</b>!"
                     "<h2>It is HTML title</h2>"
@@ -91,11 +87,11 @@ def cluster_view():
         lat=37.4419,
         lng=-122.1419,
         markers=[
-            {"lat": 37.4500, "lng": -122.1350},
-            {"lat": 37.4400, "lng": -122.1350},
-            {"lat": 37.4300, "lng": -122.1350},
-            {"lat": 36.4200, "lng": -122.1350},
-            {"lat": 36.4100, "lng": -121.1350},
+            {"latitude": 37.4500, "longitude": -122.1350},
+            {"latitude": 37.4400, "longitude": -122.1350},
+            {"latitude": 37.4300, "longitude": -122.1350},
+            {"latitude": 36.4200, "longitude": -122.1350},
+            {"latitude": 36.4100, "longitude": -121.1350},
         ],
         zoom=12,
         cluster=True,

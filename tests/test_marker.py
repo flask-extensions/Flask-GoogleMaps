@@ -1,3 +1,5 @@
+from typing import Dict
+
 import pytest
 
 from flask_googlemaps.marker import Marker
@@ -5,12 +7,16 @@ from flask_googlemaps.pin import Pin
 
 
 @pytest.fixture
-def marker_pin_object() -> Marker:
+def coordinates() -> Dict[str, float]:
+    return dict(latitude=37.4419, longitude=-122.1419)
+
+
+@pytest.fixture
+def marker_pin_object(coordinates) -> Marker:
     return Marker(
-        latitude=37.4419,
-        longitude=-122.1419,
         content=dict(border_color="", glyph_color="", background=""),
         infobox="<b>Hello World</b>",
+        **coordinates
     )
 
 
@@ -51,3 +57,33 @@ def test_marker_with_wrong_longitude():
 
 def test_marker_with_pin_object(marker_pin_object):
     assert isinstance(marker_pin_object.marker_content, Pin)
+
+
+def test_from_list_dictionary(coordinates):
+    markers = Marker.from_list([coordinates])
+    for marker in markers:
+        assert isinstance(marker, Marker)
+
+
+def test_from_list_tuple(coordinates):
+    markers = Marker.from_list(
+        [(coordinates["latitude"], coordinates["longitude"])]
+    )
+    for marker in markers:
+        assert isinstance(marker, Marker)
+
+
+def test_from_list_mixed_tuple_dict(coordinates):
+    markers = Marker.from_list(
+        [(coordinates["latitude"], coordinates["longitude"]), coordinates]
+    )
+    for marker in markers:
+        assert isinstance(marker, Marker)
+
+
+def test_from_list_type_error(coordinates):
+    with pytest.raises(TypeError) as exception_info:
+        Marker.from_list([[coordinates["latitude"], coordinates["longitude"]]])
+    assert str(exception_info.value) == (
+        "Marker must be either a dict or a tuple."
+    )

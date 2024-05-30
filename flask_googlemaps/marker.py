@@ -1,4 +1,4 @@
-from typing import Optional, List, Any, Dict
+from typing import Optional, List, Any, Dict, Tuple
 
 from flask_googlemaps.marker_content_factory import MarkerContentFactory
 
@@ -6,11 +6,11 @@ from flask_googlemaps.marker_content_factory import MarkerContentFactory
 class Marker(dict):
 
     def __init__(
-            self,
-            latitude: float,
-            longitude: float,
-            infobox: Optional[str] = None,
-            content: Optional[dict] = None,
+        self,
+        latitude: float,
+        longitude: float,
+        infobox: Optional[str] = None,
+        content: Optional[dict] = {},
     ):
         self.latitude = Marker.verify_latitude(latitude)
         self.longitude = Marker.verify_longitude(longitude)
@@ -47,5 +47,18 @@ class Marker(dict):
         return longitude
 
     @staticmethod
-    def from_list(markers: List[Dict[str, Any]]) -> List["Marker"]:
-        return list(map(lambda marker: Marker(**marker), markers))
+    def from_list(
+        markers: List[Optional[Dict[str, Any] | Tuple[float, float]]]
+    ) -> List["Marker"]:
+        if not markers:
+            return []
+        return list(map(marker_constructor, markers))
+
+
+def marker_constructor(marker: Dict[str, Any] | Tuple[float, float]) -> Marker:
+    if isinstance(marker, dict):
+        return Marker(**marker)
+    elif isinstance(marker, tuple):
+        return Marker(latitude=marker[0], longitude=marker[1])
+    else:
+        raise TypeError("Marker must be either a dict or a tuple.")

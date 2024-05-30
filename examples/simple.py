@@ -32,6 +32,8 @@ def map_created_in_view():
                     "icon_url": "https://img.shields.io/badge/PayPal-Donante-red.svg"
                 },
             },
+            (37.4500, -122.1350),
+            (37.4800, -122.1550),
         ],
         style="height:400px;width:600px;margin:0;",
     )
