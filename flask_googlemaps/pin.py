@@ -31,8 +31,11 @@ class Pin(MarkerContent):
             if self.__getattribute__(field.name):
                 self.dom.append(
                     f"\t{PinPropertyMapping.__getitem__(field.name).value}: "
-                    f"'{self.__getattribute__(field.name)}',"
                 )
+                if field.name == "scale":
+                    self.dom.append(f"{self.__getattribute__(field.name)},")
+                else:
+                    self.dom.append(f"'{self.__getattribute__(field.name)}',")
 
         if self.dom:
             self.dom.insert(0, f"const {self.name} = new PinElement({{")

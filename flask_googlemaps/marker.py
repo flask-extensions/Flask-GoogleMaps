@@ -1,20 +1,16 @@
 from typing import Optional, List, Any, Dict
 
 from flask_googlemaps.marker_content_factory import MarkerContentFactory
-from flask_googlemaps.pin import Pin
-
-DEFAULT_PIN = Pin()
 
 
 class Marker(dict):
 
     def __init__(
-        self,
-        latitude: float,
-        longitude: float,
-        infobox: Optional[str] = None,
-        content: Optional[dict] = None,
-        label: Optional[str] = None,
+            self,
+            latitude: float,
+            longitude: float,
+            infobox: Optional[str] = None,
+            content: Optional[dict] = None,
     ):
         self.latitude = Marker.verify_latitude(latitude)
         self.longitude = Marker.verify_longitude(longitude)
@@ -22,7 +18,6 @@ class Marker(dict):
         self.marker_content = MarkerContentFactory(**content).marker_content
         self.content = self.marker_content.content()
         self.dom_element = self.marker_content.dom_element()
-        self.label = label
 
         dict.__init__(
             self,

@@ -16,16 +16,17 @@ Easy to use Google Maps in your Flask application
 
 - Jinja
 - Flask
-- A google api key [get here](https://developers.google.com/maps/documentation/javascript/get-api-key)
+- A Google api key [get here](https://developers.google.com/maps/documentation/javascript/get-api-key)
 
 ## Contribute
 
-To contribute with the project, clone it, create a virtualenv and install all of you need to dev, see below:
+To contribute with the project, clone it, create a virtualenv and 
+install all of you need to dev, see below:
 
 ```bash
 git clone https://github.com/flask-extensions/Flask-GoogleMaps.git
 cd Flask-GoogleMaps
-poetry use env 3.8  # just to create virtualenv at the first time
+poetry use env 3.12  # just to create virtualenv at the first time
 poetry shell # activate virtualenv
 poetry install  # to install all for dev
 pre-commit install # to install pre-commit hooks
@@ -33,7 +34,8 @@ pre-commit install # to install pre-commit hooks
 
 ## Installation
 
-To use in your project just use your dependency manager to install it, with pip is like this:
+To use in your project just use your dependency manager 
+to install it, with pip is like this:
 
 ```bash
 pip install flask-googlemaps
@@ -41,15 +43,18 @@ pip install flask-googlemaps
 
 ## How it works
 
-Flask-GoogleMaps includes some global functions and template filters in your Jinja environment, also it allows you to use the Map in views if needed.
+Flask-GoogleMaps includes some global functions and template filters 
+in your Jinja environment, also it allows you 
+to use the Map in views if needed.
 
-### registering
+### Registering
 
 in your app
 
 ```python
 
 from flask import Flask
+
 from flask_googlemaps import GoogleMaps
 
 app = Flask(__name__)
@@ -72,7 +77,8 @@ In template
 -0.45345), ...])}}
 ```
 
-That's it! now you have some template filters and functions to use, more details in examples and screenshot below.
+That's it! now you have some template filters and functions to use, 
+more details in examples and screenshot below.
 
 ### Usage
 
@@ -84,11 +90,13 @@ That's it! now you have some template filters and functions to use, more details
 ```python
 
 from flask import Flask, render_template
+
 from flask_googlemaps import GoogleMaps
 from flask_googlemaps import Map
 
 app = Flask(__name__, template_folder=".")
 GoogleMaps(app)
+
 
 @app.route("/")
 def mapview():
@@ -97,28 +105,35 @@ def mapview():
         identifier="view-side",
         lat=37.4419,
         lng=-122.1419,
-        markers=[(37.4419, -122.1419)]
+        markers=[{'latitude': 37.4419, 'longitude': -122.1419}]
     )
     sndmap = Map(
         identifier="sndmap",
         lat=37.4419,
         lng=-122.1419,
         markers=[
-          {
-             'icon': 'http://maps.google.com/mapfiles/ms/icons/green-dot.png',
-             'lat': 37.4419,
-             'lng': -122.1419,
-             'infobox': "<b>Hello World</b>"
-          },
-          {
-             'icon': 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
-             'lat': 37.4300,
-             'lng': -122.1400,
-             'infobox': "<b>Hello World from other place</b>"
-          }
+            {
+                'content': {
+                    "icon_url": "https://img.shields.io/badge/PayPal-Donante-red.svg"},
+                'latitude': 37.4419,
+                'longitude': -122.1419,
+                'infobox': "<b>Hello World</b>"
+            },
+            {
+                'content': {
+                    "border_color": "",
+                    "glyph_color": "",
+                    "background": "",
+                    "glyph": "1",
+                    "scale": 1.0, },
+                'latitude': 37.4300,
+                'longitude': -122.1400,
+                'infobox': "<b>Hello World from other place</b>"
+            }
         ]
     )
     return render_template('example.html', mymap=mymap, sndmap=sndmap)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
@@ -131,9 +146,7 @@ if __name__ == "__main__":
 - **lng**: The longitude coordinate for centering the map.
 - **zoom**: The zoom level. Defaults to `13`.
 - **maptype**: The map type - `ROADMAP`, `SATELLITE`, `HYBRID`, `TERRAIN`. Defaults to `ROADMAP`.
-- **markers**: Markers array of tuples having (**lat**, **lng**, infobox, icon, label). Defaults to `None`.
-- or **markers**: a list of dicts containing **lat**, **lng**, infobox, icon, label.
-- or **markers**: Markers dictionary with icon urls as keys and markers array as values.
+- **markers**: A list of dictionaries representing the markers. More details [below](#Markers).
 - **varname**: The instance variable name.
 - **style**: A string containing CSS styles. Defaults to `"height:300px;width:300px;margin:0;"`.
 - **identifier**: The CSS ID selector name.
@@ -154,6 +167,30 @@ Also controls True or False:
 - collapsible (map collapses by click on **varname**\_collapse button)
 - mapdisplay (show a collapsible map by default or not)
 - center_on_user_location (using HTML5 Geolocation)
+
+##### `Markers`
+
+Markers is a list of dictionaries. 
+Each list element (i.e. a dictionary) represents a marker. 
+A marker has the following elements:
+
+- **latitude**: float. The latitude coordinate of a marker
+- **longitude**: float. The longitude coordinate of a marker
+- *label*: Optional[str]. A label that can appear within the marker. It's best to keep the label short (max 3 chars). More than 3 is fine, but it's not visually appealing
+- *infobox*: Optional[str]. The infobox appears on the map when the marker is clicked 
+- *content*: Optional[dict]. There are two potential structures:
+  - Pin: A pin can have the following elements: Colour fields can have literal values (e.g. `red`, `green`, etc.) or colour hex representations (`#FF0000`, `#008000`, etc.)
+    - *border_color*: the `border` field in image below. Default is red
+    - *glyph_color*: the `glyph` field in image below. Default is dark red
+    - *background*: the `background` field in image below. Default is red
+    - *glyph*: the `text`/`label` that a pin could have. Check [Glyph](#Glyph) section below. 
+    - *scale*: How big the marker should be. It takes float values. Default is 1.0
+  - Image: An image can have a single element:
+    - *icon_url*: The url of an icon which will be used as a marker. 
+
+![The elements of a Pin](marker_parts.png "The elements of a Pin. Credits: https://developers.google.com/maps/documentation/javascript/advanced-markers/basic-customization#javascript_1")
+
+*The elements of a Pin. Credits: https://developers.google.com/maps/documentation/javascript/advanced-markers/basic-customization#javascript_1*
 
 #### 2. Template
 
@@ -194,38 +231,38 @@ Here's an example snippet of code:
 
 ```python
 
-    Map(
-        identifier="catsmap",
-        lat=37.4419,
-        lng=-122.1419,
-        markers=[
-            {
-                'icon': 'http://maps.google.com/mapfiles/ms/icons/green-dot.png',
-                'lat':  37.4419,
-                'lng':  -122.1419,
-                'infobox': "<img src='cat1.jpg' />"
-            },
-            {
-                'icon': 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
-                'lat': 37.4300,
-                'lng': -122.1400,
-                'infobox': "<img src='cat2.jpg' />"
-            },
-            {
-                'icon': 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png',
-                'lat': 37.4500,
-                'lng': -122.1350,
-                'infobox': "<img src='cat3.jpg' />"
-            }
-        ]
-    )
+Map(
+  identifier="catsmap",
+  lat=37.4419,
+  lng=-122.1419,
+  markers=[
+    {
+      'content': {"background": "green"},
+      'latitude': 37.4419,
+      'longitude': -122.1419,
+      'infobox': "<img src='cat1.jpg' />"
+    },
+    {
+      'content': {"background": "blue"},
+      'latitude': 37.4300,
+      'longitude': -122.1400,
+      'infobox': "<img src='cat2.jpg' />"
+    },
+    {
+      'content': {"background": "yellow"},
+      'latitude': 37.4500,
+      'longitude': -122.1350,
+      'infobox': "<img src='cat3.jpg' />"
+    }
+  ]
+)
 
 ```
 
 Which results in something like the following map:
 <img width="1439" alt="screen shot 2015-07-29 at 2 41 52 pm" src="https://cloud.githubusercontent.com/assets/8108300/8969650/13b0de7a-3602-11e5-9ed0-9f328ac9253f.png">
 
-### Label
+### Glyph
 
 Here's an example snippet of code:
 ```python
@@ -236,19 +273,19 @@ Map(
         lng=-122.1419,
         markers=[
             {
-                'lat': 37.4500,
-                'lng': -122.1350,
-                'label': "X"
+                'latitude': 37.4500,
+                'longitude': -122.1350,
+                'content': {"glyph": "X"},
             },
             {
-                'lat':  37.4419,
-                'lng':  -122.1419,
-                'label': "Y"
+                'latitude':  37.4419,
+                'longitude':  -122.1419,
+                'content': {"glyph": "Y"},
             },
             {
-                'lat': 37.4300,
-                'lng': -122.1400,
-                'label': "Z"
+                'latitude': 37.4300,
+                'longitude': -122.1400,
+                'content': {"glyph": "Z"},
             }
         ]
     )

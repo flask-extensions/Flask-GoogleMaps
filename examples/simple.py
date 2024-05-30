@@ -5,17 +5,6 @@ from flask_googlemaps import GoogleMaps, Map
 app = Flask(__name__)
 GoogleMaps(app)
 
-pin_content = {
-    "border_color": "",
-    "glyph_colors": "",
-    "background": "",
-    "glyph": "",
-    "scale": 2.0,
-}
-image_content = {
-    "icon_urls": "https://img.shields.io/badge/PayPal-Donante-red.svg"
-}
-
 
 @app.route("/")
 def map_created_in_view():
@@ -28,13 +17,20 @@ def map_created_in_view():
             {
                 "latitude": 37.4419,
                 "longitude": -122.1419,
-                "label": "1",
-                "content": pin_content,
+                "infobox": "<b>Hello world!</b>",
+                "content": {
+                    "border_color": "rgb(218, 247, 166)",
+                    "glyph_color": "white",
+                    "background": "#F88379",
+                    "scale": 1.0,
+                },
             },
             {
                 "latitude": 37.4519,
                 "longitude": -122.1519,
-                "content": image_content,
+                "content": {
+                    "icon_url": "https://img.shields.io/badge/PayPal-Donante-red.svg"
+                },
             },
         ],
         style="height:400px;width:600px;margin:0;",
